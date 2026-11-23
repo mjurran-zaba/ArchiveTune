@@ -184,13 +184,14 @@ fun LoginScreen(
         }
     }
 
-    val closeAction = remember(onNavigateBack, navController) {
+    val closeAction: () -> Unit = remember(onNavigateBack, navController) {
         {
             if (onNavigateBack != null) {
                 onNavigateBack()
             } else {
                 navController.navigateUp()
             }
+            Unit
         }
     }
 
