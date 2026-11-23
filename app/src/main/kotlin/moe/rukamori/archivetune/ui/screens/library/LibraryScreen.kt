@@ -39,6 +39,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -47,6 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -193,19 +195,7 @@ fun LibraryScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .layout { measurable, constraints ->
-                        val offset = scrollBehavior.state.heightOffset.roundToInt().coerceAtMost(0)
-                        val placeable =
-                            measurable.measure(
-                                constraints.copy(
-                                    minHeight = (constraints.minHeight - offset).coerceAtLeast(0),
-                                    maxHeight = (constraints.maxHeight - offset).coerceAtLeast(0),
-                                ),
-                            )
-                        layout(placeable.width, constraints.maxHeight) {
-                            placeable.placeRelative(0, offset)
-                        }
-                    }.windowInsetsPadding(WindowInsets.statusBars)
+                    .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(top = AppBarHeight),
         ) {
             val tabListState = rememberLazyListState()
@@ -313,29 +303,46 @@ private fun LibrarySectionTabs(
     onSelect: (LibraryFilter) -> Unit,
 ) {
     val sectionsDescription = stringResource(R.string.library_tab_sections)
-    LazyRow(
-        state = state,
+    Box(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .height(LibraryHeaderContentPadding)
-                .selectableGroup()
-                .semantics { contentDescription = sectionsDescription },
-        contentPadding = PaddingValues(horizontal = LibraryContentHorizontalPadding),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+                .background(
+                    Brush.verticalGradient(
+                        colors =
+                            listOf(
+                                MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
+                                MaterialTheme.colorScheme.background.copy(alpha = 0.85f),
+                                MaterialTheme.colorScheme.background.copy(alpha = 0.45f),
+                                Color.Transparent,
+                            ),
+                    ),
+                ),
     ) {
-        items(
-            items = filters,
-            key = { filter -> filter.name },
-            contentType = { "library_section_tab" },
-        ) { filter ->
-            LibrarySectionTab(
-                label = stringResource(filter.labelRes()),
-                iconRes = filter.iconRes(),
-                selected = selectedFilter == filter,
-                onClick = { onSelect(filter) },
-            )
+        LazyRow(
+            state = state,
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .selectableGroup()
+                    .semantics { contentDescription = sectionsDescription },
+            contentPadding = PaddingValues(horizontal = LibraryContentHorizontalPadding),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            items(
+                items = filters,
+                key = { filter -> filter.name },
+                contentType = { "library_section_tab" },
+            ) { filter ->
+                LibrarySectionTab(
+                    label = stringResource(filter.labelRes()),
+                    iconRes = filter.iconRes(),
+                    selected = selectedFilter == filter,
+                    onClick = { onSelect(filter) },
+                )
+            }
         }
     }
 }
@@ -351,6 +358,18 @@ private fun LibrarySectionTab(
     ToggleButton(
         checked = selected,
         onCheckedChange = { onClick() },
+        shapes =
+            ToggleButtonDefaults.shapes(
+                shape = RoundedCornerShape(12.dp),
+                checkedShape = RoundedCornerShape(12.dp),
+            ),
+        colors =
+            ToggleButtonDefaults.colors(
+                containerColor = Color.White.copy(alpha = 0.08f),
+                checkedContainerColor = Color(0xFF38BDF8),
+                contentColor = Color.White.copy(alpha = 0.85f),
+                checkedContentColor = Color(0xFF0D1117),
+            ),
         modifier =
             Modifier
                 .heightIn(min = 40.dp)
@@ -447,7 +466,7 @@ private fun PlaylistTagFilterRow(
         item(key = "manage_playlist_tags", contentType = "playlist_tag_action") {
             FilledTonalButton(
                 onClick = onManageTagsClick,
-                shapes = ButtonDefaults.shapes(),
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.heightIn(min = 40.dp),
             ) {
                 Icon(
@@ -474,6 +493,18 @@ private fun PlaylistTagToggle(
     ToggleButton(
         checked = checked,
         onCheckedChange = onCheckedChange,
+        shapes =
+            ToggleButtonDefaults.shapes(
+                shape = RoundedCornerShape(12.dp),
+                checkedShape = RoundedCornerShape(12.dp),
+            ),
+        colors =
+            ToggleButtonDefaults.colors(
+                containerColor = Color.White.copy(alpha = 0.08f),
+                checkedContainerColor = Color(0xFF38BDF8),
+                contentColor = Color.White.copy(alpha = 0.85f),
+                checkedContentColor = Color(0xFF0D1117),
+            ),
         modifier = Modifier.heightIn(min = 40.dp),
     ) {
         if (accentColor != null) {

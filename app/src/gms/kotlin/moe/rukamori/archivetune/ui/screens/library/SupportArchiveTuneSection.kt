@@ -7,7 +7,9 @@
 
 package moe.rukamori.archivetune.ui.screens.library
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -75,15 +79,17 @@ private fun SupportArchiveTuneCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val containerColor = MaterialTheme.colorScheme.primaryContainer
-    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-    val iconContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
+    // VoidTune: 35% faded white milk glassmorphism with curved rectangle (16dp)
+    val containerColor = Color.White.copy(alpha = 0.12f)
+    val contentColor = Color.White
+    val iconContainerColor = Color(0xFF38BDF8).copy(alpha = 0.20f)
     val iconContainerModifier =
         remember(iconContainerColor) {
             Modifier
-                .size(64.dp)
-                .clip(CircleShape)
+                .size(56.dp)
+                .clip(RoundedCornerShape(14.dp))
                 .background(iconContainerColor)
+                .border(1.dp, Color(0xFF38BDF8).copy(alpha = 0.45f), RoundedCornerShape(14.dp))
         }
     val description =
         when (state) {
@@ -109,7 +115,8 @@ private fun SupportArchiveTuneCard(
         enabled =
             state !is SupportArchiveTuneScreenState.Loading &&
                 state !is SupportArchiveTuneScreenState.Empty,
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
         colors =
             CardDefaults.cardColors(
                 containerColor = containerColor,
@@ -120,7 +127,7 @@ private fun SupportArchiveTuneCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .heightIn(min = 128.dp),
+                .heightIn(min = 120.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),

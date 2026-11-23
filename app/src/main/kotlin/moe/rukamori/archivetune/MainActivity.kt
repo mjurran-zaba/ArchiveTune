@@ -1940,13 +1940,8 @@ class MainActivity : ComponentActivity() {
                                                         .onSizeChanged { size ->
                                                             if (size.height > 0) headerHeightPx = size.height
                                                         }.offset {
-                                                            IntOffset(
-                                                                x = 0,
-                                                                // VoidTune: Home TopBar stays pinned (sticky) in position during scroll
-                                                                y =
-                                                                    if (navBackStackEntry?.destination?.route == Screens.Home.route) 0
-                                                                    else currentScrollBehavior.state.heightOffset.roundToInt(),
-                                                            )
+                                                            // VoidTune: TopBar stays pinned (sticky at y = 0) across all screens during scroll
+                                                            IntOffset.Zero
                                                         },
                                             ) {
                                                 // Gradient shadow background. It lives inside the
@@ -1962,14 +1957,8 @@ class MainActivity : ComponentActivity() {
                                                         modifier =
                                                             Modifier
                                                                 .offset {
-                                                                    // VoidTune: Home TopBar is pinned (sticky at y = 0), so background must never slide down
-                                                                    if (navBackStackEntry?.destination?.route == Screens.Home.route) {
-                                                                        IntOffset.Zero
-                                                                    } else {
-                                                                        val raw = currentScrollBehavior.state.heightOffset
-                                                                        val clamped = raw.coerceAtLeast(-appBarHeightPx)
-                                                                        IntOffset(x = 0, y = (clamped - raw).roundToInt())
-                                                                    }
+                                                                    // VoidTune: TopBar background is pinned at y = 0 across all screens
+                                                                    IntOffset.Zero
                                                                 }.fillMaxWidth()
                                                                 .height(
                                                                     AppBarHeight +
