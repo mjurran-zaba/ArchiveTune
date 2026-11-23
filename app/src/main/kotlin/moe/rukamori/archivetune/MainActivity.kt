@@ -1962,22 +1962,28 @@ class MainActivity : ComponentActivity() {
                                                         modifier =
                                                             Modifier
                                                                 .offset {
-                                                                    val raw = currentScrollBehavior.state.heightOffset
-                                                                    val clamped = raw.coerceAtLeast(-appBarHeightPx)
-                                                                    IntOffset(x = 0, y = (clamped - raw).roundToInt())
+                                                                    // VoidTune: Home TopBar is pinned (sticky at y = 0), so background must never slide down
+                                                                    if (navBackStackEntry?.destination?.route == Screens.Home.route) {
+                                                                        IntOffset.Zero
+                                                                    } else {
+                                                                        val raw = currentScrollBehavior.state.heightOffset
+                                                                        val clamped = raw.coerceAtLeast(-appBarHeightPx)
+                                                                        IntOffset(x = 0, y = (clamped - raw).roundToInt())
+                                                                    }
                                                                 }.fillMaxWidth()
                                                                 .height(
                                                                     AppBarHeight +
                                                                         with(LocalDensity.current) {
                                                                             WindowInsets.systemBars.getTop(LocalDensity.current).toDp()
-                                                                        },
+                                                                        } + 12.dp,
                                                                 ).background(
                                                                     Brush.verticalGradient(
                                                                         colors =
                                                                             listOf(
+                                                                                surfaceColor.copy(alpha = 0.98f),
                                                                                 surfaceColor.copy(alpha = 0.95f),
-                                                                                surfaceColor.copy(alpha = 0.85f),
-                                                                                surfaceColor.copy(alpha = 0.6f),
+                                                                                surfaceColor.copy(alpha = 0.88f),
+                                                                                surfaceColor.copy(alpha = 0.55f),
                                                                                 Color.Transparent,
                                                                             ),
                                                                     ),

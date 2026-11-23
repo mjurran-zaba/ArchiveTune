@@ -18,12 +18,14 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Canvas
@@ -41,9 +43,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -74,6 +78,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
@@ -161,6 +166,7 @@ fun LoginScreen(
     var hunterCooldown by remember { mutableIntStateOf(0) }
     var isSubmitting by remember { mutableStateOf(false) }
     var showWebFallback by remember { mutableStateOf(false) }
+    val cardShakeX = remember { Animatable(0f) }
 
     val unifrakturCookFont = remember { FontFamily(Font(R.font.unifrakturcook)) }
 
@@ -266,17 +272,17 @@ fun LoginScreen(
         )
     }
 
-    // VoidTune Glassmorphic AuthSheet Modal Overlay
+    // VoidTune Glassmorphic AuthSheet Modal Overlay (Centered Screen Dialog)
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.70f)),
-        contentAlignment = Alignment.BottomCenter,
+        contentAlignment = Alignment.Center,
     ) {
         AnimatedVisibility(
             visible = !isHunterTriggered,
-            enter = slideInVertically(initialOffsetY = { it }, animationSpec = tween(400, easing = FastOutSlowInEasing)) + fadeIn(),
-            exit = slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(350, easing = FastOutLinearInEasing)) + fadeOut(),
+            enter = scaleIn(initialScale = 0.88f, animationSpec = tween(320, easing = FastOutSlowInEasing)) + fadeIn(animationSpec = tween(280)),
+            exit = slideOutHorizontally(targetOffsetX = { it * 2 }, animationSpec = tween(380, easing = FastOutLinearInEasing)) + fadeOut(animationSpec = tween(280)),
         ) {
             val crackAnim by animateFloatAsState(
                 targetValue = if (errorAttempts >= 3) 1f else 0f,
@@ -286,17 +292,18 @@ fun LoginScreen(
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .fillMaxWidth(0.92f)
+                    .widthIn(max = 420.dp)
+                    .offset(x = cardShakeX.value.dp)
+                    .clip(RoundedCornerShape(16.dp))
                     .background(Color(0xFF0D1117).copy(alpha = 0.95f))
-                    .background(Color.White.copy(alpha = 0.16f)) // 35% faded white milk glassmorphism
+                    .background(Color.White.copy(alpha = 0.14f)) // 35% faded white milk glassmorphism
                     .border(
                         width = 1.dp,
                         color = Color.White.copy(alpha = 0.25f),
-                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                        shape = RoundedCornerShape(16.dp),
                     )
-                    .windowInsetsPadding(WindowInsets.navigationBars)
-                    .padding(horizontal = 20.dp, vertical = 18.dp),
+                    .padding(horizontal = 22.dp, vertical = 20.dp),
             ) {
                 Column {
                     // Header: Google Logo + VoidTune • Private Security + Divider
@@ -501,9 +508,19 @@ fun LoginScreen(
                                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 
                                         if (newAttempt >= 3) {
-                                            // Hunter Defense Trigger Sequence
+                                            // Hunter Defense Trigger Sequence with Shudder & Fracture
                                             coroutineScope.launch {
-                                                delay(450L) // Allow wall fracture animation to render
+                                                // Dynamic card vibration shudder
+                                                launch {
+                                                    cardShakeX.animateTo(-14f, tween(35))
+                                                    cardShakeX.animateTo(14f, tween(35))
+                                                    cardShakeX.animateTo(-10f, tween(35))
+                                                    cardShakeX.animateTo(10f, tween(35))
+                                                    cardShakeX.animateTo(-5f, tween(35))
+                                                    cardShakeX.animateTo(5f, tween(35))
+                                                    cardShakeX.animateTo(0f, tween(35))
+                                                }
+                                                delay(650L) // Allow wall fracture animation & shake to render vividly
                                                 isHunterTriggered = true
                                                 showHunterPopup = true
                                                 hunterCooldown = 30
@@ -566,35 +583,182 @@ fun LoginScreen(
                     )
                 }
 
-                // Abstract Wall Fracture Crack Animation Overlay
+                // Hyper-Realistic Wall & Armor Fracture Crack Animation Overlay
                 if (crackAnim > 0f) {
                     Canvas(modifier = Modifier.matchParentSize()) {
                         val w = size.width
                         val h = size.height
-                        val stroke = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round)
-                        val crackColor = Color.White.copy(alpha = 0.85f * crackAnim)
+                        val cx = w * 0.48f
+                        val cy = h * 0.44f
+                        val p = crackAnim
 
-                        val p1 = Path().apply {
-                            moveTo(w * 0.5f, h * 0.5f)
-                            lineTo(w * 0.42f, h * 0.35f * crackAnim)
-                            lineTo(w * 0.30f, h * 0.20f * crackAnim)
-                            lineTo(w * 0.15f, h * 0.05f * crackAnim)
+                        val strokeGlow = Stroke(width = 3.8.dp.toPx(), cap = StrokeCap.Round)
+                        val strokeCore = Stroke(width = 1.6.dp.toPx(), cap = StrokeCap.Round)
+                        val strokeWeb = Stroke(width = 1.1.dp.toPx(), cap = StrokeCap.Round)
+
+                        val glowColor = Color(0xFF38BDF8).copy(alpha = 0.50f * p)
+                        val coreColor = Color.White.copy(alpha = 0.95f * p)
+                        val webColor = Color.White.copy(alpha = 0.70f * p)
+
+                        // 1. Impact epicenter glow
+                        drawCircle(
+                            brush = Brush.radialGradient(
+                                colors = listOf(Color(0xFF38BDF8).copy(alpha = 0.40f * p), Color.Transparent),
+                                center = Offset(cx, cy),
+                                radius = 60.dp.toPx() * p,
+                            ),
+                            radius = 60.dp.toPx() * p,
+                            center = Offset(cx, cy),
+                        )
+
+                        // 2. Central crushed core polygon
+                        val crater = Path().apply {
+                            moveTo(cx, cy - 14.dp.toPx() * p)
+                            lineTo(cx + 12.dp.toPx() * p, cy - 6.dp.toPx() * p)
+                            lineTo(cx + 16.dp.toPx() * p, cy + 10.dp.toPx() * p)
+                            lineTo(cx + 4.dp.toPx() * p, cy + 18.dp.toPx() * p)
+                            lineTo(cx - 12.dp.toPx() * p, cy + 14.dp.toPx() * p)
+                            lineTo(cx - 18.dp.toPx() * p, cy - 2.dp.toPx() * p)
+                            close()
                         }
-                        val p2 = Path().apply {
-                            moveTo(w * 0.5f, h * 0.5f)
-                            lineTo(w * 0.62f, h * 0.60f * crackAnim)
-                            lineTo(w * 0.75f, h * 0.78f * crackAnim)
-                            lineTo(w * 0.90f, h * 0.95f * crackAnim)
+                        drawPath(crater, glowColor, style = strokeGlow)
+                        drawPath(crater, coreColor, style = strokeCore)
+
+                        // 3. Primary Radial Fissures (6 Jagged Branches)
+                        // Branch 1: Top-Left (toward top left corner)
+                        val b1 = Path().apply {
+                            moveTo(cx, cy)
+                            lineTo(cx - 38f * p, cy - 32f * p)
+                            lineTo(cx - 65f * p, cy - 78f * p)
+                            lineTo(cx - 110f * p, cy - 120f * p)
+                            lineTo(cx - 160f * p, cy - 185f * p)
+                            lineTo(cx - 210f * p, cy - 260f * p)
                         }
-                        val p3 = Path().apply {
-                            moveTo(w * 0.5f, h * 0.5f)
-                            lineTo(w * 0.55f, h * 0.38f * crackAnim)
-                            lineTo(w * 0.70f, h * 0.22f * crackAnim)
-                            lineTo(w * 0.85f, h * 0.10f * crackAnim)
+                        val b1Sub1 = Path().apply {
+                            moveTo(cx - 65f * p, cy - 78f * p)
+                            lineTo(cx - 45f * p, cy - 130f * p)
+                            lineTo(cx - 75f * p, cy - 195f * p)
                         }
-                        drawPath(p1, crackColor, style = stroke)
-                        drawPath(p2, crackColor, style = stroke)
-                        drawPath(p3, crackColor, style = stroke)
+                        val b1Sub2 = Path().apply {
+                            moveTo(cx - 110f * p, cy - 120f * p)
+                            lineTo(cx - 165f * p, cy - 128f * p)
+                            lineTo(cx - 225f * p, cy - 142f * p)
+                        }
+
+                        // Branch 2: Top-Right
+                        val b2 = Path().apply {
+                            moveTo(cx, cy)
+                            lineTo(cx + 42f * p, cy - 36f * p)
+                            lineTo(cx + 80f * p, cy - 82f * p)
+                            lineTo(cx + 130f * p, cy - 115f * p)
+                            lineTo(cx + 185f * p, cy - 170f * p)
+                            lineTo(cx + 240f * p, cy - 230f * p)
+                        }
+                        val b2Sub1 = Path().apply {
+                            moveTo(cx + 80f * p, cy - 82f * p)
+                            lineTo(cx + 120f * p, cy - 60f * p)
+                            lineTo(cx + 175f * p, cy - 72f * p)
+                        }
+
+                        // Branch 3: Right
+                        val b3 = Path().apply {
+                            moveTo(cx, cy)
+                            lineTo(cx + 48f * p, cy + 12f * p)
+                            lineTo(cx + 95f * p, cy - 8f * p)
+                            lineTo(cx + 150f * p, cy + 18f * p)
+                            lineTo(cx + 215f * p, cy + 8f * p)
+                            lineTo(cx + 280f * p, cy + 24f * p)
+                        }
+                        val b3Sub1 = Path().apply {
+                            moveTo(cx + 95f * p, cy - 8f * p)
+                            lineTo(cx + 135f * p, cy + 55f * p)
+                            lineTo(cx + 185f * p, cy + 85f * p)
+                        }
+
+                        // Branch 4: Bottom-Right
+                        val b4 = Path().apply {
+                            moveTo(cx, cy)
+                            lineTo(cx + 34f * p, cy + 44f * p)
+                            lineTo(cx + 68f * p, cy + 96f * p)
+                            lineTo(cx + 112f * p, cy + 155f * p)
+                            lineTo(cx + 150f * p, cy + 225f * p)
+                            lineTo(cx + 195f * p, cy + 300f * p)
+                        }
+                        val b4Sub1 = Path().apply {
+                            moveTo(cx + 68f * p, cy + 96f * p)
+                            lineTo(cx + 120f * p, cy + 108f * p)
+                            lineTo(cx + 165f * p, cy + 135f * p)
+                        }
+
+                        // Branch 5: Bottom-Left
+                        val b5 = Path().apply {
+                            moveTo(cx, cy)
+                            lineTo(cx - 36f * p, cy + 42f * p)
+                            lineTo(cx - 72f * p, cy + 94f * p)
+                            lineTo(cx - 118f * p, cy + 148f * p)
+                            lineTo(cx - 160f * p, cy + 215f * p)
+                            lineTo(cx - 205f * p, cy + 285f * p)
+                        }
+                        val b5Sub1 = Path().apply {
+                            moveTo(cx - 72f * p, cy + 94f * p)
+                            lineTo(cx - 125f * p, cy + 82f * p)
+                            lineTo(cx - 180f * p, cy + 95f * p)
+                        }
+
+                        // Branch 6: Left
+                        val b6 = Path().apply {
+                            moveTo(cx, cy)
+                            lineTo(cx - 44f * p, cy - 10f * p)
+                            lineTo(cx - 92f * p, cy + 14f * p)
+                            lineTo(cx - 148f * p, cy - 6f * p)
+                            lineTo(cx - 205f * p, cy + 12f * p)
+                            lineTo(cx - 265f * p, cy - 4f * p)
+                        }
+
+                        // 4. Concentric Spiderweb Fracture Arcs (Connecting lines)
+                        // Inner spiderweb ring
+                        val webInner = Path().apply {
+                            moveTo(cx - 38f * p, cy - 32f * p)
+                            lineTo(cx + 42f * p, cy - 36f * p)
+                            lineTo(cx + 48f * p, cy + 12f * p)
+                            lineTo(cx + 34f * p, cy + 44f * p)
+                            lineTo(cx - 36f * p, cy + 42f * p)
+                            lineTo(cx - 44f * p, cy - 10f * p)
+                            close()
+                        }
+                        // Mid spiderweb ring
+                        val webMid = Path().apply {
+                            moveTo(cx - 65f * p, cy - 78f * p)
+                            lineTo(cx + 80f * p, cy - 82f * p)
+                            lineTo(cx + 95f * p, cy - 8f * p)
+                            lineTo(cx + 68f * p, cy + 96f * p)
+                            lineTo(cx - 72f * p, cy + 94f * p)
+                            lineTo(cx - 92f * p, cy + 14f * p)
+                            close()
+                        }
+                        // Outer spiderweb jagged bridges
+                        val webOuter = Path().apply {
+                            moveTo(cx - 110f * p, cy - 120f * p)
+                            lineTo(cx + 130f * p, cy - 115f * p)
+                            moveTo(cx + 150f * p, cy + 18f * p)
+                            lineTo(cx + 112f * p, cy + 155f * p)
+                            moveTo(cx - 118f * p, cy + 148f * p)
+                            lineTo(cx - 148f * p, cy - 6f * p)
+                        }
+
+                        val allFissures = listOf(b1, b1Sub1, b1Sub2, b2, b2Sub1, b3, b3Sub1, b4, b4Sub1, b5, b5Sub1, b6)
+
+                        // Draw Glow pass
+                        allFissures.forEach { drawPath(it, glowColor, style = strokeGlow) }
+                        drawPath(webInner, glowColor, style = strokeGlow)
+                        drawPath(webMid, glowColor, style = strokeGlow)
+                        drawPath(webOuter, glowColor, style = strokeGlow)
+
+                        // Draw Core Sharp pass
+                        allFissures.forEach { drawPath(it, coreColor, style = strokeCore) }
+                        drawPath(webInner, webColor, style = strokeWeb)
+                        drawPath(webMid, webColor, style = strokeWeb)
+                        drawPath(webOuter, webColor, style = strokeWeb)
                     }
                 }
             }
