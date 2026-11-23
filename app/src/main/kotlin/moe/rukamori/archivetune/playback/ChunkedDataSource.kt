@@ -89,14 +89,26 @@ internal class ChunkedDataSource(
     }
 
     private fun openNextChunk(dataSpec: DataSpec): Long {
-        // [VoidTune Patch: Enforce Chunking on Unbounded Initial Requests]
-        // REASON: When ExoPlayer requests a stream without known Content-Length (dataSpec.length == C.LENGTH_UNSET / -1),
-        // the original code set length = null, effectively disabling ChunkedDataSource and requesting the entire
-        // file in a single unbounded connection, causing burst throttling on Google Video Server.
-        // We now resolve stream chunk length using initialChunkLength on the first chunk (bytesRead == 0L)
-        // and chunkLength on subsequent chunks, ensuring fast start (<300ms) and steady throughput.
+        // [VoidTune Patch: Preserve Unbounded Contract on Initial Stream Open]
+        // CAUSE: Clamping unbounded initial requests (dataSpec.length == C.LENGTH_UNSET / -1) to initialChunkLength (512KB)
+        // caused ExoPlayer extractor starvation because ExoPlayer's DataSource contract expects open() to return
+        // the resolved total stream length (from HTTP Content-Range) or C.LENGTH_UNSET. When capped at 512KB,
+        // ExoPlayer treated 512KB as the entire audio file length and stopped reading at EOF (infinite buffer spinner).
+        // REASON: When dataSpec.length == C.LENGTH_UNSET, length must be null so chunkSpec remains unbounded,
+        // letting upstream OkHttpDataSource learn the true Content-Range from Google Video Server.
+        // Subsequent chunk reads (dataSpec.length > 0) are paced with chunkLength.
         /*
-        ORIGINAL CODE:
+        [VoidTune Previous Revision (Clamped Initial Request)]:
+        val targetChunkLength = if (bytesRead == 0L) initialChunkLength else chunkLength
+        val length =
+            resolveStreamChunkLength(
+                requestedLength = dataSpec.length,
+                position = dataSpec.position,
+                knownContentLength = null,
+                chunkLength = targetChunkLength,
+            )
+        val chunkSpec = length?.let { dataSpec.subrange(0L, it) } ?: dataSpec
+        */
         val length =
             if (dataSpec.length == C.LENGTH_UNSET.toLong()) {
                 null
@@ -108,16 +120,6 @@ internal class ChunkedDataSource(
                     chunkLength = chunkLength,
                 )
             }
-        val chunkSpec = length?.let { dataSpec.subrange(0L, it) } ?: dataSpec
-        */
-        val targetChunkLength = if (bytesRead == 0L) initialChunkLength else chunkLength
-        val length =
-            resolveStreamChunkLength(
-                requestedLength = dataSpec.length,
-                position = dataSpec.position,
-                knownContentLength = null,
-                chunkLength = targetChunkLength,
-            )
         val chunkSpec = length?.let { dataSpec.subrange(0L, it) } ?: dataSpec
         chunkBytesRemaining = chunkSpec.length
         upstreamOpen = true
