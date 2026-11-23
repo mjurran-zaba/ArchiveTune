@@ -10,6 +10,7 @@ package moe.rukamori.archivetune.ui.screens
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -723,8 +724,9 @@ private fun <T : Any> SongStackShelf(
                 contentType = { "song_stack" },
             ) { stack ->
                 Surface(
-                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    color = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.88f),
                     shape = MaterialTheme.shapes.extraLarge,
+                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f)),
                     modifier = Modifier.width(stackWidth),
                 ) {
                     Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -901,8 +903,9 @@ fun SpeedDialSection(
     val motionScheme = MaterialTheme.motionScheme
 
     Surface(
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.88f),
         shape = MaterialTheme.shapes.extraLarge,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f)),
         modifier =
             modifier
                 .padding(horizontal = 12.dp)
@@ -1315,7 +1318,7 @@ private fun KeepListeningResumeCard(
     val cardShape = MaterialTheme.shapes.extraLarge
 
     Surface(
-        color = containerColor,
+        color = containerColor.copy(alpha = 0.88f),
         contentColor =
             if (isActive) {
                 MaterialTheme.colorScheme.onSecondaryContainer
@@ -1323,6 +1326,7 @@ private fun KeepListeningResumeCard(
                 MaterialTheme.colorScheme.onSurface
             },
         shape = cardShape,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f)),
         modifier =
             modifier
                 .clip(cardShape)
@@ -1630,8 +1634,9 @@ private fun SimilarDiscoveryDeck(
         }
 
     Surface(
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.88f),
         shape = MaterialTheme.shapes.extraLarge,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f)),
         modifier = modifier,
     ) {
         Column(modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)) {

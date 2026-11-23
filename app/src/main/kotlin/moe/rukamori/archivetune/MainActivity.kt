@@ -47,6 +47,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -221,6 +222,7 @@ import moe.rukamori.archivetune.constants.DefaultOpenTabKey
 import moe.rukamori.archivetune.constants.DisableAnimationsKey
 import moe.rukamori.archivetune.constants.DisableScreenshotKey
 import moe.rukamori.archivetune.constants.DynamicThemeKey
+import moe.rukamori.archivetune.constants.OnboardingCompletedKey
 import moe.rukamori.archivetune.constants.EnableHapticFeedbackKey
 import moe.rukamori.archivetune.constants.FontPreferenceKey
 import moe.rukamori.archivetune.constants.HasPressedStarKey
@@ -782,7 +784,9 @@ class MainActivity : ComponentActivity() {
                     it != presentedUpdateVersion && Updater.isUpdateAvailable(it, BuildConfig.VERSION_NAME)
             }
 
-            val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
+            // VoidTune: Default false - Nord Polar Mist is the default, not Material You
+            // val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
+            val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = false)
             val customThemeColorValue by rememberPreference(CustomThemeColorKey, defaultValue = "default")
             val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
             val defaultDisableAnimations = remember(this@MainActivity) { applicationContext.isLowRamDevice() }
@@ -895,6 +899,7 @@ class MainActivity : ComponentActivity() {
                 pureBlack = pureBlack,
                 themeColor = themeColor,
                 seedPalette = if (!enableDynamicTheme) customThemeSeedPalette else null,
+                enableDynamicTheme = enableDynamicTheme,
                 disableAnimations = disableAnimations,
                 fontPreference = fontPreference,
                 customFontUri = customFontUri,
@@ -922,6 +927,17 @@ class MainActivity : ComponentActivity() {
                         is OnboardingScreenState.Success -> state.uiState.shouldShowOnboarding
                     }
 
+                // VoidTune: Skip Onboarding & Welcome flow - launch directly to Home screen after splash
+                LaunchedEffect(Unit) {
+                    dataStore.edit { preferences ->
+                        if (preferences[OnboardingCompletedKey] != true) {
+                            preferences[OnboardingCompletedKey] = true
+                        }
+                    }
+                }
+
+                /*
+                // Original ArchiveTune Onboarding Flow (Bypassed in VoidTune for instant Home access)
                 if (shouldShowOnboarding) {
                     CompositionLocalProvider(LocalAnimationsDisabled provides disableAnimations) {
                         if (showOnboardingLogin) {
@@ -951,6 +967,7 @@ class MainActivity : ComponentActivity() {
                     }
                     return@ArchiveTuneTheme
                 }
+                */
 
                 if (requiredUpdate && startupUpdateViewModel != null) {
                     CompositionLocalProvider(
@@ -1977,10 +1994,8 @@ class MainActivity : ComponentActivity() {
                                                                 }
                                                             ) + WindowInsetsSides.Top,
                                                         ),
-                                                    title = {
-                                                        TopAppBarBrand()
-                                                    },
-                                                    actions = {
+                                                    navigationIcon = {
+                                                        // VoidTune UI Redesign: Lucide panel drawer trigger moved to left (NOTEZ Design System)
                                                         val hasUpdateAvailable =
                                                             BuildConfig.UPDATER_AVAILABLE &&
                                                                 Updater.isUpdateAvailable(latestVersionName ?: BuildConfig.VERSION_NAME, BuildConfig.VERSION_NAME)
@@ -2028,41 +2043,33 @@ class MainActivity : ComponentActivity() {
                                                             },
                                                             state = newsTooltipState,
                                                         ) {
-                                                            Box {
-                                                                TranslucentTopAppBarIconButton(
-                                                                    onClick = {
-                                                                        newsTooltipState.dismiss()
-                                                                        mainMenuViewModel.toggle()
-                                                                    },
-                                                                ) {
-                                                                    BadgedBox(badge = {
-                                                                        if (hasUnreadNews || hasUpdateAvailable) {
-                                                                            Badge()
-                                                                        }
-                                                                    }) {
-                                                                        Icon(
-                                                                            painter = painterResource(R.drawable.more_horiz),
-                                                                            contentDescription =
-                                                                                stringResource(R.string.more_options),
-                                                                        )
+                                                            TranslucentTopAppBarIconButton(
+                                                                onClick = {
+                                                                    newsTooltipState.dismiss()
+                                                                    mainMenuViewModel.toggle()
+                                                                },
+                                                            ) {
+                                                                BadgedBox(badge = {
+                                                                    if (hasUnreadNews || hasUpdateAvailable) {
+                                                                        Badge()
                                                                     }
+                                                                }) {
+                                                                    Icon(
+                                                                        painter = painterResource(R.drawable.ic_lucide_panel_left),
+                                                                        contentDescription =
+                                                                            stringResource(R.string.more_options),
+                                                                    )
                                                                 }
-                                                                TopAppBarOverflowMenu(
-                                                                    expanded = topAppBarOverflowExpanded,
-                                                                    profileState = menuProfileState,
-                                                                    accountImageUrl = menuAccountImageUrl,
-                                                                    hazeState = menuHazeState,
-                                                                    pureBlack = pureBlack,
-                                                                    hasUnreadNews = hasUnreadNews,
-                                                                    hasUpdateAvailable = hasUpdateAvailable,
-                                                                    onDismissRequest = mainMenuViewModel::dismiss,
-                                                                    onSelect = { destination ->
-                                                                        newsTooltipState.dismiss()
-                                                                        mainMenuViewModel.select(destination)
-                                                                    },
-                                                                )
                                                             }
                                                         }
+                                                    },
+                                                    title = {
+                                                        // VoidTune: Removed old ArchiveTune brand from left, clean spacious title
+                                                        // TopAppBarBrand()
+                                                    },
+                                                    actions = {
+                                                        // VoidTune: VoidTune cosmic logo badge placed on the right side with balanced sizing
+                                                        VoidTuneTopBarLogo()
                                                     },
                                                     scrollBehavior =
                                                         if (shouldUseFloatingTopBar) {
@@ -2092,6 +2099,21 @@ class MainActivity : ComponentActivity() {
                                                             actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                             navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                         ),
+                                                )
+                                                // VoidTune: Slide-In Side Navigation Drawer (replacing small popup card)
+                                                TopAppBarOverflowMenu(
+                                                    expanded = topAppBarOverflowExpanded,
+                                                    profileState = menuProfileState,
+                                                    accountImageUrl = menuAccountImageUrl,
+                                                    hazeState = menuHazeState,
+                                                    pureBlack = pureBlack,
+                                                    hasUnreadNews = hasUnreadNews,
+                                                    hasUpdateAvailable = BuildConfig.UPDATER_AVAILABLE &&
+                                                        Updater.isUpdateAvailable(latestVersionName ?: BuildConfig.VERSION_NAME, BuildConfig.VERSION_NAME),
+                                                    onDismissRequest = mainMenuViewModel::dismiss,
+                                                    onSelect = { destination ->
+                                                        mainMenuViewModel.select(destination)
+                                                    },
                                                 )
                                             }
                                         }
@@ -3396,6 +3418,52 @@ private fun TopAppBarBrand() {
             style = MaterialTheme.typography.titleLargeEmphasized,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+// VoidTune UI Redesign: Balanced topbar logo badge on the right with subtle Polar Cyan ambient glow
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun VoidTuneTopBarLogo() {
+    val playerConnection = LocalPlayerConnection.current
+    val isPlaying = playerConnection?.isPlaying?.collectAsStateWithLifecycle()?.value == true
+    val morph = remember { Morph(MaterialShapes.Circle, MaterialShapes.Cookie9Sided) }
+    val morphProgress by animateFloatAsState(
+        targetValue = if (isPlaying) 1f else 0f,
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
+        label = "voidTuneLogoMorph",
+    )
+    val badgeColor by animateColorAsState(
+        targetValue =
+            if (isPlaying) {
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
+            } else {
+                Color.White.copy(alpha = 0.12f)
+            },
+        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+        label = "voidTuneLogoColor",
+    )
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier =
+            Modifier
+                .padding(end = 8.dp)
+                .size(34.dp)
+                .clip(EditorialMorphShape(morph, morphProgress))
+                .background(badgeColor)
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.22f),
+                    shape = EditorialMorphShape(morph, morphProgress),
+                ),
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.about_splash),
+            contentDescription = "VoidTune",
+            tint = Color.Unspecified,
+            modifier = Modifier.size(22.dp),
         )
     }
 }

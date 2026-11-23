@@ -160,7 +160,9 @@ fun AppearanceSettings(navController: NavController) {
     val (dynamicTheme, onDynamicThemeChange) =
         rememberPreference(
             DynamicThemeKey,
-            defaultValue = true,
+            // VoidTune: Default false - Nord Polar Mist is the default, not Material You
+            // defaultValue = true,
+            defaultValue = false,
         )
     val (wallpaperExtractionFailed) =
         rememberPreference(

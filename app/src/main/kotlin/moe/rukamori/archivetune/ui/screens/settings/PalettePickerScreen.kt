@@ -316,14 +316,27 @@ data class ThemePalette(
 )
 
 object ThemePalettes {
+    // VoidTune: Default theme is NOTEZ's Nord Polar Mist (Polar Cyan #38BDF8)
+    // Original ArchiveTune default:
+    // val Default = ThemePalette(id = "default", nameResId = R.string.palette_default, primary = Color(0xFFED5564), secondary = Color(0xFFED5564), tertiary = Color(0xFFED5564), neutral = Color(0xFFED5564))
     val Default =
         ThemePalette(
             id = "default",
-            nameResId = R.string.palette_default,
-            primary = Color(0xFFED5564),
-            secondary = Color(0xFFED5564),
-            tertiary = Color(0xFFED5564),
-            neutral = Color(0xFFED5564),
+            nameResId = R.string.palette_nord_polar_mist,
+            primary = Color(0xFF38BDF8),   // Polar Cyan (NOTEZ)
+            secondary = Color(0xFF81A1C1), // Arctic Blue (NOTEZ)
+            tertiary = Color(0xFF88C0D0),  // Frost Teal (NOTEZ)
+            neutral = Color(0xFF1E293B),   // Arctic Slate (NOTEZ)
+        )
+
+    val NordPolarMist =
+        ThemePalette(
+            id = "nord_polar_mist",
+            nameResId = R.string.palette_nord_polar_mist,
+            primary = Color(0xFF38BDF8),
+            secondary = Color(0xFF81A1C1),
+            tertiary = Color(0xFF88C0D0),
+            neutral = Color(0xFF1E293B),
         )
 
     val OceanBlue =
@@ -999,6 +1012,7 @@ object ThemePalettes {
     val allPalettes: List<ThemePalette> =
         listOf(
             Default,
+            NordPolarMist,
             OceanBlue,
             ArcticBlue,
             MidnightNavy,
@@ -1147,7 +1161,9 @@ fun PalettePickerScreen(navController: NavController) {
     val (dynamicThemeEnabled, setDynamicThemeEnabled) =
         rememberPreference(
             key = DynamicThemeKey,
-            defaultValue = true,
+            // VoidTune: Default false - Nord Polar Mist is the default, not Material You
+            // defaultValue = true,
+            defaultValue = false,
         )
 
     val customSeed =remember(customThemeColor) { ThemeSeedPaletteCodec.decodeFromPreference(customThemeColor) }
@@ -1743,7 +1759,9 @@ fun ThemeCreatorScreen(navController: NavController) {
     val (_, setDynamicThemeEnabled) =
         rememberPreference(
             key = DynamicThemeKey,
-            defaultValue = true,
+            // VoidTune: Default false - Nord Polar Mist is the default, not Material You
+            // defaultValue = true,
+            defaultValue = false,
         )
 
     val seedFromPrefs =

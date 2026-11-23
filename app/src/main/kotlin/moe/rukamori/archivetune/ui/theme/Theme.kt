@@ -51,7 +51,19 @@ import moe.rukamori.archivetune.constants.AppFontPreference
 import kotlin.math.abs
 import kotlin.math.min
 
-val DefaultThemeColor = Color(0xFFED5564)
+// VoidTune: Default theme is NOTEZ's Nord Polar Mist (Polar Cyan #38BDF8) instead of Material YOU / ArchiveTune coral red
+// val DefaultThemeColor = Color(0xFFED5564)
+val DefaultThemeColor = Color(0xFF38BDF8)
+
+// VoidTune: Nord Polar Mist Seed Palette from NOTEZ Design System
+val NordPolarMistSeedPalette =
+    ThemeSeedPalette(
+        primary = Color(0xFF38BDF8),   // Polar Cyan
+        secondary = Color(0xFF81A1C1), // Arctic Blue
+        tertiary = Color(0xFF88C0D0),  // Frost Teal
+        neutral = Color(0xFF1E293B),   // Arctic Slate
+    )
+
 val LocalArchiveTuneFontPreference = staticCompositionLocalOf { AppFontPreference.DEFAULT }
 val LocalArchiveTuneFontFamily = staticCompositionLocalOf { AppFontFamily }
 
@@ -78,14 +90,17 @@ fun ArchiveTuneTheme(
     pureBlack: Boolean = false,
     themeColor: Color = DefaultThemeColor,
     seedPalette: ThemeSeedPalette? = null,
+    enableDynamicTheme: Boolean = false,
     disableAnimations: Boolean = false,
     fontPreference: AppFontPreference = AppFontPreference.DEFAULT,
     customFontUri: String = "",
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
+    // VoidTune: Do NOT default to Material You / system dynamic color unless explicitly enabled
+    // val useSystemDynamicColor = (seedPalette == null && themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
     val useSystemDynamicColor =
-        (seedPalette == null && themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        (enableDynamicTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
     val customFontFamily =
         produceState<FontFamily?>(
@@ -126,11 +141,12 @@ fun ArchiveTuneTheme(
             paletteStyleFor(seedPalette?.primary ?: themeColor)
         }
 
+    val effectiveSeedPalette = seedPalette ?: if (themeColor == DefaultThemeColor) NordPolarMistSeedPalette else null
     val appColorScheme =
-        remember(seedPalette, themeColor, darkTheme) {
-            if (seedPalette != null) {
+        remember(effectiveSeedPalette, themeColor, darkTheme) {
+            if (effectiveSeedPalette != null) {
                 exactPaletteColorScheme(
-                    palette = seedPalette,
+                    palette = effectiveSeedPalette,
                     isDark = darkTheme,
                 )
             } else {
@@ -173,15 +189,17 @@ fun ArchiveTuneTheme(
                 small =
                     androidx.compose.foundation.shape
                         .RoundedCornerShape(12.dp),
+                // VoidTune: No capsules rule - transform M3 shapes into sleek curved rectangles (NOTEZ style)
+                // medium: 14dp, large: 14dp (down from 24dp capsule), extraLarge: 16dp (down from 32dp capsule)
                 medium =
                     androidx.compose.foundation.shape
-                        .RoundedCornerShape(16.dp),
+                        .RoundedCornerShape(14.dp),
                 large =
                     androidx.compose.foundation.shape
-                        .RoundedCornerShape(24.dp),
+                        .RoundedCornerShape(14.dp),
                 extraLarge =
                     androidx.compose.foundation.shape
-                        .RoundedCornerShape(32.dp),
+                        .RoundedCornerShape(16.dp),
             )
         }
 
