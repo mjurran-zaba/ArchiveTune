@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    ArchiveTune legacy small app icon replaced with VoidTune Arcane Cosmic Seal.
-    Reason: Rebranding to VoidTune, adopting NOTEZ glamour & luxury design system.
+    VoidTune Arcane Cosmic Music Seal Vector Drawable
+    Replaces legacy ArchiveTune vector with VoidTune emblem while maintaining 100% VectorDrawable compliance for Jetpack Compose painterResource.
+    Reason: Eliminates IllegalArgumentException in Compose painterResource which strictly requires <vector> root tags.
 -->
-<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/voidtune_emblem"
-    android:gravity="center" />
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="185dp"
+    android:height="185dp"
+    android:viewportWidth="185"
+    android:viewportHeight="185">
+
+    <!-- Outer Celestial Ring -->
+    <path
+        android:strokeColor="#FEFFFE"
+        android:strokeWidth="2.5"
+        android:pathData="M 92.5,10.5 A 82,82 0 1,1 92.49,10.5 Z" />
+
+    <!-- Secondary Rune Ring -->
+    <path
+        android:strokeColor="#FEFFFE"
+        android:strokeWidth="1.2"
+        android:strokeAlpha="0.65"
+        android:pathData="M 92.5,20.5 A 72,72 0 1,1 92.49,20.5 Z" />
+
+    <!-- Inner Celestial Circle -->
+    <path
+        android:strokeColor="#FEFFFE"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.8"
+        android:pathData="M 92.5,40.5 A 52,52 0 1,1 92.49,40.5 Z" />
+
+    <!-- Sacred Inverted Triangle -->
+    <path
+        android:strokeColor="#FEFFFE"
+        android:strokeWidth="1.8"
+        android:pathData="M 92.5,134 L 48,56 L 137,56 Z" />
+
+    <!-- Sacred Upward Triangle -->
+    <path
+        android:strokeColor="#FEFFFE"
+        android:strokeWidth="1.0"
+        android:strokeAlpha="0.5"
+        android:pathData="M 92.5,24 L 48,102 L 137,102 Z" />
+
+    <!-- Central Musical Quaver (Eighth Note) -->
+    <!-- Note Head -->
+    <path
+        android:fillColor="#FEFFFE"
+        android:pathData="M 70,111 C 63,106 65,97 74,92 C 83,87 94,89 100,94 C 107,99 105,108 96,113 C 87,118 77,116 70,111 Z" />
+
+    <!-- Note Stem -->
+    <path
+        android:fillColor="#FEFFFE"
+        android:pathData="M 92,52 L 96.5,52 L 96.5,102 L 92,102 Z" />
+
+    <!-- Note Flag -->
+    <path
+        android:fillColor="#FEFFFE"
+        android:pathData="M 96.5,52 C 108,54 120,64 122,76 C 115,70 106,65 96.5,66 Z" />
+</vector>
 <!--
 Legacy ArchiveTune vector path preserved for traceability:
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
