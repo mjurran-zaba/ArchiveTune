@@ -310,6 +310,7 @@ import moe.rukamori.archivetune.ui.screens.navigationBuilder
 import moe.rukamori.archivetune.ui.screens.onboarding.OnboardingRoute
 import moe.rukamori.archivetune.ui.screens.settings.AppUpdateRoute
 import moe.rukamori.archivetune.ui.screens.settings.AppUpdateScreen
+import moe.rukamori.archivetune.ui.screens.VoidTuneSplashScreen
 import moe.rukamori.archivetune.viewmodels.AppUpdateState
 import moe.rukamori.archivetune.viewmodels.AppUpdateViewModel
 import moe.rukamori.archivetune.ui.screens.search.LocalSearchScreen
@@ -898,6 +899,16 @@ class MainActivity : ComponentActivity() {
                 fontPreference = fontPreference,
                 customFontUri = customFontUri,
             ) {
+                // VoidTune UI Redesign: Luxury Animated Splash Screen with Lottie light burst
+                var showSplashScreen by rememberSaveable { mutableStateOf(true) }
+                if (showSplashScreen) {
+                    VoidTuneSplashScreen(
+                        visible = true,
+                        onAnimationFinished = { showSplashScreen = false },
+                    )
+                    return@ArchiveTuneTheme
+                }
+
                 val navController = rememberNavController()
                 val onboardingViewModel: OnboardingViewModel = hiltViewModel()
                 val onboardingState by onboardingViewModel.screenState.collectAsStateWithLifecycle()

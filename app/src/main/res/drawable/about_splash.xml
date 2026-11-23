@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    ArchiveTune legacy logo vector replaced with VoidTune Arcane Cosmic Seal.
+    Reason: Rebranding to VoidTune, adopting NOTEZ glamour & luxury design system.
+-->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/voidtune_emblem"
+    android:gravity="center" />
+<!--
+Legacy ArchiveTune vector path preserved for traceability:
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="185dp"
     android:height="185dp"
@@ -25,3 +34,4 @@
 76.3087,148.954 69.3087,146.954 62.5,144.5C 69.9692,122.011 74.9692,99.011
 77.5,75.5 Z" />
 </vector>
+-->

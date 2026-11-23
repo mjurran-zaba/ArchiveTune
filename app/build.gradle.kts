@@ -323,6 +323,8 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
 
     implementation(libs.material3)
+    // VoidTune UI Redesign: Lottie Compose for luxury splash screen animations
+    implementation(libs.lottie.compose)
     implementation(libs.haze)
     implementation(libs.haze.blur)
     implementation(libs.haze.glass)

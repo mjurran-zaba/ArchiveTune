@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    VoidTune Cold-Start Splash Window Background
+    Replaces legacy #ffffff white window background with pure AMOLED black #000000
+    and centered VoidTune seal emblem to eliminate cold-start flashes.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/black" />
+    <item
+        android:width="280dp"
+        android:height="280dp"
+        android:gravity="center"
+        android:drawable="@drawable/voidtune_emblem" />
+</layer-list>
