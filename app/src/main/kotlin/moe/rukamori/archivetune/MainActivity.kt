@@ -1942,8 +1942,10 @@ class MainActivity : ComponentActivity() {
                                                         }.offset {
                                                             IntOffset(
                                                                 x = 0,
+                                                                // VoidTune: Home TopBar stays pinned (sticky) in position during scroll
                                                                 y =
-                                                                    currentScrollBehavior.state.heightOffset.roundToInt(),
+                                                                    if (navBackStackEntry?.destination?.route == Screens.Home.route) 0
+                                                                    else currentScrollBehavior.state.heightOffset.roundToInt(),
                                                             )
                                                         },
                                             ) {
@@ -2068,8 +2070,16 @@ class MainActivity : ComponentActivity() {
                                                         // TopAppBarBrand()
                                                     },
                                                     actions = {
-                                                        // VoidTune: VoidTune cosmic logo badge placed on the right side with balanced sizing
-                                                        VoidTuneTopBarLogo()
+                                                        // VoidTune: Removed right logo; in-place expanding Search trigger on TopBar right
+                                                        // VoidTuneTopBarLogo()
+                                                        TranslucentTopAppBarIconButton(
+                                                            onClick = openSearch,
+                                                        ) {
+                                                            Icon(
+                                                                painter = painterResource(R.drawable.search),
+                                                                contentDescription = stringResource(R.string.search),
+                                                            )
+                                                        }
                                                     },
                                                     scrollBehavior =
                                                         if (shouldUseFloatingTopBar) {

@@ -10,6 +10,15 @@
 package moe.rukamori.archivetune.ui.component
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +28,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +59,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import dev.chrisbanes.haze.HazeInput
@@ -66,7 +82,7 @@ fun BlurredOverflowMenu(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    // VoidTune UI Redesign: Transform tiny dropdown popup card into a sleek Side Navigation Drawer (NOTEZ style)!
+    // VoidTune UI Redesign: Slowly smooth physics-based Slide-In Navigation Drawer
     // Original ArchiveTune dropdown popup code is preserved in comments below.
     /*
     val surfaceColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainerHigh
@@ -102,11 +118,19 @@ fun BlurredOverflowMenu(
     }
     */
 
-    if (!expanded) return
+    val transitionState = remember { MutableTransitionState(false) }
+    LaunchedEffect(expanded) {
+        transitionState.targetState = expanded
+    }
+
+    if (!transitionState.currentState && !transitionState.targetState) {
+        return
+    }
 
     val surfaceColor = if (pureBlack) Color(0xFF000000) else Color(0xFF0D1117)
     val contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurface
     val shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
+    val unifrakturCookFont = remember { FontFamily(Font(R.font.unifrakturcook)) }
 
     BackHandler(enabled = expanded) {
         onDismissRequest()
@@ -120,81 +144,108 @@ fun BlurredOverflowMenu(
             dismissOnClickOutside = true,
         ),
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.60f))
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = onDismissRequest,
-                ),
+        AnimatedVisibility(
+            visibleState = transitionState,
+            enter = fadeIn(animationSpec = tween(380, easing = FastOutSlowInEasing)),
+            exit = fadeOut(animationSpec = tween(280, easing = FastOutLinearInEasing)),
         ) {
-            Column(
-                modifier = modifier
-                    .align(Alignment.CenterStart)
-                    .fillMaxHeight()
-                    .width(300.dp)
-                    .clip(shape)
-                    .background(surfaceColor.copy(alpha = 0.94f))
-                    .border(
-                        width = 1.dp,
-                        color = Color.White.copy(alpha = 0.18f),
-                        shape = shape,
-                    )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.60f))
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = {}, // Absorb click inside drawer
-                    )
-                    .windowInsetsPadding(WindowInsets.systemBars)
-                    .verticalScroll(rememberScrollState())
-                    .padding(vertical = 16.dp, horizontal = 6.dp),
+                        onClick = onDismissRequest,
+                    ),
             ) {
-                // VoidTune Side Drawer Brand Header
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 14.dp, vertical = 10.dp),
+                AnimatedVisibility(
+                    visibleState = transitionState,
+                    enter = slideInHorizontally(
+                        initialOffsetX = { -it },
+                        animationSpec = tween(420, easing = FastOutSlowInEasing),
+                    ),
+                    exit = slideOutHorizontally(
+                        targetOffsetX = { -it },
+                        animationSpec = tween(320, easing = FastOutLinearInEasing),
+                    ),
+                    modifier = Modifier.align(Alignment.CenterStart),
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(38.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color.White.copy(alpha = 0.10f))
-                            .border(1.dp, Color.White.copy(alpha = 0.22f), RoundedCornerShape(10.dp)),
+                    Column(
+                        modifier = modifier
+                            .fillMaxHeight()
+                            .width(300.dp)
+                            .clip(shape)
+                            .background(surfaceColor.copy(alpha = 0.94f))
+                            .background(Color.White.copy(alpha = 0.16f)) // VoidTune: 35% faded white milk glassmorphism
+                            .border(
+                                width = 1.dp,
+                                color = Color.White.copy(alpha = 0.25f), // Specular hairline rim
+                                shape = shape,
+                            )
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {}, // Absorb click inside drawer
+                            )
+                            .windowInsetsPadding(WindowInsets.systemBars)
+                            .verticalScroll(rememberScrollState())
+                            .padding(vertical = 18.dp, horizontal = 8.dp),
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.about_splash),
-                            contentDescription = "VoidTune",
-                            tint = Color.Unspecified,
-                            modifier = Modifier.size(24.dp),
+                        // VoidTune Side Drawer Brand Header (Logo removed, Gothic UnifrakturCook font + MJURRAN ARC)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 14.dp, vertical = 8.dp),
+                        ) {
+                            Text(
+                                text = "VoidTune",
+                                fontFamily = unifrakturCookFont,
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontSize = 28.sp,
+                                    letterSpacing = 1.2.sp,
+                                ),
+                                color = contentColor,
+                            )
+                            Text(
+                                text = "MJURRAN ARC",
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontStyle = FontStyle.Italic,
+                                    letterSpacing = 1.8.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                ),
+                                color = MaterialTheme.colorScheme.primary, // Polar Cyan (#38BDF8)
+                                modifier = Modifier.padding(top = 2.dp),
+                            )
+                        }
+
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
+                            thickness = 0.5.dp,
+                            color = Color.White.copy(alpha = 0.14f),
                         )
-                    }
-                    Column {
-                        Text(
-                            text = "VoidTune",
-                            style = MaterialTheme.typography.titleLargeEmphasized,
-                            color = contentColor,
+
+                        content()
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
+                            thickness = 0.5.dp,
+                            color = Color.White.copy(alpha = 0.12f),
                         )
+
+                        // VoidTune Drawer Footer (Exact: Developer • Mjurran | INDONESIA)
                         Text(
-                            text = "Nord Polar Mist Edition",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary,
+                            text = "Developer • Mjurran | INDONESIA",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                letterSpacing = 0.8.sp,
+                            ),
+                            color = contentColor.copy(alpha = 0.50f),
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp),
                         )
                     }
                 }
-
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                    thickness = 0.5.dp,
-                    color = Color.White.copy(alpha = 0.12f),
-                )
-
-                content()
             }
         }
     }

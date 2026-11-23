@@ -48,7 +48,9 @@ sealed class Screens(
     )
 
     companion object {
-        val MainScreens = listOf(Home, Search, Library)
+        // VoidTune: Search moved to TopBar right with in-place expanding bar & suggestions (no layer switching)
+        // val MainScreens = listOf(Home, Search, Library)
+        val MainScreens = listOf(Home, Library)
         val TvMainScreens = listOf(Home, Search, Library)
     }
 }
