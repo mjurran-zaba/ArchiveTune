@@ -86,3 +86,61 @@ jobs:
           name: VoidTune-Universal-Debug
           path: app/build/outputs/apk/**/*.apk
           if-no-files-found: warn
+
+      # [VoidTune Patch: Automated Telegram Build Status Notification]
+      # REASON: Send real-time notification to user Telegram on build completion (both SUCCESS and FAILURE)
+      # with run summary, commit message, and direct link to download the compiled APK.
+      - name: Send Telegram Notification
+        if: always()
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BUILD_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_HASH: ${{ github.sha }}
+        run: |
+          python3 -c "
+          import os, urllib.request, json
+          bot_token = os.environ.get('BOT_TOKEN')
+          chat_id = os.environ.get('CHAT_ID')
+          if not bot_token or not chat_id:
+              print('Telegram secrets missing, skipping notification.')
+              exit(0)
+
+          status = os.environ.get('BUILD_STATUS', 'UNKNOWN').upper()
+          run_url = os.environ.get('RUN_URL', '')
+          commit_hash = os.environ.get('COMMIT_HASH', '')[:7]
+          commit_msg = (os.environ.get('COMMIT_MSG', '').splitlines() or [''])[0]
+
+          if status == 'SUCCESS':
+              text = (
+                  f'🚀 <b>VoidTune CI: Build SUKSES!</b>\n\n'
+                  f'📌 <b>Commit:</b> <code>{commit_hash}</code>\n'
+                  f'💬 <b>Pesan:</b> {commit_msg}\n'
+                  f'📦 <b>Status:</b> Berhasil dikompilasi! APK Universal Debug siap diunduh di artefak GitHub Actions.\n\n'
+                  f'🔗 <a href=\"{run_url}\">Cek Hasil Build & Download APK</a>'
+              )
+          else:
+              text = (
+                  f'❌ <b>VoidTune CI: Build GAGAL (FAILED)!</b>\n\n'
+                  f'📌 <b>Commit:</b> <code>{commit_hash}</code>\n'
+                  f'💬 <b>Pesan:</b> {commit_msg}\n'
+                  f'⚠️ <b>What went wrong:</b> Kompilasi atau linting Gradle gagal.\n\n'
+                  f'🔗 <a href=\"{run_url}\">Cek Log Error di GitHub Actions</a>'
+              )
+
+          url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+          payload = json.dumps({
+              'chat_id': chat_id,
+              'text': text,
+              'parse_mode': 'HTML',
+              'disable_web_page_preview': False
+          }).encode('utf-8')
+          req = urllib.request.Request(url, data=payload, headers={'Content-Type': 'application/json'})
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  print('Telegram notification dispatched successfully.')
+          except Exception as e:
+              print('Telegram notification error:', e)
+          "
