@@ -126,14 +126,17 @@ jobs:
       #     EXTRACTOR_BEARER: ${{ secrets.EXTRACTOR_BEARER }}
       # [VoidTune Patch: Fetch Support QR from Telegram Bot Updates]
       # REASON: Pull the latest QR image sent to the Telegram bot so Support VoidTune modal displays the user's authentic payment QR.
-      # If no image found or token missing, preserves the existing vector drawable fallback (img_support_qr.xml).
+      # Converts incoming image (JPEG/WebP) to standard RGBA PNG via Pillow to guarantee AAPT2 compilation compliance.
+      # If no image found or conversion fails, preserves the existing vector drawable fallback (img_support_qr.xml).
       - name: Fetch Support QR from Telegram
         shell: bash
         env:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
+          python3 -m pip install --quiet pillow
           python3 -c "
           import urllib.request, json, os
+          from PIL import Image
 
           bot_token = os.environ.get('BOT_TOKEN')
           if not bot_token:
@@ -147,7 +150,7 @@ jobs:
               
               photos = []
               for item in data.get('result', []):
-                  msg = item.get('message', {}) or item.get('channel_post', {})
+                  msg = item.get('message', {}) or item.get('channel_post', {}) or item.get('edited_message', {})
                   if 'photo' in msg and len(msg['photo']) > 0:
                       photos.append(msg['photo'][-1]['file_id'])
                   elif 'document' in msg and msg['document'].get('mime_type', '').startswith('image/'):
@@ -162,16 +165,25 @@ jobs:
                   file_path = file_info['result']['file_path']
                   download_url = f'https://api.telegram.org/file/bot{bot_token}/{file_path}'
                   
-                  target_dest = 'app/src/main/res/drawable/img_support_qr.png'
-                  os.makedirs(os.path.dirname(target_dest), exist_ok=True)
-                  urllib.request.urlretrieve(download_url, target_dest)
-                  print(f'Successfully downloaded QR image: {os.path.getsize(target_dest)} bytes')
+                  temp_raw = '/tmp/tg_qr_raw'
+                  urllib.request.urlretrieve(download_url, temp_raw)
+                  print(f'Raw image downloaded: {os.path.getsize(temp_raw)} bytes. Converting with Pillow...')
+
+                  target_png = 'app/src/main/res/drawable/img_support_qr.png'
+                  os.makedirs(os.path.dirname(target_png), exist_ok=True)
+                  with Image.open(temp_raw) as img:
+                      img.convert('RGBA').save(target_png, format='PNG')
+                  print(f'Successfully converted to compliant PNG: {os.path.getsize(target_png)} bytes')
+
+                  # Remove XML fallback to prevent AAPT2 duplicate resource conflict
                   if os.path.exists('app/src/main/res/drawable/img_support_qr.xml'):
                       os.remove('app/src/main/res/drawable/img_support_qr.xml')
               else:
                   print('No photo found in getUpdates, using fallback vector QR.')
           except Exception as e:
-              print(f'Note: Could not fetch QR from Telegram ({e}), using fallback vector QR.')
+              print(f'Note: Could not convert QR from Telegram ({e}), ensuring fallback vector QR.')
+              if os.path.exists('app/src/main/res/drawable/img_support_qr.png'):
+                  os.remove('app/src/main/res/drawable/img_support_qr.png')
           "
 
       - name: Build Mobile Universal Release APK

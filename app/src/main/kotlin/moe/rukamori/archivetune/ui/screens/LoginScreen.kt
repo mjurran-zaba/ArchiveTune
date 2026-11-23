@@ -42,17 +42,21 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -272,11 +276,19 @@ fun LoginScreen(
         )
     }
 
-    // VoidTune Glassmorphic AuthSheet Modal Overlay (Centered Screen Dialog)
+    // VoidTune Glassmorphic AuthSheet Modal Overlay (Centered Screen Dialog with Auto Keyboard Adjustment)
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.70f)),
+            .background(Color.Black.copy(alpha = 0.70f))
+            .systemBarsPadding()
+            .imePadding()
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+            ) {
+                focusManager.clearFocus()
+            },
         contentAlignment = Alignment.Center,
     ) {
         AnimatedVisibility(
@@ -284,11 +296,13 @@ fun LoginScreen(
             enter = scaleIn(initialScale = 0.88f, animationSpec = tween(320, easing = FastOutSlowInEasing)) + fadeIn(animationSpec = tween(280)),
             exit = slideOutHorizontally(targetOffsetX = { it * 2 }, animationSpec = tween(380, easing = FastOutLinearInEasing)) + fadeOut(animationSpec = tween(280)),
         ) {
-            val crackAnim by animateFloatAsState(
-                targetValue = if (errorAttempts >= 3) 1f else 0f,
-                animationSpec = tween(600, easing = FastOutSlowInEasing),
-                label = "crackAnim",
-            )
+            // [VoidTune: Wall fracture animation removed per user preference - haptics and slide to right remain intact]
+            // DO NOT DELETE BUT COMMENT:
+            // val crackAnim by animateFloatAsState(
+            //     targetValue = if (errorAttempts >= 3) 1f else 0f,
+            //     animationSpec = tween(600, easing = FastOutSlowInEasing),
+            //     label = "crackAnim",
+            // )
 
             Box(
                 modifier = Modifier
@@ -303,9 +317,17 @@ fun LoginScreen(
                         color = Color.White.copy(alpha = 0.25f),
                         shape = RoundedCornerShape(16.dp),
                     )
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                    ) {
+                        // Prevent backdrop click from dismissing keyboard when tapping inside card
+                    }
                     .padding(horizontal = 22.dp, vertical = 20.dp),
             ) {
-                Column {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                ) {
                     // Header: Google Logo + VoidTune • Private Security + Divider
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -583,7 +605,9 @@ fun LoginScreen(
                     )
                 }
 
-                // Hyper-Realistic Wall & Armor Fracture Crack Animation Overlay
+                // [VoidTune: Wall fracture animation overlay removed per user request - haptic feedback & slide-to-right remain]
+                // DO NOT DELETE BUT COMMENT:
+                /*
                 if (crackAnim > 0f) {
                     Canvas(modifier = Modifier.matchParentSize()) {
                         val w = size.width
@@ -761,6 +785,7 @@ fun LoginScreen(
                         drawPath(webOuter, webColor, style = strokeWeb)
                     }
                 }
+                */
             }
         }
 
