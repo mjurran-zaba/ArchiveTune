@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VoidTune Rebrand: Support Developer Mjurran -->
-    <!-- <string name="support_archivetune_title">Support ArchiveTune ❤️</string> -->
-    <!-- <string name="support_archivetune_description">Love the app? Tap to watch a quick ad and support its development.</string> -->
-    <string name="support_archivetune_title">Support VoidTune ❤️</string>
-    <string name="support_archivetune_description">Love VoidTune? Tap to support developer Mjurran\'s work &amp; updates.</string>
+    <string name="support_archivetune_title">Support VoidTune</string>
+    <string name="support_archivetune_description">Every single coin you offer, reforges Void\'s spell</string>
     <string name="support_archivetune_preparing">Opening the support page…</string>
     <string name="support_archivetune_unavailable">The support page is currently unavailable.</string>
     <string name="support_archivetune_retry">The support page couldn’t be opened. Tap to try again.</string>

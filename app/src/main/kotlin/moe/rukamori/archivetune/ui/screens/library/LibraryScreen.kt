@@ -61,6 +61,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
@@ -358,11 +359,6 @@ private fun LibrarySectionTab(
     ToggleButton(
         checked = selected,
         onCheckedChange = { onClick() },
-        shapes =
-            ToggleButtonDefaults.shapes(
-                shape = RoundedCornerShape(12.dp),
-                checkedShape = RoundedCornerShape(12.dp),
-            ),
         colors =
             ToggleButtonDefaults.colors(
                 containerColor = Color.White.copy(alpha = 0.08f),
@@ -372,6 +368,7 @@ private fun LibrarySectionTab(
             ),
         modifier =
             Modifier
+                .clip(RoundedCornerShape(12.dp))
                 .heightIn(min = 40.dp)
                 .semantics { role = Role.Tab },
     ) {
@@ -493,11 +490,6 @@ private fun PlaylistTagToggle(
     ToggleButton(
         checked = checked,
         onCheckedChange = onCheckedChange,
-        shapes =
-            ToggleButtonDefaults.shapes(
-                shape = RoundedCornerShape(12.dp),
-                checkedShape = RoundedCornerShape(12.dp),
-            ),
         colors =
             ToggleButtonDefaults.colors(
                 containerColor = Color.White.copy(alpha = 0.08f),
@@ -505,7 +497,10 @@ private fun PlaylistTagToggle(
                 contentColor = Color.White.copy(alpha = 0.85f),
                 checkedContentColor = Color(0xFF0D1117),
             ),
-        modifier = Modifier.heightIn(min = 40.dp),
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .heightIn(min = 40.dp),
     ) {
         if (accentColor != null) {
             Box(
