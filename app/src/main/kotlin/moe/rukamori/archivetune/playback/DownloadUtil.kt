@@ -801,8 +801,17 @@ class DownloadUtil
             private const val DOWNLOAD_CONTENT_LENGTH_METADATA_KEY = "archivetune_download_content_length"
             private const val MAX_PARALLEL_DOWNLOADS = 3
             private const val DOWNLOAD_MIN_RETRY_COUNT = 10
-            private const val MAX_IDLE_DOWNLOAD_CONNECTIONS = 12
+            private const val MAX_IDLE_DOWNLOAD_CONNECTIONS = 16
+            // [VoidTune Patch: Expand OkHttp Dispatcher Concurrency for Downloads]
+            // REASON: In original code, MAX_DOWNLOAD_HTTP_REQUESTS was strictly tied to MAX_PARALLEL_DOWNLOADS (3).
+            // When 3 downloads are active, sub-requests for chunk ranges, format metadata, and artwork
+            // suffer from head-of-line blocking in OkHttp Dispatcher.
+            // Expanding MAX_DOWNLOAD_HTTP_REQUESTS to 8 allows concurrent range reads and artwork fetching.
+            /*
+            ORIGINAL CODE:
             private const val MAX_DOWNLOAD_HTTP_REQUESTS = MAX_PARALLEL_DOWNLOADS
+            */
+            private const val MAX_DOWNLOAD_HTTP_REQUESTS = 8
             private const val DOWNLOAD_READ_TIMEOUT_SECONDS = 30L
             private const val DOWNLOAD_PROGRESS_REFRESH_INTERVAL_MS = 1_000L
             private const val DOWNLOAD_METADATA_BATCH_SIZE = 100

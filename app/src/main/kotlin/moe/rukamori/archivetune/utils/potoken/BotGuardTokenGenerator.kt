@@ -83,8 +83,15 @@ object BotGuardTokenGenerator {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.3"
     private const val JS_BRIDGE = "BotGuardBridge"
 
-    /** Timeout for first call (cold start: WebView boot + BotGuard bootstrap). */
+    // [VoidTune Patch: Cold-Start Timeout Optimization]
+    // REASON: Original 45-second cold start timeout (and 90s withTimeoutOrNull multiplier) caused
+    // extreme perceived app hang if network was slow or BotGuard script was blocked by DNS adblockers.
+    // Reducing to 15s provides generous headroom for WebView bootstrap while capping worst-case freeze.
+    /*
+    ORIGINAL CODE:
     private const val COLD_START_TIMEOUT_MS = 45_000L
+    */
+    private const val COLD_START_TIMEOUT_MS = 15_000L
 
     /** Timeout for subsequent calls (warm: just mint a token). */
     private const val WARM_TIMEOUT_MS = 5_000L

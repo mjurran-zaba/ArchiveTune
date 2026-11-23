@@ -1,6 +1,17 @@
 name: Build Pull Request
 
+# [VoidTune Patch: Enable CI Trigger on VoidTune Branch Push & Manual Dispatch]
+# REASON: Enable instant cloud build of debug APKs upon pushing to VoidTune branch without requiring a release keystore.
+# ORIGINAL CODE:
+# on:
+#   pull_request:
+#     branches:
+#       - "**"
 on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "VoidTune"
   pull_request:
     branches:
       - "**"
@@ -66,3 +77,12 @@ jobs:
           API_BEARER_TOKEN: ${{ secrets.API_BEARER_TOKEN }}
           CANVAS_BEARER_TOKEN: ${{ secrets.CANVAS_BEARER_TOKEN }}
           EXTRACTOR_BEARER: ${{ secrets.EXTRACTOR_BEARER }}
+
+      # [VoidTune Patch: Upload Built Debug APK Artifact]
+      # REASON: Preserve the generated APK as a downloadable GitHub Actions artifact for immediate testing.
+      - name: Upload VoidTune Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: VoidTune-Universal-Debug
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: warn

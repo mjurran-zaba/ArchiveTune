@@ -369,8 +369,17 @@ class YoutubeiStreamRepository
 
         private companion object {
             const val LOG_TAG = "YoutubeiResolver"
+            // [VoidTune Patch: Fast-Fail Stream Probing to Prevent UI/Playback Freeze]
+            // REASON: When network latency or packet loss occurs on mobile carriers, a 10s probe timeout
+            // repeated across 3 attempts (up to 30s) freezes playback resolution and causes perceived stall.
+            // Reducing probe timeout to 3s with 2 attempts ensures fast failover or recovery without freezing.
+            /*
+            ORIGINAL CODE:
             const val STREAM_PROBE_TIMEOUT_SECONDS = 10L
             const val MAX_TOKEN_GENERATOR_ATTEMPTS = 3
+            */
+            const val STREAM_PROBE_TIMEOUT_SECONDS = 3L
+            const val MAX_TOKEN_GENERATOR_ATTEMPTS = 2
             val AUTHENTICATED_STREAM_CLIENTS = setOf("WEB_CREATOR")
             val ANONYMOUS_STREAM_CLIENTS = setOf("MWEB", "VISIONOS")
             val CONTENT_CONFIRMATION_REASONS =
