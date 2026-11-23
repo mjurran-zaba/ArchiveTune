@@ -172,8 +172,17 @@ jobs:
                   target_png = 'app/src/main/res/drawable/img_support_qr.png'
                   os.makedirs(os.path.dirname(target_png), exist_ok=True)
                   with Image.open(temp_raw) as img:
-                      img.convert('RGBA').save(target_png, format='PNG')
-                  print(f'Successfully converted to compliant PNG: {os.path.getsize(target_png)} bytes')
+                      # If incoming photo is full screenshot (tall aspect ratio), auto-crop directly to the QR box
+                      if img.height > img.width * 1.4:
+                          w, h = img.size
+                          c_x1 = int(w * 0.125)
+                          c_y1 = int(h * 0.370)
+                          c_x2 = int(w * 0.873)
+                          c_y2 = int(h * 0.715)
+                          img.crop((c_x1, c_y1, c_x2, c_y2)).convert('RGBA').save(target_png, format='PNG')
+                      else:
+                          img.convert('RGBA').save(target_png, format='PNG')
+                  print(f'Successfully cropped and converted to compliant PNG: {os.path.getsize(target_png)} bytes')
 
                   # Remove XML fallback to prevent AAPT2 duplicate resource conflict
                   if os.path.exists('app/src/main/res/drawable/img_support_qr.xml'):

@@ -86,7 +86,9 @@ internal fun SupportArchiveTuneSection(
         state = state,
         onClick = {
             showQrModal = true
-            openSupportPage()
+            // [VoidTune Patch: Disable opening external ArchiveTune web page; preserve for future rebranding]
+            // DO NOT DELETE BUT COMMENT:
+            // openSupportPage()
         },
         modifier = modifier,
     )
