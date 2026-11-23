@@ -45,7 +45,6 @@ IGNORED_SECTIONS = frozenset(
         "installed release channel where the bug happens",
         "latest nightly verification",
         "nightly build used, or stable-only reason",
-        "no ai / no llm policy",
         "pre-submission checklist",
         "release channel",
         "reproducibility",
