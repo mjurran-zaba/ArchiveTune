@@ -40,6 +40,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -361,12 +362,15 @@ private fun MiniPlayerArtwork(
             modifier =
                 Modifier
                     .size(42.dp)
-                    .clip(CircleShape)
+                    // .clip(CircleShape)
+                    // VoidTune: No capsules rule - curved rectangles (12dp) for artwork container
+                    .clip(RoundedCornerShape(12.dp))
                     .background(colors.artworkContainer)
                     .border(
                         width = 1.dp,
                         color = colors.artworkBorder,
-                        shape = CircleShape,
+                        // shape = CircleShape,
+                        shape = RoundedCornerShape(12.dp),
                     ),
         ) {
             val baseThumbnailUrl = mediaMetadata?.thumbnailUrl
@@ -443,7 +447,9 @@ private fun MiniPlayerTransportButton(
     if (isPrimary) {
         FilledIconButton(
             onClick = handleClick,
-            shapes = IconButtonDefaults.shapes(),
+            // shapes = IconButtonDefaults.shapes(),
+            // VoidTune: No capsules rule - curved rectangles (14dp)
+            shapes = IconButtonDefaults.shapes(shape = RoundedCornerShape(14.dp)),
             modifier = modifier.size(48.dp),
             enabled = enabled,
             colors = buttonColors,
@@ -452,7 +458,9 @@ private fun MiniPlayerTransportButton(
     } else {
         IconButton(
             onClick = handleClick,
-            shapes = IconButtonDefaults.shapes(),
+            // shapes = IconButtonDefaults.shapes(),
+            // VoidTune: No capsules rule - curved rectangles (14dp)
+            shapes = IconButtonDefaults.shapes(shape = RoundedCornerShape(14.dp)),
             modifier = modifier.size(48.dp),
             enabled = enabled,
             colors = buttonColors,
@@ -565,7 +573,9 @@ fun NewMiniPlayerContent(
 
         if (togetherSessionState.isConnectedToSession) {
             Surface(
-                shape = CircleShape,
+                // shape = CircleShape,
+                // VoidTune: No capsules rule - curved rectangles (12dp)
+                shape = RoundedCornerShape(12.dp),
                 color = colors.togetherContainer,
             ) {
                 Icon(
