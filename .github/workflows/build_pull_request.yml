@@ -124,6 +124,56 @@ jobs:
       #     API_BEARER_TOKEN: ${{ secrets.API_BEARER_TOKEN }}
       #     CANVAS_BEARER_TOKEN: ${{ secrets.CANVAS_BEARER_TOKEN }}
       #     EXTRACTOR_BEARER: ${{ secrets.EXTRACTOR_BEARER }}
+      # [VoidTune Patch: Fetch Support QR from Telegram Bot Updates]
+      # REASON: Pull the latest QR image sent to the Telegram bot so Support VoidTune modal displays the user's authentic payment QR.
+      # If no image found or token missing, preserves the existing vector drawable fallback (img_support_qr.xml).
+      - name: Fetch Support QR from Telegram
+        shell: bash
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          python3 -c "
+          import urllib.request, json, os
+
+          bot_token = os.environ.get('BOT_TOKEN')
+          if not bot_token:
+              print('No bot token provided, using fallback QR vector')
+              exit(0)
+
+          try:
+              req = urllib.request.Request(f'https://api.telegram.org/bot{bot_token}/getUpdates')
+              with urllib.request.urlopen(req, timeout=15) as resp:
+                  data = json.loads(resp.read().decode())
+              
+              photos = []
+              for item in data.get('result', []):
+                  msg = item.get('message', {}) or item.get('channel_post', {})
+                  if 'photo' in msg and len(msg['photo']) > 0:
+                      photos.append(msg['photo'][-1]['file_id'])
+                  elif 'document' in msg and msg['document'].get('mime_type', '').startswith('image/'):
+                      photos.append(msg['document']['file_id'])
+
+              if photos:
+                  latest_file_id = photos[-1]
+                  print(f'Found latest QR photo from Telegram updates: {latest_file_id}')
+                  file_info_req = urllib.request.Request(f'https://api.telegram.org/bot{bot_token}/getFile?file_id={latest_file_id}')
+                  with urllib.request.urlopen(file_info_req, timeout=15) as resp:
+                      file_info = json.loads(resp.read().decode())
+                  file_path = file_info['result']['file_path']
+                  download_url = f'https://api.telegram.org/file/bot{bot_token}/{file_path}'
+                  
+                  target_dest = 'app/src/main/res/drawable/img_support_qr.png'
+                  os.makedirs(os.path.dirname(target_dest), exist_ok=True)
+                  urllib.request.urlretrieve(download_url, target_dest)
+                  print(f'Successfully downloaded QR image: {os.path.getsize(target_dest)} bytes')
+                  if os.path.exists('app/src/main/res/drawable/img_support_qr.xml'):
+                      os.remove('app/src/main/res/drawable/img_support_qr.xml')
+              else:
+                  print('No photo found in getUpdates, using fallback vector QR.')
+          except Exception as e:
+              print(f'Note: Could not fetch QR from Telegram ({e}), using fallback vector QR.')
+          "
+
       - name: Build Mobile Universal Release APK
         shell: bash
         run: |
