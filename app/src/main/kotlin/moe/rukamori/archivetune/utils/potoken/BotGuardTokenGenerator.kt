@@ -450,6 +450,11 @@ object BotGuardTokenGenerator {
         )
     }
 
+    // [VoidTune Patch: Expose BotGuard Engine Warmth State]
+    // CAUSE: ResolveAudioStreamUseCase needs to know if the headless WebView is already warm or still cold-starting.
+    // REASON: Allows fast-start fallback to token-free VISIONOS client on cold start instead of blocking playback for 15-20 seconds.
+    fun isReadyForSession(sessionId: String): Boolean = isEngineReadyForSession(sessionId)
+
     private fun isEngineReadyForSession(sessionId: String): Boolean =
         engineReady &&
             engineSessionId == sessionId &&

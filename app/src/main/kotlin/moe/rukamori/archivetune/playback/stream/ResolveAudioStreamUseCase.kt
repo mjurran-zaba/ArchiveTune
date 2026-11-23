@@ -386,6 +386,41 @@ class ResolveAudioStreamUseCase
                     }
                 }
             }
+
+            // [VoidTune Patch: Fast-Start Non-Blocking Playback on Cold Start]
+            // CAUSE: On app cold start, BotGuard headless WebView takes 15-18 seconds to initialize and fetch challenge scripts.
+            // If resolveWithAuth() is called directly, playback blocks for 15-20 seconds with an empty spinner.
+            // REASON: When BotGuard engine is not yet warm for the account session, immediately attempt instant playback
+            // via VISIONOS token-free stream (using PlaybackAuthState.EMPTY).
+            // If anonymous resolution succeeds, playback starts in <300ms. If it fails (e.g. age-restricted content),
+            // it cleanly falls back to resolveWithAuth(). Once BotGuard finishes warming up in background (~15s),
+            // subsequent songs automatically use authenticated session without any cold-start wait.
+            val authState = request.authState
+            val contentBinding = if (authState.hasLoginCookie) {
+                with(YTPlayerUtils) { authState.poTokenContentBinding() }
+            } else null
+
+            val isWarm = contentBinding != null && BotGuardTokenGenerator.isReadyForSession(contentBinding)
+
+            if (authState.hasLoginCookie && !isWarm) {
+                Timber.tag(TAG).i("BotGuard engine is cold for %s; fast-starting via token-free VISIONOS stream", request.mediaId)
+                try {
+                    return youtubeiRepository.resolve(
+                        request = request.copy(authState = PlaybackAuthState.EMPTY),
+                        priority = priority,
+                    )
+                } catch (fastStartFailure: Exception) {
+                    if (fastStartFailure is CancellationException) throw fastStartFailure
+                    Timber.tag(TAG).w(fastStartFailure, "Fast-start VISIONOS fallback failed, proceeding with authenticated resolution")
+                }
+            }
+
+            /*
+            ORIGINAL CODE:
+            return try {
+                resolveWithAuth(request, priority)
+            } catch (failure: Exception) {
+            */
             return try {
                 resolveWithAuth(request, priority)
             } catch (failure: Exception) {
