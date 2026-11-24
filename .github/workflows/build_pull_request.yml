@@ -30,12 +30,16 @@ jobs:
       # CAUSE: Default morideobfuscator submodule prioritizes [MWEB, VISIONOS]. MWEB triggers BotGuard token checks
       # and GVS HTTP 403 range probe rejections, causing infinite playback buffering loops.
       # REASON: Prioritizing VISIONOS hands out direct, token-free audio streams with neither 'n' nor 'pot' parameters.
-      - name: Patch morideobfuscator for VISIONOS client priority
-        shell: bash
-        run: |
-          sed -i 's/\[AH,lJ\]/\[lJ,AH\]/g' morideobfuscator/src/main/assets/youtubei/youtubei.bundle.js
-          sed -i 's/\[ANONYMOUS_CLIENT, ANONYMOUS_DIRECT_CLIENT\]/\[ANONYMOUS_DIRECT_CLIENT, ANONYMOUS_CLIENT\]/g' morideobfuscator/javascript/src/index.js
-          echo "Verified morideobfuscator VISIONOS priority patch applied."
+      # [VoidTune Patch: Revert VISIONOS Swap & Retain MWEB PoToken Priority]
+      # CAUSE: Hardcoded sed step forced [lJ,AH] in youtubei.bundle.js, causing VISIONOS to be used without PoToken.
+      # This triggered "stream not available playback, bot detected please login" on guest mode and HTTP 403 on mobile data.
+      # REASON: Preserve default MWEB [AH,lJ] priority with valid PoToken generation.
+      # - name: Patch morideobfuscator for VISIONOS client priority
+      #   shell: bash
+      #   run: |
+      #     sed -i 's/\[AH,lJ\]/\[lJ,AH\]/g' morideobfuscator/src/main/assets/youtubei/youtubei.bundle.js
+      #     sed -i 's/\[ANONYMOUS_CLIENT, ANONYMOUS_DIRECT_CLIENT\]/\[ANONYMOUS_DIRECT_CLIENT, ANONYMOUS_CLIENT\]/g' morideobfuscator/javascript/src/index.js
+      #     echo "Verified morideobfuscator VISIONOS priority patch applied."
 
       # [VoidTune Patch: Concurrency Optimization for InnerTube OkHttp Engine]
       # CAUSE: Default OkHttp maxRequestsPerHost is 5. When background sync runs, all 5 connections
