@@ -211,6 +211,91 @@ if os.path.exists(mori_bundle_file):
     elif patch_oj_fallback in bundle_content:
         print("youtubei.bundle.js already has multi-client fallback patch.")
 
+    # [VoidTune Patch: Strip onBehalfOfUser during VISIONOS getBasicInfo to prevent HTTP 400/401]
+    # CAUSE: When logged in, onBehalfOfUser is attached to session.context.user.
+    # VISIONOS is an Apple client that rejects onBehalfOfUser with HTTP 400/401.
+    # REASON: Temporarily omit onBehalfOfUser while resolving VISIONOS, restoring it for WEB_CREATOR.
+    target_sh = 'async function SH(t,e,i,s){let o=i===q4||i===AH;o&&!s&&await EH(t);let r=s||await t.getBasicInfo(e.mediaId,{client:i,po_token:(o||i===lJ)?ne(e.videoPoToken):void 0}),a=ne(r.playability_status?.status),c=ne(r.playability_status?.reason);'
+    patch_sh = 'async function SH(t,e,i,s){let o=i===q4||i===AH,uO=t.session?.context?.user?.onBehalfOfUser;i===lJ&&t.session?.context?.user&&delete t.session.context.user.onBehalfOfUser;o&&!s&&await EH(t);let r;try{r=s||await t.getBasicInfo(e.mediaId,{client:i,po_token:(o||i===lJ)?ne(e.videoPoToken):void 0})}finally{uO&&t.session?.context?.user&&(t.session.context.user.onBehalfOfUser=uO)}let a=ne(r.playability_status?.status),c=ne(r.playability_status?.reason);'
+    if target_sh in bundle_content:
+        bundle_content = bundle_content.replace(target_sh, patch_sh, 1)
+        print("Applied youtubei.bundle.js VISIONOS onBehalfOfUser isolation patch.")
+    elif patch_sh in bundle_content:
+        print("youtubei.bundle.js already has VISIONOS onBehalfOfUser isolation patch.")
+
     with open(mori_bundle_file, "w", encoding="utf-8") as f:
         f.write(bundle_content)
+
+# --- Patch 4: morideobfuscator YoutubeiRequestAuthentication (Isolate VISIONOS from web cookies & Origin match) ---
+mori_auth_file = "morideobfuscator/src/main/kotlin/moe/rukamori/archivetune/morideobfuscator/youtubei/YoutubeiRequestAuthentication.kt"
+if os.path.exists(mori_auth_file):
+    with open(mori_auth_file, "r", encoding="utf-8") as f:
+        auth_content = f.read()
+
+    old_apply_to = """    fun applyTo(request: Request): Request {
+        if (request.url.host !in AUTHENTICATED_HOSTS ||
+            !request.url.encodedPath.startsWith("/youtubei/") ||
+            !request.url.isHttps ||
+            request.header("Cookie").isNullOrBlank()
+        ) {
+            return request
+        }"""
+
+    patch_apply_to = """    fun applyTo(request: Request): Request {
+        // [VoidTune Patch: Never send web cookies/auth to VISIONOS client (101)]
+        // CAUSE: Apple VisionOS client (101) rejects web session credentials (SAPISID, X-Goog-PageId) with HTTP 400.
+        // REASON: Keep VISIONOS requests clean and anonymous with matching origin so they succeed in <200ms.
+        if (request.header("X-Youtube-Client-Name") == "101") {
+            return request.newBuilder()
+                .removeHeader("Cookie")
+                .removeHeader("Authorization")
+                .removeHeader("X-Goog-AuthUser")
+                .removeHeader("X-Youtube-Bootstrap-Logged-In")
+                .removeHeader("X-Goog-PageId")
+                .header("Origin", "https://${request.url.host}")
+                .header("X-Origin", "https://${request.url.host}")
+                .build()
+        }
+
+        if (request.url.host !in AUTHENTICATED_HOSTS ||
+            !request.url.encodedPath.startsWith("/youtubei/") ||
+            !request.url.isHttps ||
+            request.header("Cookie").isNullOrBlank()
+        ) {
+            return request
+        }"""
+
+    if "X-Youtube-Client-Name" not in auth_content and old_apply_to in auth_content:
+        auth_content = auth_content.replace(old_apply_to, patch_apply_to, 1)
+        with open(mori_auth_file, "w", encoding="utf-8") as f:
+            f.write(auth_content)
+        print("Applied YoutubeiRequestAuthentication VISIONOS isolation patch.")
+
+# --- Patch 5: morideobfuscator YoutubeiHttpClient Origin host match ---
+if os.path.exists(mori_client_file):
+    with open(mori_client_file, "r", encoding="utf-8") as f:
+        mori_client_content = f.read()
+
+    old_build_request_header = """        headers?.keys()?.forEach { name ->
+            val value = headers.optString(name)
+            if (isAllowedHeader(name, value)) builder.header(name, value)
+        }"""
+
+    patch_build_request_header = """        headers?.keys()?.forEach { name ->
+            val value = headers.optString(name)
+            if (isAllowedHeader(name, value)) {
+                if (name.equals("origin", ignoreCase = true) || name.equals("x-origin", ignoreCase = true)) {
+                    builder.header(name, "https://${url.host}")
+                } else {
+                    builder.header(name, value)
+                }
+            }
+        }"""
+
+    if "https://${url.host}" not in mori_client_content and old_build_request_header in mori_client_content:
+        mori_client_content = mori_client_content.replace(old_build_request_header, patch_build_request_header, 1)
+        with open(mori_client_file, "w", encoding="utf-8") as f:
+            f.write(mori_client_content)
+        print("Applied YoutubeiHttpClient Origin host match patch.")
+
 
