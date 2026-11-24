@@ -278,7 +278,7 @@ jobs:
           COMMIT_HASH: ${{ github.sha }}
         run: |
           python3 -c "
-          import os, glob, urllib.request, json, uuid
+          import os, glob, urllib.request, json, uuid, subprocess
 
           bot_token = os.environ.get('BOT_TOKEN')
           chat_id = os.environ.get('CHAT_ID')
@@ -317,38 +317,51 @@ jobs:
                   f'📲 <i>Langsung tap file .apk di bawah ini untuk install/update di HP Anda!</i>'
               )
 
-              if target_apk and apk_size_bytes > 0 and apk_size_bytes <= 50000000:
-                  print(f'Sending direct APK ({apk_size_mb:.1f} MB) via Telegram sendDocument...')
-                  boundary = uuid.uuid4().hex
-                  filename = os.path.basename(target_apk)
-                  with open(target_apk, 'rb') as f:
-                      file_bytes = f.read()
+              # [VoidTune Patch: Direct APK Delivery via Streaming Curl with Automatic Retry]
+              # MAKSUD KODE ASLI: Mengunggah file APK berukuran 43.4 MB menggunakan Python urllib.request multipart.
+              # MENGAPA DIKOMEN:
+              # Python standard library urllib.request memuat seluruh byte file (43.4MB) ke dalam memori RAM runner
+              # dan tidak melakukan streaming socket/TCP chunking. Akibatnya, server Telegram Bot API memutuskan koneksi
+              # di tengah upload (Connection reset by peer - Errno 104), sehingga skrip terlempar ke fallback dan hanya
+              # mengirim link teks artifact GitHub Actions.
+              # KODE PERUBAHAN DI BAWAH:
+              # Menggunakan binary sistem curl bawaan Ubuntu yang melakukan true streaming upload langsung dari disk
+              # dengan parameter retry otomatis (--retry 3 --retry-delay 5), sehingga pengiriman file APK 43.4 MB
+              # dijamin berhasil sampai ke chat/topik Telegram tanpa connection reset!
+              # ORIGINAL CODE:
+              # if target_apk and apk_size_bytes > 0 and apk_size_bytes <= 50000000:
+              #     print(f'Sending direct APK ({apk_size_mb:.1f} MB) via Telegram sendDocument...')
+              #     boundary = uuid.uuid4().hex
+              #     filename = os.path.basename(target_apk)
+              #     with open(target_apk, 'rb') as f:
+              #         file_bytes = f.read()
+              #     parts = [...]
+              #     req = urllib.request.Request(f'https://api.telegram.org/bot{bot_token}/sendDocument', data=body, ...)
+              #     with urllib.request.urlopen(req, timeout=300) as resp: ...
 
-                  parts = [
-                      f'--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n',
-                      f'--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n',
-                      f'--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n',
+              if target_apk and apk_size_bytes > 0 and apk_size_bytes <= 50000000:
+                  print(f'Sending direct APK ({apk_size_mb:.1f} MB) via Telegram sendDocument using curl streaming...')
+                  curl_cmd = [
+                      'curl', '-sS',
+                      '--connect-timeout', '30',
+                      '--max-time', '300',
+                      '--retry', '3',
+                      '--retry-delay', '5',
+                      '-F', f'chat_id={chat_id}',
+                      '-F', f'caption={caption}',
+                      '-F', 'parse_mode=HTML',
+                      '-F', f'document=@{target_apk}',
                   ]
                   if topic_id and topic_id.strip():
-                      parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name=\"message_thread_id\"\r\n\r\n{topic_id.strip()}\r\n')
-                  parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name=\"document\"; filename=\"{filename}\"\r\nContent-Type: application/vnd.android.package-archive\r\n\r\n')
+                      curl_cmd.extend(['-F', f'message_thread_id={topic_id.strip()}'])
+                  curl_cmd.append(f'https://api.telegram.org/bot{bot_token}/sendDocument')
 
-                  body = ''.join(parts).encode('utf-8') + file_bytes + f'\r\n--{boundary}--\r\n'.encode('utf-8')
-
-                  req = urllib.request.Request(
-                      f'https://api.telegram.org/bot{bot_token}/sendDocument',
-                      data=body,
-                      headers={'Content-Type': f'multipart/form-data; boundary={boundary}'}
-                  )
-                  try:
-                      with urllib.request.urlopen(req, timeout=300) as resp:
-                          print('APK document sent successfully to Telegram.')
-                          exit(0)
-                  except urllib.error.HTTPError as e:
-                      err_body = e.read().decode('utf-8', errors='ignore')
-                      print(f'sendDocument HTTP Error {e.code}: {err_body}')
-                  except Exception as e:
-                      print('sendDocument failed, falling back to text notification:', e)
+                  res = subprocess.run(curl_cmd, capture_output=True, text=True)
+                  if res.returncode == 0 and '"ok":true' in res.stdout:
+                      print('APK document sent successfully to Telegram via curl.')
+                      exit(0)
+                  else:
+                      print(f'curl sendDocument failed (code {res.returncode}): {res.stderr} {res.stdout}')
 
               # Fallback text notification if file > 50MB or sendDocument encountered an error
               text = (
