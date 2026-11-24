@@ -394,16 +394,22 @@ class ResolveAudioStreamUseCase
 
             val now = SystemClock.elapsedRealtime()
             val previousResolution = lastResolutionTime.getAndSet(now)
+            /*
+            // [VoidTune Patch: Proactive Session Invalidation on Idle Wakeup]
+            // REASON: When playback resumes after >60s (e.g. 7 minutes idle), stale QuickJS tokens
+            // can deadlock player deciphering. Invalidating ensures a fresh session runtime.
             if (previousResolution > 0L && (now - previousResolution) > 60_000L) {
-                // [VoidTune Patch: Proactive Session Invalidation on Idle Wakeup]
-                // REASON: When playback resumes after >60s (e.g. 7 minutes idle), stale QuickJS tokens
-                // can deadlock player deciphering. Invalidating ensures a fresh session runtime.
                 try {
                     youtubeiRepository.invalidateSessions()
                 } catch (t: Throwable) {
                     Timber.tag(TAG).w(t, "Failed to invalidate sessions on idle wakeup")
                 }
             }
+            */
+            // [VoidTune Patch: Preserve QuickJS Session Runtime across Idle Wakeup]
+            // CAUSE: Invalidation destroyed QuickJS runtime contexts and cached player deciphers, causing
+            // resolution stalls and decipher errors when waking up after 7 minutes idle.
+            // REASON: Keep QuickJS sessions intact; network reconnects are handled at OkHttp layer.
 
             // [VoidTune Patch: Anonymous-First Stream Resolution (VISIONOS) with Authenticated Fallback]
             // CAUSE: When logged in, routing every song through WEB_CREATOR forces BotGuard PoToken minting,
@@ -484,6 +490,7 @@ class ResolveAudioStreamUseCase
 
             return resolveWithAuth(request, priority)
             */
+            /*
             // [VoidTune Patch: Universal Token-Free Stream Resolution with Authenticated Fallback]
             // CAUSE: Previously, 'if (authState.hasLoginCookie)' meant anonymous (non-logged-in) users
             // completely bypassed the fast token-free path and fell straight into resolveWithAuth(),
@@ -516,6 +523,33 @@ class ResolveAudioStreamUseCase
                     throw directFailure
                 }
             }
+            */
+            // [VoidTune Patch: Secure Stream Resolution with PoToken & VisitorData]
+            // CAUSE: Stripping authState with PlaybackAuthState.EMPTY prevented visitorData & PoToken minting,
+            // which triggered YouTube's anti-bot "bot detected please login" on guest mode, and caused HTTP 403
+            // stream rejections on cellular data for logged-in users.
+            // REASON: Both guest and authenticated users MUST route through resolveWithAuth() so that
+            // ensureYoutubeiPoTokensForPlayback() mints a valid visitor PoToken / auth tokens, ensuring 100%
+            // compatibility across both cellular networks (CGNAT) and Wi-Fi.
+            val authState = request.authState
+            if (authState.hasLoginCookie) {
+                try {
+                    return resolveWithAuth(request, priority)
+                } catch (authFailure: Exception) {
+                    if (authFailure is CancellationException) throw authFailure
+                    Timber.tag(TAG).w(
+                        authFailure,
+                        "Authenticated stream resolution failed for %s, falling back to direct stream",
+                        request.mediaId,
+                    )
+                    return youtubeiRepository.resolve(
+                        request = request.copy(authState = PlaybackAuthState.EMPTY),
+                        priority = priority,
+                    )
+                }
+            }
+
+            return resolveWithAuth(request, priority)
         }
 
         private suspend fun resolveWithAuth(

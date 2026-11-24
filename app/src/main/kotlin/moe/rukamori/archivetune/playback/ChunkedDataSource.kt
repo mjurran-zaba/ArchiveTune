@@ -65,8 +65,23 @@ internal class ChunkedDataSource(
             }
         val count = upstream.read(buffer, offset, readLength)
         if (count == C.RESULT_END_OF_INPUT) {
+            /*
+            ORIGINAL CODE:
             if (chunkBytesRemaining > 0L) {
                 throw EOFException("Audio stream ended before the requested range was complete")
+            }
+            return count
+            */
+            // [VoidTune Patch: Safe EOF Handling to Prevent Corrupt Cache Invalidation Loop]
+            // CAUSE: When an audio stream ends, the final chunk frequently has fewer bytes remaining than
+            // the full chunk length (e.g. chunkBytesRemaining = 500KB). Throwing EOFException caused
+            // MusicService to flag the stream as corrupted (isCacheCorruptionError), delete the cached audio,
+            // and restart the download from byte 0, causing an infinite download loop that consumed 1GB of data.
+            // REASON: When upstream reaches end of input, if the request was open-ended (C.LENGTH_UNSET) or if
+            // all expected bytes were read, cleanly return C.RESULT_END_OF_INPUT. Only throw if an explicitly
+            // bounded total DataSpec was truncated before its total length.
+            if (dataSpec.length != C.LENGTH_UNSET.toLong() && bytesRead < dataSpec.length) {
+                throw EOFException("Audio stream ended before the requested range was complete (read $bytesRead of ${dataSpec.length})")
             }
             return count
         }

@@ -153,14 +153,19 @@ if os.path.exists(mori_client_file):
     print("Applied YoutubeiHttpClient idle eviction patch successfully.")
 
 # --- Patch 3: morideobfuscator JS bundle VISIONOS priority ---
-mori_bundle_file = "morideobfuscator/src/main/assets/youtubei/youtubei.bundle.js"
-if os.path.exists(mori_bundle_file):
-    with open(mori_bundle_file, "r", encoding="utf-8") as f:
-        bundle_content = f.read()
-
-    if "[AH,lJ]" in bundle_content:
-        bundle_content = bundle_content.replace("[AH,lJ]", "[lJ,AH]", 1)
-        with open(mori_bundle_file, "w", encoding="utf-8") as f:
-            f.write(bundle_content)
-        print("Applied youtubei.bundle.js VISIONOS priority patch successfully.")
+# [VoidTune Patch: Preserve MWEB priority [AH,lJ] to retain PoToken support]
+# CAUSE: Swapping [AH,lJ] to [lJ,AH] prioritized VISIONOS. VISIONOS explicitly strips/bypasses PoToken
+# in youtubei.bundle.js (bH deletes pot parameter), causing YouTube to immediately reject guest & cellular
+# streams with "stream not available playback, bot detected please login" or HTTP 403.
+# REASON: Keep MWEB [AH] first with valid BotGuard PoToken support.
+# mori_bundle_file = "morideobfuscator/src/main/assets/youtubei/youtubei.bundle.js"
+# if os.path.exists(mori_bundle_file):
+#     with open(mori_bundle_file, "r", encoding="utf-8") as f:
+#         bundle_content = f.read()
+# 
+#     if "[AH,lJ]" in bundle_content:
+#         bundle_content = bundle_content.replace("[AH,lJ]", "[lJ,AH]", 1)
+#         with open(mori_bundle_file, "w", encoding="utf-8") as f:
+#             f.write(bundle_content)
+#         print("Applied youtubei.bundle.js VISIONOS priority patch successfully.")
 

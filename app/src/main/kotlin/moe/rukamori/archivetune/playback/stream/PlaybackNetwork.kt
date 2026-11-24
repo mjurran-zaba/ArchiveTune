@@ -94,11 +94,23 @@ internal class PlaybackHttpClient(
                 .proxy(current.proxy ?: Proxy.NO_PROXY)
                 .dns(dns)
             */
+            /*
             // [VoidTune Patch: Enforce retryOnConnectionFailure for Media Socket Streaming]
             // REASON: If a connection fails midway or was dropped by NAT, OkHttp should immediately retry on
             // another route rather than hanging the playback thread.
             client = baseClient.newBuilder()
                 .retryOnConnectionFailure(true)
+                .connectionPool(connectionPool())
+                .proxy(current.proxy ?: Proxy.NO_PROXY)
+                .dns(dns)
+            */
+            // [VoidTune Patch: Disable retryOnConnectionFailure for Media Socket Streaming]
+            // CAUSE: Setting retryOnConnectionFailure(true) causes OkHttp to replay failed Range requests
+            // in an uncontrollable loop at full network speed (1 MB/s), consuming user data (e.g. 1GB quota drained)
+            // while stuck in infinite buffering, and replaying without refreshed SABR/GVS tokens resulting in HTTP 403.
+            // REASON: Let ExoPlayer control chunk reading, timeouts, and failovers cleanly without silent OkHttp retry loops.
+            client = baseClient.newBuilder()
+                .retryOnConnectionFailure(false)
                 .connectionPool(connectionPool())
                 .proxy(current.proxy ?: Proxy.NO_PROXY)
                 .dns(dns)

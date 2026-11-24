@@ -499,10 +499,6 @@ class MusicService :
     private val cacheBypassMediaIds = ConcurrentHashMap.newKeySet<String>()
     private val castMimeTypeCache = LruCache<String, String>(128)
     private val mediaOkHttpClient: OkHttpClient by lazy {
-        // [VoidTune Patch: Anti-Zombie Connection Pool & Fast Failover for Media Streaming]
-        // REASON: On mobile carrier networks (NAT timeout ~2-3 mins), idle pooled connections become zombies.
-        // Without retryOnConnectionFailure(true) and with default 5-min pool, resuming playback after 7 minutes
-        // idle hangs on dead sockets for 30s. We enable retryOnConnectionFailure(true) and clamp keep-alive to 45s.
         /*
         ORIGINAL CODE:
         OkHttpClient
@@ -512,9 +508,13 @@ class MusicService :
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
         */
+        // [VoidTune Patch: Anti-Zombie Connection Pool for Media Streaming]
+        // REASON: On mobile carrier networks (NAT timeout ~2-3 mins), idle pooled connections become zombies.
+        // A 45s keep-alive evicts idle sockets before carrier NAT kills them, preventing 7-minute idle hangs.
+        // retryOnConnectionFailure is explicitly disabled to prevent silent OkHttp background loops from draining mobile data quota (e.g. 1GB).
         OkHttpClient
             .Builder()
-            .retryOnConnectionFailure(true)
+            .retryOnConnectionFailure(false)
             .connectionPool(ConnectionPool(8, 45, TimeUnit.SECONDS))
             .followRedirects(true)
             .followSslRedirects(true)
