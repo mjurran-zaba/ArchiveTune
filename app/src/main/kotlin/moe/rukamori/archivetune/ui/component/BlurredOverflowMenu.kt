@@ -202,6 +202,13 @@ fun BlurredOverflowMenu(
                                 .fillMaxWidth()
                                 .padding(horizontal = 12.dp, vertical = 10.dp),
                         ) {
+                            // [VoidTune Patch: Crisp, Full-Vibrant Galactic Emblem in Drawer Header]
+                            // MAKSUD KODE ASLI: Menampilkan seal logo berukuran 56dp di dalam box 62dp dengan background surfaceContainerHighest alpha 0.45f.
+                            // MENGAPA DIUBAH:
+                            // User meminta logo baru dipasang jelas dan tajam ('jangan sampai pudar').
+                            // Logo baru ditampilkan full 62dp dengan border glow primary halus agar warna ungu galaksi dan kristal perak bersinar tajam tanpa redup.
+                            // ORIGINAL CODE:
+                            /*
                             Box(
                                 modifier = Modifier
                                     .size(62.dp)
@@ -221,6 +228,27 @@ fun BlurredOverflowMenu(
                                     modifier = Modifier
                                         .size(56.dp)
                                         .clip(RoundedCornerShape(12.dp)),
+                                )
+                            }
+                            */
+                            Box(
+                                modifier = Modifier
+                                    .size(62.dp)
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .border(
+                                        width = 1.2.dp,
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
+                                        shape = RoundedCornerShape(14.dp),
+                                    ),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.ic_voidtune_seal),
+                                    contentDescription = "VoidTune Galactic Emblem",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(62.dp)
+                                        .clip(RoundedCornerShape(14.dp)),
                                 )
                             }
                             Column {

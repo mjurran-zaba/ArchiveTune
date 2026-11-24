@@ -292,6 +292,7 @@ import moe.rukamori.archivetune.ui.component.IconButton
 import moe.rukamori.archivetune.ui.component.LocalBottomSheetPageState
 import moe.rukamori.archivetune.ui.component.LocalMenuState
 import moe.rukamori.archivetune.ui.component.NetworkStatusBanner
+import moe.rukamori.archivetune.ui.component.SpotifyGateDialog
 import moe.rukamori.archivetune.ui.component.StarDialog
 import moe.rukamori.archivetune.ui.component.TopAppBarOverflowMenu
 import moe.rukamori.archivetune.ui.component.TopSearch
@@ -1636,6 +1637,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     var showStarDialog by remember { mutableStateOf(false) }
+                    var showSpotifyGateDialog by remember { mutableStateOf(false) }
                     var starPromptPending by remember { mutableStateOf(false) }
                     var whatsNewPresented by remember { mutableStateOf(false) }
                     val whatsNewPending = whatsNewState is WhatsNewState.Checking || whatsNewState is WhatsNewState.Showing
@@ -1682,7 +1684,14 @@ class MainActivity : ComponentActivity() {
                     }
 
                     LaunchedEffect(Unit) {
-                        kotlinx.coroutines.delay(3000)
+                        // [VoidTune Patch: 5-second initial delay after opening app]
+                        // MAKSUD KODE ASLI: Menunggu 3 detik (delay 3000) sebelum mengecek apakah popup dialog bintang/support harus muncul.
+                        // MENGAPA DIKOMEN:
+                        // Delay 3 detik terlalu cepat dan bisa mengagetkan user saat antarmuka awal masih bersiap.
+                        // Dinaikkan menjadi 5 detik (delay 5000) agar user menikmati transisi awal dengan tenang.
+                        // ORIGINAL CODE:
+                        // kotlinx.coroutines.delay(3000)
+                        kotlinx.coroutines.delay(5000)
 
                         withContext(Dispatchers.IO) {
                             val current = dataStore[LaunchCountKey] ?: 0
@@ -1736,6 +1745,19 @@ class MainActivity : ComponentActivity() {
                                         showStarDialog = false
                                     }
                                 }
+                            },
+                        )
+                    }
+
+                    // [VoidTune Patch: 45% Glassmorphism Spotify Gateway Dialog]
+                    if (showSpotifyGateDialog) {
+                        SpotifyGateDialog(
+                            onContinue = {
+                                showSpotifyGateDialog = false
+                                navController.navigate("settings/integration") { launchSingleTop = true }
+                            },
+                            onDismiss = {
+                                showSpotifyGateDialog = false
                             },
                         )
                     }
@@ -2117,7 +2139,19 @@ class MainActivity : ComponentActivity() {
                                                         Updater.isUpdateAvailable(latestVersionName ?: BuildConfig.VERSION_NAME, BuildConfig.VERSION_NAME),
                                                     onDismissRequest = mainMenuViewModel::dismiss,
                                                     onSelect = { destination ->
-                                                        mainMenuViewModel.select(destination)
+                                                        // [VoidTune Patch: Intercept Drawer Login to present 45% Glassmorphism Spotify Gateway Dialog]
+                                                        // MAKSUD KODE ASLI: Langsung memilih destinasi MainMenuDestination.Profile yang membuka halaman login Google/YouTube Music di settings/account.
+                                                        // MENGAPA DIKOMEN / DI-INTERCEPT:
+                                                        // Login Google YouTube Music sering mengalami hambatan BotGuard/error stream.
+                                                        // Alur dialihkan ke Spotify Connect yang lebih lancar dan stabil, dengan menampilkan pop-up dialog bergaya 45% glassmorphism faded grey charcoal.
+                                                        // ORIGINAL CODE:
+                                                        // mainMenuViewModel.select(destination)
+                                                        if (destination == MainMenuDestination.Profile && menuProfileState is MenuProfileState.Empty) {
+                                                            mainMenuViewModel.dismiss()
+                                                            showSpotifyGateDialog = true
+                                                        } else {
+                                                            mainMenuViewModel.select(destination)
+                                                        }
                                                     },
                                                 )
                                             }
