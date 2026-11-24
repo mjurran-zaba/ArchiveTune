@@ -190,6 +190,27 @@ if os.path.exists(mori_bundle_file):
     elif patch_gvs_pot in bundle_content:
         print("youtubei.bundle.js already has VISIONOS PoToken preservation patch.")
 
+    # [VoidTune Patch: Pass PoToken to getBasicInfo for VISIONOS to prevent anti-bot trigger on rapid song switch]
+    target_basic_info_pot = "po_token:o?ne(e.videoPoToken):void 0"
+    patch_basic_info_pot = "po_token:(o||i===lJ)?ne(e.videoPoToken):void 0"
+    if target_basic_info_pot in bundle_content:
+        bundle_content = bundle_content.replace(target_basic_info_pot, patch_basic_info_pot, 1)
+        print("Applied youtubei.bundle.js VISIONOS basicInfo PoToken patch.")
+    elif patch_basic_info_pot in bundle_content:
+        print("youtubei.bundle.js already has VISIONOS basicInfo PoToken patch.")
+
+    # [VoidTune Patch: Robust multi-client fallback in OJ]
+    # CAUSE: If primary client (VISIONOS) throws any error other than NO_FORMAT (e.g. LOGIN_REQUIRED),
+    # OJ previously aborted immediately ('if(bo(r)!=="NO_FORMAT")throw r;').
+    # REASON: Allow fallback to secondary client (WEB_CREATOR) on ANY recoverable error.
+    target_oj_fallback = 'if(!s){if(bo(r)!=="NO_FORMAT")throw r;s=r;continue}'
+    patch_oj_fallback = 'if(!s){s=r;continue}'
+    if target_oj_fallback in bundle_content:
+        bundle_content = bundle_content.replace(target_oj_fallback, patch_oj_fallback, 1)
+        print("Applied youtubei.bundle.js multi-client fallback patch.")
+    elif patch_oj_fallback in bundle_content:
+        print("youtubei.bundle.js already has multi-client fallback patch.")
+
     with open(mori_bundle_file, "w", encoding="utf-8") as f:
         f.write(bundle_content)
 
