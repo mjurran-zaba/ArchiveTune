@@ -127,6 +127,8 @@ class SyncUtils
                         return@withContext
                     }
 
+                    /*
+                    ORIGINAL CODE:
                     supervisorScope {
                         val songResults = listOf(
                             captureSyncFailure { syncLikedSongs(authoritative, propagateFailures = true) },
@@ -140,6 +142,45 @@ class SyncUtils
                         ).awaitAll()
                         results.firstNotNullOfOrNull { it.exceptionOrNull() }?.let { throw it }
                         if (!authoritative) syncAutoSyncPlaylists(propagateFailures)
+                    }
+                    */
+
+                    // [VoidTune Patch: Sequential Paced Full Sync]
+                    // CAUSE: Running 6 heavy sync routines concurrently in supervisorScope fires dozens to hundreds
+                    // of paginated HTTP requests simultaneously, saturating OkHttp maxRequestsPerHost and triggering
+                    // YouTube server-side anti-scraping tarpitting/rate limits.
+                    // REASON: Execute sync categories sequentially with a short pacing gap, keeping the network pipeline smooth
+                    // and leaving ample bandwidth for user-initiated UI actions.
+                    val gen = syncGeneration.get()
+                    val results = mutableListOf<Result<Unit>>()
+
+                    if (isSyncStillEnabled(gen)) {
+                        results += captureSyncFailure { syncLikedSongs(authoritative, propagateFailures = true) }
+                    }
+                    if (isSyncStillEnabled(gen)) {
+                        kotlinx.coroutines.delay(150L)
+                        results += captureSyncFailure { syncLibrarySongs(authoritative, propagateFailures = true) }
+                    }
+                    if (isSyncStillEnabled(gen)) {
+                        kotlinx.coroutines.delay(150L)
+                        results += captureSyncFailure { syncLikedAlbums(authoritative, propagateFailures = true) }
+                    }
+                    if (isSyncStillEnabled(gen)) {
+                        kotlinx.coroutines.delay(150L)
+                        results += captureSyncFailure { syncArtistsSubscriptions(authoritative, propagateFailures = true) }
+                    }
+                    if (isSyncStillEnabled(gen)) {
+                        kotlinx.coroutines.delay(150L)
+                        results += captureSyncFailure { syncSavedPlaylists(authoritative, propagateFailures = true) }
+                    }
+                    if (isSyncStillEnabled(gen)) {
+                        kotlinx.coroutines.delay(150L)
+                        results += captureSyncFailure { syncSavedPodcasts(propagateFailures = true) }
+                    }
+
+                    results.firstNotNullOfOrNull { it.exceptionOrNull() }?.let { throw it }
+                    if (!authoritative && isSyncStillEnabled(gen)) {
+                        syncAutoSyncPlaylists(propagateFailures)
                     }
                 } catch (e: Exception) {
                     if (e is CancellationException) throw e

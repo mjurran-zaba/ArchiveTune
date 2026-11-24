@@ -37,6 +37,16 @@ jobs:
           sed -i 's/\[ANONYMOUS_CLIENT, ANONYMOUS_DIRECT_CLIENT\]/\[ANONYMOUS_DIRECT_CLIENT, ANONYMOUS_CLIENT\]/g' morideobfuscator/javascript/src/index.js
           echo "Verified morideobfuscator VISIONOS priority patch applied."
 
+      # [VoidTune Patch: Concurrency Optimization for InnerTube OkHttp Engine]
+      # CAUSE: Default OkHttp maxRequestsPerHost is 5. When background sync runs, all 5 connections
+      # to music.youtube.com are consumed, starving user-initiated browsing (Home, Search, Artist).
+      # REASON: Increase maxRequestsPerHost to 20 and configure ConnectionPool so UI requests are never
+      # blocked behind background sync requests.
+      - name: Patch core InnerTube for OkHttp concurrency
+        shell: bash
+        run: |
+          python3 scripts/patch_core.py
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v7
         with:
