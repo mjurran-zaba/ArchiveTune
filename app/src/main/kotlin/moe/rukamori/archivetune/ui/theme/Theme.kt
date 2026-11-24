@@ -345,10 +345,36 @@ private fun mergedSeedColorScheme(
     contrastLevel: Double = 0.0,
     style: PaletteStyle = paletteStyleFor(primarySeed),
 ): ColorScheme {
-    val primaryScheme = materialKolorScheme(primarySeed, isDark, contrastLevel, style)
-    val secondaryScheme = materialKolorScheme(secondarySeed, isDark, contrastLevel, paletteStyleFor(secondarySeed))
-    val tertiaryScheme = materialKolorScheme(tertiarySeed, isDark, contrastLevel, paletteStyleFor(tertiarySeed))
-    val neutralScheme = materialKolorScheme(neutralSeed, isDark, contrastLevel, paletteStyleFor(neutralSeed))
+    // VoidTune: For light mode, elevate font contrast so text and icons are crisp and not pale/washed out
+    val effectiveContrast = if (!isDark) maxOf(contrastLevel, 0.25) else contrastLevel
+    val primaryScheme = materialKolorScheme(primarySeed, isDark, effectiveContrast, style)
+    val secondaryScheme = materialKolorScheme(secondarySeed, isDark, effectiveContrast, paletteStyleFor(secondarySeed))
+    val tertiaryScheme = materialKolorScheme(tertiarySeed, isDark, effectiveContrast, paletteStyleFor(tertiarySeed))
+    val neutralScheme = materialKolorScheme(neutralSeed, isDark, effectiveContrast, paletteStyleFor(neutralSeed))
+
+    val onSurface = if (!isDark) {
+        if (neutralScheme.onSurface.luminance() > 0.12f) Color(0xFF0F172A) else neutralScheme.onSurface
+    } else {
+        neutralScheme.onSurface
+    }
+
+    val onBackground = if (!isDark) {
+        if (neutralScheme.onBackground.luminance() > 0.12f) Color(0xFF0F172A) else neutralScheme.onBackground
+    } else {
+        neutralScheme.onBackground
+    }
+
+    val onSurfaceVariant = if (!isDark) {
+        if (neutralScheme.onSurfaceVariant.luminance() > 0.18f) Color(0xFF334155) else neutralScheme.onSurfaceVariant
+    } else {
+        neutralScheme.onSurfaceVariant
+    }
+
+    val outline = if (!isDark) {
+        if (neutralScheme.outline.luminance() > 0.45f) Color(0xFF94A3B8) else neutralScheme.outline
+    } else {
+        neutralScheme.outline
+    }
 
     return ColorScheme(
         primary = primaryScheme.primary,
@@ -365,11 +391,11 @@ private fun mergedSeedColorScheme(
         tertiaryContainer = tertiaryScheme.primaryContainer,
         onTertiaryContainer = tertiaryScheme.onPrimaryContainer,
         background = neutralScheme.background,
-        onBackground = neutralScheme.onBackground,
+        onBackground = onBackground,
         surface = neutralScheme.surface,
-        onSurface = neutralScheme.onSurface,
+        onSurface = onSurface,
         surfaceVariant = neutralScheme.surfaceVariant,
-        onSurfaceVariant = neutralScheme.onSurfaceVariant,
+        onSurfaceVariant = onSurfaceVariant,
         inverseSurface = neutralScheme.inverseSurface,
         inverseOnSurface = neutralScheme.inverseOnSurface,
         surfaceBright = neutralScheme.surfaceBright,
@@ -379,7 +405,7 @@ private fun mergedSeedColorScheme(
         surfaceContainerLowest = neutralScheme.surfaceContainerLowest,
         surfaceContainerHigh = neutralScheme.surfaceContainerHigh,
         surfaceContainerHighest = neutralScheme.surfaceContainerHighest,
-        outline = neutralScheme.outline,
+        outline = outline,
         outlineVariant = neutralScheme.outlineVariant,
         error = primaryScheme.error,
         onError = primaryScheme.onError,

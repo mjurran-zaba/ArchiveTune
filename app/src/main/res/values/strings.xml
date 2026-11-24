@@ -1188,7 +1188,9 @@
     <string name="updates_latest_version_unknown">Unknown</string>
     <string name="updates_get_update">Get Update</string>
     <string name="updates_preferences">Preferences</string>
-    <string name="updates_commit_branch">dev branch</string>
+    <!-- DO NOT DELETE BUT COMMENT: Original ArchiveTune dev branch
+    <string name="updates_commit_branch">dev branch</string> -->
+    <string name="updates_commit_branch">VoidTune dev branch</string>
     <string name="updates_commits_error">Couldn\'t load recent commits</string>
     <string name="updates_commit_meta">%1$s · %2$s</string>
     <string name="updates_commit_date_unknown">Date unavailable</string>

@@ -56,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.paneTitle
@@ -199,24 +200,39 @@ fun BlurredOverflowMenu(
                             horizontalArrangement = Arrangement.spacedBy(14.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 14.dp, vertical = 8.dp),
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
                         ) {
-                            Image(
-                                painter = painterResource(R.drawable.ic_voidtune_seal),
-                                contentDescription = "VoidTune Magic Seal",
+                            Box(
                                 modifier = Modifier
-                                    .size(46.dp)
-                                    .clip(RoundedCornerShape(12.dp)),
-                            )
+                                    .size(62.dp)
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.45f))
+                                    .border(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                                        shape = RoundedCornerShape(14.dp),
+                                    ),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.ic_voidtune_seal),
+                                    contentDescription = "VoidTune Magic Seal",
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier
+                                        .size(56.dp)
+                                        .clip(RoundedCornerShape(12.dp)),
+                                )
+                            }
                             Column {
                                 Text(
                                     text = "VoidTune",
                                     fontFamily = unifrakturCookFont,
                                     style = MaterialTheme.typography.headlineMedium.copy(
-                                        fontSize = 26.sp,
+                                        fontSize = 28.sp,
                                         letterSpacing = 1.2.sp,
+                                        fontWeight = FontWeight.Bold,
                                     ),
-                                    color = contentColor,
+                                    color = MaterialTheme.colorScheme.primary, // Dynamically follows active theme color
                                 )
                                 Text(
                                     text = "MJURRAN ARC",
@@ -225,7 +241,7 @@ fun BlurredOverflowMenu(
                                         letterSpacing = 1.8.sp,
                                         fontWeight = FontWeight.SemiBold,
                                     ),
-                                    color = MaterialTheme.colorScheme.primary, // Polar Cyan (#38BDF8)
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(top = 1.dp),
                                 )
                             }

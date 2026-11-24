@@ -63,7 +63,10 @@ object Updater {
     private val releaseRepo: String
         get() = BuildConfig.RELEASE_GITHUB_REPO
 
-    private const val CommitHistoryBaseUrl = "https://api.github.com/repos/rukamori/ArchiveTune"
+    // DO NOT DELETE BUT COMMENT: Original ArchiveTune CommitHistoryBaseUrl
+    // private const val CommitHistoryBaseUrl = "https://api.github.com/repos/rukamori/ArchiveTune"
+    private val CommitHistoryBaseUrl: String
+        get() = "https://api.github.com/repos/${BuildConfig.GITHUB_OWNER}/${BuildConfig.GITHUB_REPO}"
 
     private val stableReleaseBaseUrl: String
         get() = "https://github.com/$releaseOwner/$releaseRepo/releases"
@@ -392,7 +395,9 @@ object Updater {
 
     suspend fun getCommitHistory(
         count: Int = 20,
-        branch: String = "dev",
+        // DO NOT DELETE BUT COMMENT: Original ArchiveTune dev branch
+        // branch: String = "dev",
+        branch: String = "VoidTune",
     ): Result<List<GitCommit>> =
         runCatchingCancellable {
             if (!isUpdaterDistribution) {

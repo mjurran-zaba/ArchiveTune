@@ -173,6 +173,33 @@ private enum class PaletteFamily(
     val paletteIds: Set<String>,
 ) {
     ALL(R.string.palette_family_all, emptySet()),
+    NOTEZ(
+        R.string.palette_family_notez,
+        setOf(
+            "default",
+            "nord_polar_mist",
+            "notez_github_dark",
+            "notez_you_dark",
+            "notez_you_warm",
+            "notez_fade_choco_matcha",
+            "notez_blue_moon_cheese",
+            "notez_raspberry_night",
+            "notez_gloomy_sakura_night",
+            "notez_gloomy_lavender",
+            "notez_gloome_dark_sunset",
+            "notez_dark_forest",
+            "notez_tokyo_night",
+            "notez_kawaii_catpucinn",
+            "notez_oled_black",
+            "notez_cobalt2",
+            "notez_aurora_borealis",
+            "notez_cyber_obsidian",
+            "notez_sunset_mirage",
+            "notez_matcha_cream_paper",
+            "notez_parchment_amber",
+            "notez_rose_pine_dawn",
+        ),
+    ),
     BLUE(
         R.string.palette_family_blue,
         setOf("ocean_blue", "arctic_blue", "midnight_navy", "sky_blue", "cobalt_blue", "electric_blue"),
@@ -337,6 +364,207 @@ object ThemePalettes {
             secondary = Color(0xFF81A1C1),
             tertiary = Color(0xFF88C0D0),
             neutral = Color(0xFF1E293B),
+        )
+
+    // --- NOTEZ Design System Themes ---
+    val NotezGithubDark =
+        ThemePalette(
+            id = "notez_github_dark",
+            nameResId = R.string.palette_notez_github_dark,
+            primary = Color(0xFF58A6FF),
+            secondary = Color(0xFF8B949E),
+            tertiary = Color(0xFF79C0FF),
+            neutral = Color(0xFF161B22),
+        )
+
+    val NotezYouDark =
+        ThemePalette(
+            id = "notez_you_dark",
+            nameResId = R.string.palette_notez_you_dark,
+            primary = Color(0xFFA5D6A7),
+            secondary = Color(0xFFAAB8AA),
+            tertiary = Color(0xFF81C784),
+            neutral = Color(0xFF1B211B),
+        )
+
+    val NotezYouWarm =
+        ThemePalette(
+            id = "notez_you_warm",
+            nameResId = R.string.palette_notez_you_warm,
+            primary = Color(0xFFF2B36D),
+            secondary = Color(0xFFBDAA91),
+            tertiary = Color(0xFFFFCC80),
+            neutral = Color(0xFF211A14),
+        )
+
+    val NotezFadeChocoMatcha =
+        ThemePalette(
+            id = "notez_fade_choco_matcha",
+            nameResId = R.string.palette_notez_fade_choco_matcha,
+            primary = Color(0xFFA8C66C),
+            secondary = Color(0xFFC2AA83),
+            tertiary = Color(0xFFC5E1A5),
+            neutral = Color(0xFF241C13),
+        )
+
+    val NotezBlueMoonCheese =
+        ThemePalette(
+            id = "notez_blue_moon_cheese",
+            nameResId = R.string.palette_notez_blue_moon_cheese,
+            primary = Color(0xFFFFD166),
+            secondary = Color(0xFFA8B6D6),
+            tertiary = Color(0xFFFFE082),
+            neutral = Color(0xFF17213A),
+        )
+
+    val NotezRaspberryNight =
+        ThemePalette(
+            id = "notez_raspberry_night",
+            nameResId = R.string.palette_notez_raspberry_night,
+            primary = Color(0xFFFF5C8A),
+            secondary = Color(0xFFB99AAC),
+            tertiary = Color(0xFFFF8DA1),
+            neutral = Color(0xFF21151F),
+        )
+
+    val NotezGloomySakuraNight =
+        ThemePalette(
+            id = "notez_gloomy_sakura_night",
+            nameResId = R.string.palette_notez_gloomy_sakura_night,
+            primary = Color(0xFFF48FB1),
+            secondary = Color(0xFFB4A8C8),
+            tertiary = Color(0xFFF8BBD0),
+            neutral = Color(0xFF1D1A27),
+        )
+
+    val NotezGloomyLavender =
+        ThemePalette(
+            id = "notez_gloomy_lavender",
+            nameResId = R.string.palette_notez_gloomy_lavender,
+            primary = Color(0xFFB69DF8),
+            secondary = Color(0xFFAEA6C8),
+            tertiary = Color(0xFFD1C4E9),
+            neutral = Color(0xFF1C1A2A),
+        )
+
+    val NotezGloomeDarkSunset =
+        ThemePalette(
+            id = "notez_gloome_dark_sunset",
+            nameResId = R.string.palette_notez_gloome_dark_sunset,
+            primary = Color(0xFFFF8A65),
+            secondary = Color(0xFFC2A19A),
+            tertiary = Color(0xFFFFAB91),
+            neutral = Color(0xFF24191B),
+        )
+
+    val NotezDarkForest =
+        ThemePalette(
+            id = "notez_dark_forest",
+            nameResId = R.string.palette_notez_dark_forest,
+            primary = Color(0xFF66BB6A),
+            secondary = Color(0xFF9DB5A4),
+            tertiary = Color(0xFF81C784),
+            neutral = Color(0xFF121D16),
+        )
+
+    val NotezTokyoNight =
+        ThemePalette(
+            id = "notez_tokyo_night",
+            nameResId = R.string.palette_notez_tokyo_night,
+            primary = Color(0xFF7AA2F7),
+            secondary = Color(0xFF9AA6C8),
+            tertiary = Color(0xFFBB9AF7),
+            neutral = Color(0xFF131A2F),
+        )
+
+    val NotezKawaiiCatpucinn =
+        ThemePalette(
+            id = "notez_kawaii_catpucinn",
+            nameResId = R.string.palette_notez_kawaii_catpucinn,
+            primary = Color(0xFFF5A3D7),
+            secondary = Color(0xFFBDAED1),
+            tertiary = Color(0xFFB4BEFE),
+            neutral = Color(0xFF241C2E),
+        )
+
+    val NotezOledBlack =
+        ThemePalette(
+            id = "notez_oled_black",
+            nameResId = R.string.palette_notez_oled_black,
+            primary = Color(0xFF39FF14),
+            secondary = Color(0xFF8A9A8A),
+            tertiary = Color(0xFF00E676),
+            neutral = Color(0xFF101410),
+        )
+
+    val NotezCobalt2 =
+        ThemePalette(
+            id = "notez_cobalt2",
+            nameResId = R.string.palette_notez_cobalt2,
+            primary = Color(0xFFFFC600),
+            secondary = Color(0xFF9BB8D3),
+            tertiary = Color(0xFF0088FF),
+            neutral = Color(0xFF152C3E),
+        )
+
+    val NotezAuroraBorealis =
+        ThemePalette(
+            id = "notez_aurora_borealis",
+            nameResId = R.string.palette_notez_aurora_borealis,
+            primary = Color(0xFF00F5A0),
+            secondary = Color(0xFF88AAB5),
+            tertiary = Color(0xFF00D2FF),
+            neutral = Color(0xFF111824),
+        )
+
+    val NotezCyberObsidian =
+        ThemePalette(
+            id = "notez_cyber_obsidian",
+            nameResId = R.string.palette_notez_cyber_obsidian,
+            primary = Color(0xFF8B5CF6),
+            secondary = Color(0xFF9A94B8),
+            tertiary = Color(0xFFA78BFA),
+            neutral = Color(0xFF14141F),
+        )
+
+    val NotezSunsetMirage =
+        ThemePalette(
+            id = "notez_sunset_mirage",
+            nameResId = R.string.palette_notez_sunset_mirage,
+            primary = Color(0xFFFF7E5F),
+            secondary = Color(0xFFBA9B95),
+            tertiary = Color(0xFFFEB47B),
+            neutral = Color(0xFF1F1418),
+        )
+
+    val NotezMatchaCreamPaper =
+        ThemePalette(
+            id = "notez_matcha_cream_paper",
+            nameResId = R.string.palette_notez_matcha_cream_paper,
+            primary = Color(0xFF386B42),
+            secondary = Color(0xFF5A6B5F),
+            tertiary = Color(0xFF6B9B74),
+            neutral = Color(0xFFF6F4ED),
+        )
+
+    val NotezParchmentAmber =
+        ThemePalette(
+            id = "notez_parchment_amber",
+            nameResId = R.string.palette_notez_parchment_amber,
+            primary = Color(0xFF8C531B),
+            secondary = Color(0xFF6E6255),
+            tertiary = Color(0xFFA6713D),
+            neutral = Color(0xFFF7F2E8),
+        )
+
+    val NotezRosePineDawn =
+        ThemePalette(
+            id = "notez_rose_pine_dawn",
+            nameResId = R.string.palette_notez_rose_pine_dawn,
+            primary = Color(0xFFB4637A),
+            secondary = Color(0xFF797593),
+            tertiary = Color(0xFFD7827E),
+            neutral = Color(0xFFFAF4ED),
         )
 
     val OceanBlue =
@@ -1013,6 +1241,26 @@ object ThemePalettes {
         listOf(
             Default,
             NordPolarMist,
+            NotezGithubDark,
+            NotezYouDark,
+            NotezYouWarm,
+            NotezFadeChocoMatcha,
+            NotezBlueMoonCheese,
+            NotezRaspberryNight,
+            NotezGloomySakuraNight,
+            NotezGloomyLavender,
+            NotezGloomeDarkSunset,
+            NotezDarkForest,
+            NotezTokyoNight,
+            NotezKawaiiCatpucinn,
+            NotezOledBlack,
+            NotezCobalt2,
+            NotezAuroraBorealis,
+            NotezCyberObsidian,
+            NotezSunsetMirage,
+            NotezMatchaCreamPaper,
+            NotezParchmentAmber,
+            NotezRosePineDawn,
             OceanBlue,
             ArcticBlue,
             MidnightNavy,
