@@ -39,9 +39,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
@@ -205,77 +207,192 @@ fun LoginScreen(
         }
     }
 
-    // Background Auth Bridge WebView
+    // VoidTune Centered Floating Google Auth Dialog (Card-Based, Non-Fullscreen Web Frame)
     Box(
-        modifier = if (showWebFallback) {
-            Modifier.fillMaxSize().background(Color(0xFF000000))
-        } else {
-            Modifier.size(1.dp).alpha(0.01f)
-        },
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.70f))
+            .systemBarsPadding()
+            .imePadding()
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+            ) {
+                closeAction()
+            },
+        contentAlignment = Alignment.Center,
     ) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { ctx ->
-                WebView(ctx).apply {
-                    val cookieManager = CookieManager.getInstance()
-                    webViewClient =
-                        YouTubeLoginWebViewClient(
-                            cookieManager = cookieManager,
-                            onCookiesCaptured = viewModel::onCookiesCaptured,
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.92f)
+                .widthIn(max = 420.dp)
+                .fillMaxHeight(0.82f)
+                .heightIn(min = 420.dp, max = 620.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color(0xFF0D1117).copy(alpha = 0.98f))
+                .background(Color.White.copy(alpha = 0.12f)) // 35% faded white milk glassmorphism
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.25f),
+                    shape = RoundedCornerShape(16.dp),
+                )
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ) {
+                    // Absorb clicks inside dialog so it doesn't dismiss
+                }
+                .padding(top = 16.dp, bottom = 14.dp, start = 14.dp, end = 14.dp),
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                // Header: Google Logo + VoidTune • Google Sign-In + Close Button
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp, start = 4.dp, end = 2.dp),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_google),
+                            contentDescription = "Google",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(22.dp),
                         )
-                    settings.apply {
-                        javaScriptEnabled = true
-                        domStorageEnabled = true
-                        setSupportZoom(true)
-                        builtInZoomControls = true
-                        displayZoomControls = false
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "VoidTune",
+                                fontFamily = unifrakturCookFont,
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontSize = 20.sp,
+                                    letterSpacing = 1.sp,
+                                ),
+                                color = Color.White,
+                            )
+                            Text(
+                                text = " • Google Sign-In",
+                                style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp),
+                                color = Color.White.copy(alpha = 0.85f),
+                            )
+                        }
                     }
-                    val loginWebView = this
-                    addJavascriptInterface(
-                        object {
-                            @JavascriptInterface
-                            fun onRetrieveVisitorData(newVisitorData: String?) {
-                                loginWebView.post {
-                                    viewModel.onVisitorDataExtracted(newVisitorData)
-                                }
-                            }
 
-                            @JavascriptInterface
-                            fun onRetrieveDataSyncId(newDataSyncId: String?) {
-                                loginWebView.post {
-                                    viewModel.onDataSyncIdExtracted(newDataSyncId)
-                                }
-                            }
+                    IconButton(
+                        onClick = closeAction,
+                        modifier = Modifier.size(32.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.close),
+                            contentDescription = "Close",
+                            tint = Color.White.copy(alpha = 0.70f),
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
+                }
 
-                            @JavascriptInterface
-                            fun onRetrieveAccountIndex(newAccountIndex: String?) {
-                                loginWebView.post {
-                                    viewModel.onAccountIndexExtracted(newAccountIndex)
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = Color.White.copy(alpha = 0.15f),
+                    modifier = Modifier.padding(bottom = 10.dp),
+                )
+
+                // Google Web Sign-In Frame (cleanly clipped inside curved rectangle)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White),
+                ) {
+                    AndroidView(
+                        modifier = Modifier.fillMaxSize(),
+                        factory = { ctx ->
+                            WebView(ctx).apply {
+                                val cookieManager = CookieManager.getInstance()
+                                webViewClient =
+                                    YouTubeLoginWebViewClient(
+                                        cookieManager = cookieManager,
+                                        onCookiesCaptured = viewModel::onCookiesCaptured,
+                                    )
+                                settings.apply {
+                                    javaScriptEnabled = true
+                                    domStorageEnabled = true
+                                    setSupportZoom(true)
+                                    builtInZoomControls = true
+                                    displayZoomControls = false
+                                    // Remove ; wv flag to ensure Google OAuth compatibility
+                                    userAgentString = userAgentString.replace("; wv", "")
+                                }
+                                val loginWebView = this
+                                addJavascriptInterface(
+                                    object {
+                                        @JavascriptInterface
+                                        fun onRetrieveVisitorData(newVisitorData: String?) {
+                                            loginWebView.post {
+                                                viewModel.onVisitorDataExtracted(newVisitorData)
+                                            }
+                                        }
+
+                                        @JavascriptInterface
+                                        fun onRetrieveDataSyncId(newDataSyncId: String?) {
+                                            loginWebView.post {
+                                                viewModel.onDataSyncIdExtracted(newDataSyncId)
+                                            }
+                                        }
+
+                                        @JavascriptInterface
+                                        fun onRetrieveAccountIndex(newAccountIndex: String?) {
+                                            loginWebView.post {
+                                                viewModel.onAccountIndexExtracted(newAccountIndex)
+                                            }
+                                        }
+                                    },
+                                    "Android",
+                                )
+                                webView = this
+                                resetAuthWebViewSession(ctx, this, clearCookies = true) {
+                                    if (webView === this) {
+                                        loadUrl(startUrl?.takeIf { it.isNotBlank() } ?: DEFAULT_LOGIN_URL)
+                                    }
                                 }
                             }
                         },
-                        "Android",
+                        onRelease = { releasedWebView ->
+                            (releasedWebView.webViewClient as? YouTubeLoginWebViewClient)?.release(releasedWebView)
+                            releasedWebView.removeJavascriptInterface("Android")
+                            releasedWebView.stopLoading()
+                            releasedWebView.destroy()
+                            if (webView === releasedWebView) {
+                                webView = null
+                            }
+                        },
                     )
-                    webView = this
-                    resetAuthWebViewSession(ctx, this, clearCookies = true) {
-                        if (webView === this) {
-                            loadUrl(startUrl?.takeIf { it.isNotBlank() } ?: DEFAULT_LOGIN_URL)
-                        }
-                    }
                 }
-            },
-            onRelease = { releasedWebView ->
-                (releasedWebView.webViewClient as? YouTubeLoginWebViewClient)?.release(releasedWebView)
-                releasedWebView.removeJavascriptInterface("Android")
-                releasedWebView.stopLoading()
-                releasedWebView.destroy()
-                if (webView === releasedWebView) {
-                    webView = null
-                }
-            },
-        )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Footer: UNDER SECURITY OF DEVELOPER | FORTIFYING GATES
+                Text(
+                    text = "UNDER SECURITY OF DEVELOPER | FORTIFYING GATES",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 9.5.sp,
+                        letterSpacing = 1.sp,
+                        fontWeight = FontWeight.Medium,
+                    ),
+                    color = Color.White.copy(alpha = 0.40f),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                )
+            }
+        }
     }
 
+    // [VoidTune Patch: Legacy Duplicate Fake Form AuthSheet Commented Out for Direct Floating Google Sign-In]
+    // DO NOT DELETE BUT COMMENT:
+    /*
     // VoidTune Glassmorphic AuthSheet Modal Overlay (Centered Screen Dialog with Auto Keyboard Adjustment)
     Box(
         modifier = Modifier
@@ -607,185 +724,9 @@ fun LoginScreen(
 
                 // [VoidTune: Wall fracture animation overlay removed per user request - haptic feedback & slide-to-right remain]
                 // DO NOT DELETE BUT COMMENT:
-                /*
-                if (crackAnim > 0f) {
-                    Canvas(modifier = Modifier.matchParentSize()) {
-                        val w = size.width
-                        val h = size.height
-                        val cx = w * 0.48f
-                        val cy = h * 0.44f
-                        val p = crackAnim
-
-                        val strokeGlow = Stroke(width = 3.8.dp.toPx(), cap = StrokeCap.Round)
-                        val strokeCore = Stroke(width = 1.6.dp.toPx(), cap = StrokeCap.Round)
-                        val strokeWeb = Stroke(width = 1.1.dp.toPx(), cap = StrokeCap.Round)
-
-                        val glowColor = Color(0xFF38BDF8).copy(alpha = 0.50f * p)
-                        val coreColor = Color.White.copy(alpha = 0.95f * p)
-                        val webColor = Color.White.copy(alpha = 0.70f * p)
-
-                        // 1. Impact epicenter glow
-                        drawCircle(
-                            brush = Brush.radialGradient(
-                                colors = listOf(Color(0xFF38BDF8).copy(alpha = 0.40f * p), Color.Transparent),
-                                center = Offset(cx, cy),
-                                radius = 60.dp.toPx() * p,
-                            ),
-                            radius = 60.dp.toPx() * p,
-                            center = Offset(cx, cy),
-                        )
-
-                        // 2. Central crushed core polygon
-                        val crater = Path().apply {
-                            moveTo(cx, cy - 14.dp.toPx() * p)
-                            lineTo(cx + 12.dp.toPx() * p, cy - 6.dp.toPx() * p)
-                            lineTo(cx + 16.dp.toPx() * p, cy + 10.dp.toPx() * p)
-                            lineTo(cx + 4.dp.toPx() * p, cy + 18.dp.toPx() * p)
-                            lineTo(cx - 12.dp.toPx() * p, cy + 14.dp.toPx() * p)
-                            lineTo(cx - 18.dp.toPx() * p, cy - 2.dp.toPx() * p)
-                            close()
-                        }
-                        drawPath(crater, glowColor, style = strokeGlow)
-                        drawPath(crater, coreColor, style = strokeCore)
-
-                        // 3. Primary Radial Fissures (6 Jagged Branches)
-                        // Branch 1: Top-Left (toward top left corner)
-                        val b1 = Path().apply {
-                            moveTo(cx, cy)
-                            lineTo(cx - 38f * p, cy - 32f * p)
-                            lineTo(cx - 65f * p, cy - 78f * p)
-                            lineTo(cx - 110f * p, cy - 120f * p)
-                            lineTo(cx - 160f * p, cy - 185f * p)
-                            lineTo(cx - 210f * p, cy - 260f * p)
-                        }
-                        val b1Sub1 = Path().apply {
-                            moveTo(cx - 65f * p, cy - 78f * p)
-                            lineTo(cx - 45f * p, cy - 130f * p)
-                            lineTo(cx - 75f * p, cy - 195f * p)
-                        }
-                        val b1Sub2 = Path().apply {
-                            moveTo(cx - 110f * p, cy - 120f * p)
-                            lineTo(cx - 165f * p, cy - 128f * p)
-                            lineTo(cx - 225f * p, cy - 142f * p)
-                        }
-
-                        // Branch 2: Top-Right
-                        val b2 = Path().apply {
-                            moveTo(cx, cy)
-                            lineTo(cx + 42f * p, cy - 36f * p)
-                            lineTo(cx + 80f * p, cy - 82f * p)
-                            lineTo(cx + 130f * p, cy - 115f * p)
-                            lineTo(cx + 185f * p, cy - 170f * p)
-                            lineTo(cx + 240f * p, cy - 230f * p)
-                        }
-                        val b2Sub1 = Path().apply {
-                            moveTo(cx + 80f * p, cy - 82f * p)
-                            lineTo(cx + 120f * p, cy - 60f * p)
-                            lineTo(cx + 175f * p, cy - 72f * p)
-                        }
-
-                        // Branch 3: Right
-                        val b3 = Path().apply {
-                            moveTo(cx, cy)
-                            lineTo(cx + 48f * p, cy + 12f * p)
-                            lineTo(cx + 95f * p, cy - 8f * p)
-                            lineTo(cx + 150f * p, cy + 18f * p)
-                            lineTo(cx + 215f * p, cy + 8f * p)
-                            lineTo(cx + 280f * p, cy + 24f * p)
-                        }
-                        val b3Sub1 = Path().apply {
-                            moveTo(cx + 95f * p, cy - 8f * p)
-                            lineTo(cx + 135f * p, cy + 55f * p)
-                            lineTo(cx + 185f * p, cy + 85f * p)
-                        }
-
-                        // Branch 4: Bottom-Right
-                        val b4 = Path().apply {
-                            moveTo(cx, cy)
-                            lineTo(cx + 34f * p, cy + 44f * p)
-                            lineTo(cx + 68f * p, cy + 96f * p)
-                            lineTo(cx + 112f * p, cy + 155f * p)
-                            lineTo(cx + 150f * p, cy + 225f * p)
-                            lineTo(cx + 195f * p, cy + 300f * p)
-                        }
-                        val b4Sub1 = Path().apply {
-                            moveTo(cx + 68f * p, cy + 96f * p)
-                            lineTo(cx + 120f * p, cy + 108f * p)
-                            lineTo(cx + 165f * p, cy + 135f * p)
-                        }
-
-                        // Branch 5: Bottom-Left
-                        val b5 = Path().apply {
-                            moveTo(cx, cy)
-                            lineTo(cx - 36f * p, cy + 42f * p)
-                            lineTo(cx - 72f * p, cy + 94f * p)
-                            lineTo(cx - 118f * p, cy + 148f * p)
-                            lineTo(cx - 160f * p, cy + 215f * p)
-                            lineTo(cx - 205f * p, cy + 285f * p)
-                        }
-                        val b5Sub1 = Path().apply {
-                            moveTo(cx - 72f * p, cy + 94f * p)
-                            lineTo(cx - 125f * p, cy + 82f * p)
-                            lineTo(cx - 180f * p, cy + 95f * p)
-                        }
-
-                        // Branch 6: Left
-                        val b6 = Path().apply {
-                            moveTo(cx, cy)
-                            lineTo(cx - 44f * p, cy - 10f * p)
-                            lineTo(cx - 92f * p, cy + 14f * p)
-                            lineTo(cx - 148f * p, cy - 6f * p)
-                            lineTo(cx - 205f * p, cy + 12f * p)
-                            lineTo(cx - 265f * p, cy - 4f * p)
-                        }
-
-                        // 4. Concentric Spiderweb Fracture Arcs (Connecting lines)
-                        // Inner spiderweb ring
-                        val webInner = Path().apply {
-                            moveTo(cx - 38f * p, cy - 32f * p)
-                            lineTo(cx + 42f * p, cy - 36f * p)
-                            lineTo(cx + 48f * p, cy + 12f * p)
-                            lineTo(cx + 34f * p, cy + 44f * p)
-                            lineTo(cx - 36f * p, cy + 42f * p)
-                            lineTo(cx - 44f * p, cy - 10f * p)
-                            close()
-                        }
-                        // Mid spiderweb ring
-                        val webMid = Path().apply {
-                            moveTo(cx - 65f * p, cy - 78f * p)
-                            lineTo(cx + 80f * p, cy - 82f * p)
-                            lineTo(cx + 95f * p, cy - 8f * p)
-                            lineTo(cx + 68f * p, cy + 96f * p)
-                            lineTo(cx - 72f * p, cy + 94f * p)
-                            lineTo(cx - 92f * p, cy + 14f * p)
-                            close()
-                        }
-                        // Outer spiderweb jagged bridges
-                        val webOuter = Path().apply {
-                            moveTo(cx - 110f * p, cy - 120f * p)
-                            lineTo(cx + 130f * p, cy - 115f * p)
-                            moveTo(cx + 150f * p, cy + 18f * p)
-                            lineTo(cx + 112f * p, cy + 155f * p)
-                            moveTo(cx - 118f * p, cy + 148f * p)
-                            lineTo(cx - 148f * p, cy - 6f * p)
-                        }
-
-                        val allFissures = listOf(b1, b1Sub1, b1Sub2, b2, b2Sub1, b3, b3Sub1, b4, b4Sub1, b5, b5Sub1, b6)
-
-                        // Draw Glow pass
-                        allFissures.forEach { drawPath(it, glowColor, style = strokeGlow) }
-                        drawPath(webInner, glowColor, style = strokeGlow)
-                        drawPath(webMid, glowColor, style = strokeGlow)
-                        drawPath(webOuter, glowColor, style = strokeGlow)
-
-                        // Draw Core Sharp pass
-                        allFissures.forEach { drawPath(it, coreColor, style = strokeCore) }
-                        drawPath(webInner, webColor, style = strokeWeb)
-                        drawPath(webMid, webColor, style = strokeWeb)
-                        drawPath(webOuter, webColor, style = strokeWeb)
-                    }
-                }
-                */
+                // if (crackAnim > 0f) {
+                //     Canvas(modifier = Modifier.matchParentSize()) { ... }
+                // }
             }
         }
 
@@ -815,6 +756,7 @@ fun LoginScreen(
             }
         }
     }
+    */
 
     /*
     // Original ArchiveTune TopAppBar (Commented out per VoidTune design)
@@ -831,7 +773,7 @@ fun LoginScreen(
     */
 
     BackHandler(enabled = onNavigateBack != null || webView?.canGoBack() == true) {
-        if (showWebFallback && webView?.canGoBack() == true) {
+        if (webView?.canGoBack() == true) {
             webView?.goBack()
         } else {
             closeAction()
