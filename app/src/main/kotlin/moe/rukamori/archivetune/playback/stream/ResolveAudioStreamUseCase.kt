@@ -44,6 +44,7 @@ import java.net.ConnectException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
@@ -99,6 +100,10 @@ class ResolveAudioStreamUseCase
         private val sessionResetMutex = Mutex()
         private val sessionResetRequired = AtomicBoolean(false)
         private val loginContextMutex = Mutex()
+        // [VoidTune Patch: Track Idle Duration to Proactively Invalidate Stale Session Tokens]
+        // REASON: When music playback is idle for >60s (e.g. 7 minutes idle), YouTube session tokens and
+        // QuickJS memory state become stale. Tracking resolution timestamps allows proactive session refresh.
+        private val lastResolutionTime = AtomicLong(0L)
 
         suspend operator fun invoke(request: AudioStreamRequest): ResolvedAudioStream =
             resolve(request, ResolutionConsumer.PLAYBACK)
@@ -387,6 +392,19 @@ class ResolveAudioStreamUseCase
                 }
             }
 
+            val now = SystemClock.elapsedRealtime()
+            val previousResolution = lastResolutionTime.getAndSet(now)
+            if (previousResolution > 0L && (now - previousResolution) > 60_000L) {
+                // [VoidTune Patch: Proactive Session Invalidation on Idle Wakeup]
+                // REASON: When playback resumes after >60s (e.g. 7 minutes idle), stale QuickJS tokens
+                // can deadlock player deciphering. Invalidating ensures a fresh session runtime.
+                try {
+                    youtubeiRepository.invalidateSessions()
+                } catch (t: Throwable) {
+                    Timber.tag(TAG).w(t, "Failed to invalidate sessions on idle wakeup")
+                }
+            }
+
             // [VoidTune Patch: Anonymous-First Stream Resolution (VISIONOS) with Authenticated Fallback]
             // CAUSE: When logged in, routing every song through WEB_CREATOR forces BotGuard PoToken minting,
             // 4MB player script download, AST deciphering, and pre-playback GVS Range probe, causing 2-5s lag per song.
@@ -443,6 +461,8 @@ class ResolveAudioStreamUseCase
                 }
             }
             */
+            /*
+            ORIGINAL CODE:
             val authState = request.authState
             if (authState.hasLoginCookie) {
                 try {
@@ -463,6 +483,39 @@ class ResolveAudioStreamUseCase
             }
 
             return resolveWithAuth(request, priority)
+            */
+            // [VoidTune Patch: Universal Token-Free Stream Resolution with Authenticated Fallback]
+            // CAUSE: Previously, 'if (authState.hasLoginCookie)' meant anonymous (non-logged-in) users
+            // completely bypassed the fast token-free path and fell straight into resolveWithAuth(),
+            // triggering BotGuardTokenGenerator and WebView operations that freeze/deadlock after 7 minutes idle.
+            // REASON: ALL requests (whether anonymous or logged-in) can resolve via token-free VISIONOS in <200ms.
+            // If and only if token-free resolution fails for restricted content AND the user has login cookies,
+            // we cleanly fall back to resolveWithAuth(request, priority).
+            val authState = request.authState
+            try {
+                Timber.tag(TAG).d("Resolving %s via fast token-free VISIONOS stream", request.mediaId)
+                return youtubeiRepository.resolve(
+                    request = request.copy(authState = PlaybackAuthState.EMPTY),
+                    priority = priority,
+                )
+            } catch (directFailure: Exception) {
+                if (directFailure is CancellationException) throw directFailure
+                if (authState.hasLoginCookie) {
+                    Timber.tag(TAG).i(
+                        directFailure,
+                        "Fast direct stream resolution failed for %s; falling back to authenticated resolution (WEB_CREATOR)",
+                        request.mediaId,
+                    )
+                    return resolveWithAuth(request, priority)
+                } else {
+                    Timber.tag(TAG).w(
+                        directFailure,
+                        "Fast direct stream resolution failed for %s and no login cookie available",
+                        request.mediaId,
+                    )
+                    throw directFailure
+                }
+            }
         }
 
         private suspend fun resolveWithAuth(

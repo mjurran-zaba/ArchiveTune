@@ -310,6 +310,7 @@ import moe.rukamori.archivetune.utils.retryWithoutPlaybackLoginContext
 import moe.rukamori.archivetune.widget.LoadWidgetInsightsUseCase
 import moe.rukamori.archivetune.widget.LoadWidgetRecentSongsUseCase
 import moe.rukamori.archivetune.widget.WidgetServiceActions
+import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.io.EOFException
@@ -498,8 +499,23 @@ class MusicService :
     private val cacheBypassMediaIds = ConcurrentHashMap.newKeySet<String>()
     private val castMimeTypeCache = LruCache<String, String>(128)
     private val mediaOkHttpClient: OkHttpClient by lazy {
+        // [VoidTune Patch: Anti-Zombie Connection Pool & Fast Failover for Media Streaming]
+        // REASON: On mobile carrier networks (NAT timeout ~2-3 mins), idle pooled connections become zombies.
+        // Without retryOnConnectionFailure(true) and with default 5-min pool, resuming playback after 7 minutes
+        // idle hangs on dead sockets for 30s. We enable retryOnConnectionFailure(true) and clamp keep-alive to 45s.
+        /*
+        ORIGINAL CODE:
         OkHttpClient
             .Builder()
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+        */
+        OkHttpClient
+            .Builder()
+            .retryOnConnectionFailure(true)
+            .connectionPool(ConnectionPool(8, 45, TimeUnit.SECONDS))
             .followRedirects(true)
             .followSslRedirects(true)
             // [VoidTune Patch: Fast Connection Handshake to Mitigate Mobile Carrier Latency / IPv6 Blackholes]

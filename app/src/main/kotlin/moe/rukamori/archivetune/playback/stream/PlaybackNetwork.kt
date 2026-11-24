@@ -35,6 +35,8 @@ internal fun playbackNetworkConfiguration(context: Context): YoutubeiNetworkConf
     )
 }
 
+/*
+ORIGINAL CODE:
 internal class PlaybackHttpClient(
     private val context: Context,
     private val baseClient: OkHttpClient,
@@ -46,6 +48,28 @@ internal class PlaybackHttpClient(
 
     @Synchronized
     override fun newCall(request: Request): Call {
+*/
+// [VoidTune Patch: Shortened Keep-Alive & Proactive Eviction for Media Sockets to Prevent CGNAT Zombie Sockets]
+// REASON: Default ConnectionPool keeps sockets alive for 5 minutes. Carrier NAT tables drop idle connections
+// after 2-3 minutes. Setting keepAlive to 45 seconds and evicting when waking after >45s idle prevents sending
+// requests over dead half-open sockets when playing music after 7 minutes of idle.
+internal class PlaybackHttpClient(
+    private val context: Context,
+    private val baseClient: OkHttpClient,
+    private val connectionPool: () -> ConnectionPool = { ConnectionPool(8, 45, java.util.concurrent.TimeUnit.SECONDS) },
+) : Call.Factory {
+    private var configuration: YoutubeiNetworkConfiguration? = null
+    private var client: OkHttpClient? = null
+    private var streamIpv6: Boolean? = null
+    private var lastCallTimeMs: Long = 0L
+
+    @Synchronized
+    override fun newCall(request: Request): Call {
+        val now = android.os.SystemClock.elapsedRealtime()
+        if (now - lastCallTimeMs > 45_000L) {
+            client?.connectionPool?.evictAll()
+        }
+        lastCallTimeMs = now
         val current = playbackNetworkConfiguration(context)
         val requestedIpv6 = request.url.queryParameter("ip")
             ?.takeIf { it.isNotBlank() && request.url.host.isGoogleVideoHost() && current.proxy == null }
@@ -63,7 +87,18 @@ internal class PlaybackHttpClient(
                     addresses
                 }
             }
+            /*
+            ORIGINAL CODE:
             client = baseClient.newBuilder()
+                .connectionPool(connectionPool())
+                .proxy(current.proxy ?: Proxy.NO_PROXY)
+                .dns(dns)
+            */
+            // [VoidTune Patch: Enforce retryOnConnectionFailure for Media Socket Streaming]
+            // REASON: If a connection fails midway or was dropped by NAT, OkHttp should immediately retry on
+            // another route rather than hanging the playback thread.
+            client = baseClient.newBuilder()
+                .retryOnConnectionFailure(true)
                 .connectionPool(connectionPool())
                 .proxy(current.proxy ?: Proxy.NO_PROXY)
                 .dns(dns)
