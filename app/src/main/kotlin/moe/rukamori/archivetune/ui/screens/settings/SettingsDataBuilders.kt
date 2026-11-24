@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -33,6 +34,7 @@ fun buildSettingsContent(
     showAccountEntry: Boolean,
     context: Context,
 ): SettingsContent {
+    val uriHandler = LocalUriHandler.current
     val account =
         SettingsItem(
             key = "account",
@@ -264,7 +266,12 @@ fun buildSettingsContent(
             title = stringResource(R.string.about),
             subtitle = stringResource(R.string.settings_about_subtitle),
             accentColor = MaterialTheme.colorScheme.secondary,
+            /*
+            ORIGINAL CODE:
             onClick = { navController.navigate("settings/about") },
+            */
+            // [VoidTune Patch: Direct Redirect to moezaq.vercel.app on About Click]
+            onClick = { uriHandler.openUri("https://moezaq.vercel.app/") },
         )
 
     val highlights =

@@ -11,6 +11,7 @@ package moe.rukamori.archivetune.ui.screens.library
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,6 +42,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -560,9 +562,10 @@ private fun LikedSongsTile(
     Surface(
         onClick = onClick,
         interactionSource = interactionSource,
-        shape = MaterialTheme.shapes.extraLarge,
-        color = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        shape = RoundedCornerShape(16.dp),
+        color = Color.White.copy(alpha = 0.12f), // 35% faded white milk glassmorphism
+        contentColor = Color.White,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
         modifier =
             modifier.graphicsLayer {
                 scaleX = scale
@@ -579,15 +582,16 @@ private fun LikedSongsTile(
             Box(
                 modifier =
                     Modifier
-                        .size(52.dp)
-                        .background(MaterialTheme.colorScheme.primary, iconShape),
+                        .size(48.dp)
+                        .background(Color(0xFF38BDF8).copy(alpha = 0.20f), RoundedCornerShape(12.dp))
+                        .border(1.dp, Color(0xFF38BDF8).copy(alpha = 0.45f), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     painter = painterResource(R.drawable.favorite),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(22.dp),
+                    tint = Color(0xFF38BDF8),
+                    modifier = Modifier.size(24.dp),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -622,9 +626,10 @@ private fun QuickAccessTile(
     Surface(
         onClick = onClick,
         interactionSource = interactionSource,
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        contentColor = MaterialTheme.colorScheme.onSurface,
+        shape = RoundedCornerShape(14.dp),
+        color = Color.White.copy(alpha = 0.08f), // 35% faded white milk glassmorphism
+        contentColor = Color.White,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.18f)),
         modifier =
             modifier
                 .fillMaxWidth()
@@ -641,7 +646,8 @@ private fun QuickAccessTile(
                 modifier =
                     Modifier
                         .size(40.dp)
-                        .background(accent.copy(alpha = 0.16f), CircleShape),
+                        .background(accent.copy(alpha = 0.18f), RoundedCornerShape(10.dp))
+                        .border(1.dp, accent.copy(alpha = 0.35f), RoundedCornerShape(10.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -662,7 +668,7 @@ private fun QuickAccessTile(
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = Color.White.copy(alpha = 0.65f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

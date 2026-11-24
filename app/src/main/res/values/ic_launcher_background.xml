@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FFFFFF</color>
+    <!--
+        VoidTune Adaptive Icon Background: Replaced legacy #FFFFFF with pure AMOLED black #000000.
+    -->
+    <!-- <color name="ic_launcher_background">#FFFFFF</color> -->
+    <color name="ic_launcher_background">#000000</color>
 </resources>

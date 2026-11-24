@@ -8,6 +8,7 @@
 package moe.rukamori.archivetune.ui.player
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -231,7 +232,12 @@ private fun NewMiniPlayer(
                     .fillMaxWidth()
                     .height(MiniPlayerHeight)
                     .offset { IntOffset(offsetX.roundToInt(), 0) }
-                    .clip(miniPlayerShape),
+                    .clip(miniPlayerShape)
+                    .border(
+                        width = 1.dp,
+                        color = Color.White.copy(alpha = 0.22f), // VoidTune: 30% faded white milk specular rim
+                        shape = miniPlayerShape,
+                    ),
         ) {
             MiniPlayerBackground(
                 style = effectiveBackgroundStyle,
@@ -315,7 +321,12 @@ private fun MiniPlayerBackground(
     when (style) {
         MiniPlayerBackgroundStyle.THEME -> {
             Box(
-                modifier = modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                modifier = modifier
+                    .background(
+                        if (pureBlack) Color(0xFF000000).copy(alpha = 0.88f)
+                        else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.88f)
+                    )
+                    .background(Color.White.copy(alpha = 0.12f)), // VoidTune: 30% faded white milk glaze
             )
         }
 

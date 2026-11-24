@@ -6,7 +6,12 @@
         <item name="android:windowMinWidthMinor">100%</item>
         <item name="android:windowMinWidthMajor">100%</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">#ffffff</item>
+        <!--
+            Legacy ArchiveTune white background caused blinding flash on cold start.
+            Replaced with pure AMOLED black splash window background with VoidTune emblem.
+        -->
+        <!-- <item name="android:windowBackground">#ffffff</item> -->
+        <item name="android:windowBackground">@drawable/splash_background</item>
         <item name="android:enforceNavigationBarContrast" tools:ignore="NewApi">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

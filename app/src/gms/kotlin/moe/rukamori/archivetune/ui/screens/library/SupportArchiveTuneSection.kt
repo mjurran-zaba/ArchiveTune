@@ -7,34 +7,53 @@
 
 package moe.rukamori.archivetune.ui.screens.library
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.rukamori.archivetune.R
@@ -53,6 +72,7 @@ internal fun SupportArchiveTuneSection(
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     val failureMessage = stringResource(R.string.support_archivetune_failed)
     val openSupportPage = remember(viewModel) { viewModel::onSupportArchiveTuneClick }
+    var showQrModal by remember { mutableStateOf(false) }
 
     LaunchedEffect(viewModel, onMessage, failureMessage) {
         viewModel.events.collect { event ->
@@ -64,9 +84,119 @@ internal fun SupportArchiveTuneSection(
 
     SupportArchiveTuneCard(
         state = state,
-        onClick = openSupportPage,
+        onClick = {
+            showQrModal = true
+            // [VoidTune Patch: Disable opening external ArchiveTune web page; preserve for future rebranding]
+            // DO NOT DELETE BUT COMMENT:
+            // openSupportPage()
+        },
         modifier = modifier,
     )
+
+    if (showQrModal) {
+        SupportVoidTuneQrDialog(
+            onDismiss = { showQrModal = false },
+        )
+    }
+}
+
+@Composable
+private fun SupportVoidTuneQrDialog(
+    onDismiss: () -> Unit,
+) {
+    val unifrakturCookFont = remember { FontFamily(Font(R.font.unifrakturcook)) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth(0.92f)
+                    .widthIn(max = 380.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color(0xFF0D1117).copy(alpha = 0.95f))
+                    .background(Color.White.copy(alpha = 0.14f)) // 35% faded white milk glassmorphism
+                    .border(BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)), RoundedCornerShape(16.dp))
+                    .padding(22.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
+                // Header: Title with UnifrakturCook font
+                Text(
+                    text = "Support VoidTune",
+                    fontFamily = unifrakturCookFont,
+                    style =
+                        MaterialTheme.typography.titleLarge.copy(
+                            fontSize = 22.sp,
+                            letterSpacing = 1.1.sp,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                    color = Color.White,
+                )
+
+                // Subtitle: Every single coin you offer, reforges Void's spell
+                Text(
+                    text = "“Every single coin you offer, reforges Void's spell”",
+                    style =
+                        MaterialTheme.typography.bodySmall.copy(
+                            fontStyle = FontStyle.Italic,
+                            fontSize = 12.5.sp,
+                            lineHeight = 18.sp,
+                        ),
+                    textAlign = TextAlign.Center,
+                    color = Color(0xFF38BDF8).copy(alpha = 0.90f),
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                )
+
+                // QR Code Image Box
+                Box(
+                    modifier =
+                        Modifier
+                            .size(220.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color.White)
+                            .padding(12.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.img_support_qr),
+                        contentDescription = "VoidTune Support QR Code",
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                // Footer note
+                Text(
+                    text = "Scan using any e-Wallet or Banking app (QRIS)\nDeveloper • Mjurran | INDONESIA",
+                    style =
+                        MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 10.5.sp,
+                            lineHeight = 14.sp,
+                        ),
+                    textAlign = TextAlign.Center,
+                    color = Color.White.copy(alpha = 0.50f),
+                )
+
+                Spacer(modifier = Modifier.height(2.dp))
+
+                // Close Button
+                OutlinedButton(
+                    onClick = onDismiss,
+                    shape = RoundedCornerShape(12.dp),
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White.copy(alpha = 0.85f),
+                        ),
+                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                ) {
+                    Text("Close")
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -75,15 +205,17 @@ private fun SupportArchiveTuneCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val containerColor = MaterialTheme.colorScheme.primaryContainer
-    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-    val iconContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
+    // VoidTune: 35% faded white milk glassmorphism with curved rectangle (16dp)
+    val containerColor = Color.White.copy(alpha = 0.12f)
+    val contentColor = Color.White
+    val iconContainerColor = Color(0xFF38BDF8).copy(alpha = 0.20f)
     val iconContainerModifier =
         remember(iconContainerColor) {
             Modifier
-                .size(64.dp)
-                .clip(CircleShape)
+                .size(56.dp)
+                .clip(RoundedCornerShape(14.dp))
                 .background(iconContainerColor)
+                .border(1.dp, Color(0xFF38BDF8).copy(alpha = 0.45f), RoundedCornerShape(14.dp))
         }
     val description =
         when (state) {
@@ -109,7 +241,8 @@ private fun SupportArchiveTuneCard(
         enabled =
             state !is SupportArchiveTuneScreenState.Loading &&
                 state !is SupportArchiveTuneScreenState.Empty,
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
         colors =
             CardDefaults.cardColors(
                 containerColor = containerColor,
@@ -120,7 +253,7 @@ private fun SupportArchiveTuneCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .heightIn(min = 128.dp),
+                .heightIn(min = 120.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),

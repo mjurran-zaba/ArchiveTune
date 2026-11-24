@@ -47,6 +47,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -221,6 +222,7 @@ import moe.rukamori.archivetune.constants.DefaultOpenTabKey
 import moe.rukamori.archivetune.constants.DisableAnimationsKey
 import moe.rukamori.archivetune.constants.DisableScreenshotKey
 import moe.rukamori.archivetune.constants.DynamicThemeKey
+import moe.rukamori.archivetune.constants.OnboardingCompletedKey
 import moe.rukamori.archivetune.constants.EnableHapticFeedbackKey
 import moe.rukamori.archivetune.constants.FontPreferenceKey
 import moe.rukamori.archivetune.constants.HasPressedStarKey
@@ -290,6 +292,7 @@ import moe.rukamori.archivetune.ui.component.IconButton
 import moe.rukamori.archivetune.ui.component.LocalBottomSheetPageState
 import moe.rukamori.archivetune.ui.component.LocalMenuState
 import moe.rukamori.archivetune.ui.component.NetworkStatusBanner
+import moe.rukamori.archivetune.ui.component.SpotifyGateDialog
 import moe.rukamori.archivetune.ui.component.StarDialog
 import moe.rukamori.archivetune.ui.component.TopAppBarOverflowMenu
 import moe.rukamori.archivetune.ui.component.TopSearch
@@ -310,6 +313,7 @@ import moe.rukamori.archivetune.ui.screens.navigationBuilder
 import moe.rukamori.archivetune.ui.screens.onboarding.OnboardingRoute
 import moe.rukamori.archivetune.ui.screens.settings.AppUpdateRoute
 import moe.rukamori.archivetune.ui.screens.settings.AppUpdateScreen
+import moe.rukamori.archivetune.ui.screens.VoidTuneSplashScreen
 import moe.rukamori.archivetune.viewmodels.AppUpdateState
 import moe.rukamori.archivetune.viewmodels.AppUpdateViewModel
 import moe.rukamori.archivetune.ui.screens.search.LocalSearchScreen
@@ -349,7 +353,9 @@ import moe.rukamori.archivetune.viewmodels.BackupCategory
 import moe.rukamori.archivetune.viewmodels.BackupRestoreViewModel
 import moe.rukamori.archivetune.viewmodels.GatekeeperViewModel
 import moe.rukamori.archivetune.viewmodels.HomeViewModel
+import moe.rukamori.archivetune.viewmodels.MainMenuDestination
 import moe.rukamori.archivetune.viewmodels.MainMenuViewModel
+import moe.rukamori.archivetune.viewmodels.MenuProfileState
 import moe.rukamori.archivetune.viewmodels.NetworkBannerViewModel
 import moe.rukamori.archivetune.viewmodels.NewsViewModel
 import moe.rukamori.archivetune.viewmodels.OnlineSearchViewModel
@@ -781,7 +787,9 @@ class MainActivity : ComponentActivity() {
                     it != presentedUpdateVersion && Updater.isUpdateAvailable(it, BuildConfig.VERSION_NAME)
             }
 
-            val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
+            // VoidTune: Default false - Nord Polar Mist is the default, not Material You
+            // val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
+            val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = false)
             val customThemeColorValue by rememberPreference(CustomThemeColorKey, defaultValue = "default")
             val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
             val defaultDisableAnimations = remember(this@MainActivity) { applicationContext.isLowRamDevice() }
@@ -894,10 +902,21 @@ class MainActivity : ComponentActivity() {
                 pureBlack = pureBlack,
                 themeColor = themeColor,
                 seedPalette = if (!enableDynamicTheme) customThemeSeedPalette else null,
+                enableDynamicTheme = enableDynamicTheme,
                 disableAnimations = disableAnimations,
                 fontPreference = fontPreference,
                 customFontUri = customFontUri,
             ) {
+                // VoidTune UI Redesign: Luxury Animated Splash Screen with Lottie light burst
+                var showSplashScreen by rememberSaveable { mutableStateOf(true) }
+                if (showSplashScreen) {
+                    VoidTuneSplashScreen(
+                        visible = true,
+                        onAnimationFinished = { showSplashScreen = false },
+                    )
+                    return@ArchiveTuneTheme
+                }
+
                 val navController = rememberNavController()
                 val onboardingViewModel: OnboardingViewModel = hiltViewModel()
                 val onboardingState by onboardingViewModel.screenState.collectAsStateWithLifecycle()
@@ -911,6 +930,17 @@ class MainActivity : ComponentActivity() {
                         is OnboardingScreenState.Success -> state.uiState.shouldShowOnboarding
                     }
 
+                // VoidTune: Skip Onboarding & Welcome flow - launch directly to Home screen after splash
+                LaunchedEffect(Unit) {
+                    dataStore.edit { preferences ->
+                        if (preferences[OnboardingCompletedKey] != true) {
+                            preferences[OnboardingCompletedKey] = true
+                        }
+                    }
+                }
+
+                /*
+                // Original ArchiveTune Onboarding Flow (Bypassed in VoidTune for instant Home access)
                 if (shouldShowOnboarding) {
                     CompositionLocalProvider(LocalAnimationsDisabled provides disableAnimations) {
                         if (showOnboardingLogin) {
@@ -940,6 +970,7 @@ class MainActivity : ComponentActivity() {
                     }
                     return@ArchiveTuneTheme
                 }
+                */
 
                 if (requiredUpdate && startupUpdateViewModel != null) {
                     CompositionLocalProvider(
@@ -1608,6 +1639,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     var showStarDialog by remember { mutableStateOf(false) }
+                    var showSpotifyGateDialog by remember { mutableStateOf(false) }
                     var starPromptPending by remember { mutableStateOf(false) }
                     var whatsNewPresented by remember { mutableStateOf(false) }
                     val whatsNewPending = whatsNewState is WhatsNewState.Checking || whatsNewState is WhatsNewState.Showing
@@ -1654,7 +1686,14 @@ class MainActivity : ComponentActivity() {
                     }
 
                     LaunchedEffect(Unit) {
-                        kotlinx.coroutines.delay(3000)
+                        // [VoidTune Patch: 5-second initial delay after opening app]
+                        // MAKSUD KODE ASLI: Menunggu 3 detik (delay 3000) sebelum mengecek apakah popup dialog bintang/support harus muncul.
+                        // MENGAPA DIKOMEN:
+                        // Delay 3 detik terlalu cepat dan bisa mengagetkan user saat antarmuka awal masih bersiap.
+                        // Dinaikkan menjadi 5 detik (delay 5000) agar user menikmati transisi awal dengan tenang.
+                        // ORIGINAL CODE:
+                        // kotlinx.coroutines.delay(3000)
+                        kotlinx.coroutines.delay(5000)
 
                         withContext(Dispatchers.IO) {
                             val current = dataStore[LaunchCountKey] ?: 0
@@ -1708,6 +1747,19 @@ class MainActivity : ComponentActivity() {
                                         showStarDialog = false
                                     }
                                 }
+                            },
+                        )
+                    }
+
+                    // [VoidTune Patch: 45% Glassmorphism Spotify Gateway Dialog]
+                    if (showSpotifyGateDialog) {
+                        SpotifyGateDialog(
+                            onContinue = {
+                                showSpotifyGateDialog = false
+                                navController.navigate("settings/integration") { launchSingleTop = true }
+                            },
+                            onDismiss = {
+                                showSpotifyGateDialog = false
                             },
                         )
                     }
@@ -1912,11 +1964,8 @@ class MainActivity : ComponentActivity() {
                                                         .onSizeChanged { size ->
                                                             if (size.height > 0) headerHeightPx = size.height
                                                         }.offset {
-                                                            IntOffset(
-                                                                x = 0,
-                                                                y =
-                                                                    currentScrollBehavior.state.heightOffset.roundToInt(),
-                                                            )
+                                                            // VoidTune: TopBar stays pinned (sticky at y = 0) across all screens during scroll
+                                                            IntOffset.Zero
                                                         },
                                             ) {
                                                 // Gradient shadow background. It lives inside the
@@ -1932,22 +1981,22 @@ class MainActivity : ComponentActivity() {
                                                         modifier =
                                                             Modifier
                                                                 .offset {
-                                                                    val raw = currentScrollBehavior.state.heightOffset
-                                                                    val clamped = raw.coerceAtLeast(-appBarHeightPx)
-                                                                    IntOffset(x = 0, y = (clamped - raw).roundToInt())
+                                                                    // VoidTune: TopBar background is pinned at y = 0 across all screens
+                                                                    IntOffset.Zero
                                                                 }.fillMaxWidth()
                                                                 .height(
                                                                     AppBarHeight +
                                                                         with(LocalDensity.current) {
                                                                             WindowInsets.systemBars.getTop(LocalDensity.current).toDp()
-                                                                        },
+                                                                        } + 12.dp,
                                                                 ).background(
                                                                     Brush.verticalGradient(
                                                                         colors =
                                                                             listOf(
+                                                                                surfaceColor.copy(alpha = 0.98f),
                                                                                 surfaceColor.copy(alpha = 0.95f),
-                                                                                surfaceColor.copy(alpha = 0.85f),
-                                                                                surfaceColor.copy(alpha = 0.6f),
+                                                                                surfaceColor.copy(alpha = 0.88f),
+                                                                                surfaceColor.copy(alpha = 0.55f),
                                                                                 Color.Transparent,
                                                                             ),
                                                                     ),
@@ -1966,10 +2015,8 @@ class MainActivity : ComponentActivity() {
                                                                 }
                                                             ) + WindowInsetsSides.Top,
                                                         ),
-                                                    title = {
-                                                        TopAppBarBrand()
-                                                    },
-                                                    actions = {
+                                                    navigationIcon = {
+                                                        // VoidTune UI Redesign: Lucide panel drawer trigger moved to left (NOTEZ Design System)
                                                         val hasUpdateAvailable =
                                                             BuildConfig.UPDATER_AVAILABLE &&
                                                                 Updater.isUpdateAvailable(latestVersionName ?: BuildConfig.VERSION_NAME, BuildConfig.VERSION_NAME)
@@ -2017,40 +2064,40 @@ class MainActivity : ComponentActivity() {
                                                             },
                                                             state = newsTooltipState,
                                                         ) {
-                                                            Box {
-                                                                TranslucentTopAppBarIconButton(
-                                                                    onClick = {
-                                                                        newsTooltipState.dismiss()
-                                                                        mainMenuViewModel.toggle()
-                                                                    },
-                                                                ) {
-                                                                    BadgedBox(badge = {
-                                                                        if (hasUnreadNews || hasUpdateAvailable) {
-                                                                            Badge()
-                                                                        }
-                                                                    }) {
-                                                                        Icon(
-                                                                            painter = painterResource(R.drawable.more_horiz),
-                                                                            contentDescription =
-                                                                                stringResource(R.string.more_options),
-                                                                        )
+                                                            TranslucentTopAppBarIconButton(
+                                                                onClick = {
+                                                                    newsTooltipState.dismiss()
+                                                                    mainMenuViewModel.toggle()
+                                                                },
+                                                            ) {
+                                                                BadgedBox(badge = {
+                                                                    if (hasUnreadNews || hasUpdateAvailable) {
+                                                                        Badge()
                                                                     }
+                                                                }) {
+                                                                    Icon(
+                                                                        painter = painterResource(R.drawable.ic_lucide_panel_left),
+                                                                        contentDescription =
+                                                                            stringResource(R.string.more_options),
+                                                                    )
                                                                 }
-                                                                TopAppBarOverflowMenu(
-                                                                    expanded = topAppBarOverflowExpanded,
-                                                                    profileState = menuProfileState,
-                                                                    accountImageUrl = menuAccountImageUrl,
-                                                                    hazeState = menuHazeState,
-                                                                    pureBlack = pureBlack,
-                                                                    hasUnreadNews = hasUnreadNews,
-                                                                    hasUpdateAvailable = hasUpdateAvailable,
-                                                                    onDismissRequest = mainMenuViewModel::dismiss,
-                                                                    onSelect = { destination ->
-                                                                        newsTooltipState.dismiss()
-                                                                        mainMenuViewModel.select(destination)
-                                                                    },
-                                                                )
                                                             }
+                                                        }
+                                                    },
+                                                    title = {
+                                                        // VoidTune: Removed old ArchiveTune brand from left, clean spacious title
+                                                        // TopAppBarBrand()
+                                                    },
+                                                    actions = {
+                                                        // VoidTune: Removed right logo; in-place expanding Search trigger on TopBar right
+                                                        // VoidTuneTopBarLogo()
+                                                        TranslucentTopAppBarIconButton(
+                                                            onClick = openSearch,
+                                                        ) {
+                                                            Icon(
+                                                                painter = painterResource(R.drawable.search),
+                                                                contentDescription = stringResource(R.string.search),
+                                                            )
                                                         }
                                                     },
                                                     scrollBehavior =
@@ -2081,6 +2128,33 @@ class MainActivity : ComponentActivity() {
                                                             actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                             navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                         ),
+                                                )
+                                                // VoidTune: Slide-In Side Navigation Drawer (replacing small popup card)
+                                                TopAppBarOverflowMenu(
+                                                    expanded = topAppBarOverflowExpanded,
+                                                    profileState = menuProfileState,
+                                                    accountImageUrl = menuAccountImageUrl,
+                                                    hazeState = menuHazeState,
+                                                    pureBlack = pureBlack,
+                                                    hasUnreadNews = hasUnreadNews,
+                                                    hasUpdateAvailable = BuildConfig.UPDATER_AVAILABLE &&
+                                                        Updater.isUpdateAvailable(latestVersionName ?: BuildConfig.VERSION_NAME, BuildConfig.VERSION_NAME),
+                                                    onDismissRequest = mainMenuViewModel::dismiss,
+                                                    onSelect = { destination ->
+                                                        // [VoidTune Patch: Intercept Drawer Login to present 45% Glassmorphism Spotify Gateway Dialog]
+                                                        // MAKSUD KODE ASLI: Langsung memilih destinasi MainMenuDestination.Profile yang membuka halaman login Google/YouTube Music di settings/account.
+                                                        // MENGAPA DIKOMEN / DI-INTERCEPT:
+                                                        // Login Google YouTube Music sering mengalami hambatan BotGuard/error stream.
+                                                        // Alur dialihkan ke Spotify Connect yang lebih lancar dan stabil, dengan menampilkan pop-up dialog bergaya 45% glassmorphism faded grey charcoal.
+                                                        // ORIGINAL CODE:
+                                                        // mainMenuViewModel.select(destination)
+                                                        if (destination == MainMenuDestination.Profile && menuProfileState is MenuProfileState.Empty) {
+                                                            mainMenuViewModel.dismiss()
+                                                            showSpotifyGateDialog = true
+                                                        } else {
+                                                            mainMenuViewModel.select(destination)
+                                                        }
+                                                    },
                                                 )
                                             }
                                         }
@@ -3385,6 +3459,52 @@ private fun TopAppBarBrand() {
             style = MaterialTheme.typography.titleLargeEmphasized,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+// VoidTune UI Redesign: Balanced topbar logo badge on the right with subtle Polar Cyan ambient glow
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun VoidTuneTopBarLogo() {
+    val playerConnection = LocalPlayerConnection.current
+    val isPlaying = playerConnection?.isPlaying?.collectAsStateWithLifecycle()?.value == true
+    val morph = remember { Morph(MaterialShapes.Circle, MaterialShapes.Cookie9Sided) }
+    val morphProgress by animateFloatAsState(
+        targetValue = if (isPlaying) 1f else 0f,
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
+        label = "voidTuneLogoMorph",
+    )
+    val badgeColor by animateColorAsState(
+        targetValue =
+            if (isPlaying) {
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
+            } else {
+                Color.White.copy(alpha = 0.12f)
+            },
+        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+        label = "voidTuneLogoColor",
+    )
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier =
+            Modifier
+                .padding(end = 8.dp)
+                .size(34.dp)
+                .clip(EditorialMorphShape(morph, morphProgress))
+                .background(badgeColor)
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.22f),
+                    shape = EditorialMorphShape(morph, morphProgress),
+                ),
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.about_splash),
+            contentDescription = "VoidTune",
+            tint = Color.Unspecified,
+            modifier = Modifier.size(22.dp),
         )
     }
 }

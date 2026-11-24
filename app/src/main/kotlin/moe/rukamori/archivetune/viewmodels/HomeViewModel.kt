@@ -1226,6 +1226,18 @@ class HomeViewModel
                                 if (shouldSynchronize) {
                                     launch {
                                         try {
+                                            /*
+                                            ORIGINAL CODE:
+                                            if (context.dataStore.get(YtmSyncKey, true)) {
+                                                syncUtils.performFullSync()
+                                            }
+                                            */
+                                            // [VoidTune Patch: Staggered Lazy Background Sync]
+                                            // CAUSE: Triggering full sync immediately at launch floods OkHttp sockets and competes
+                                            // with initial Home screen loading (HomeViewModel.load), causing UI freeze.
+                                            // REASON: Stagger background sync by 3 seconds so the Home screen can load and display
+                                            // instantly without any network or database contention.
+                                            kotlinx.coroutines.delay(3000L)
                                             if (context.dataStore.get(YtmSyncKey, true)) {
                                                 syncUtils.performFullSync()
                                             }

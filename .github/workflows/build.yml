@@ -105,6 +105,11 @@ jobs:
       - name: Generate translation contributor credits
         run: python scripts/generate_translation_contributors.py
 
+      - name: Patch submodules for VoidTune optimizations
+        shell: bash
+        run: |
+          python3 scripts/patch_core.py
+
       - name: Set up JDK 27
         uses: actions/setup-java@v6
         with:

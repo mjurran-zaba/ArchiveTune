@@ -165,6 +165,16 @@ fun AboutScreen(
         }
     }
 
+    // [VoidTune Patch: Direct Redirect to moezaq.vercel.app on About Screen Open]
+    // CAUSE: User requested to comment out/bypass the About screen contents and directly redirect to https://moezaq.vercel.app/
+    // REASON: When About is accessed directly, immediately launch the browser and pop back.
+    LaunchedEffect(Unit) {
+        uriHandler.openUri("https://moezaq.vercel.app/")
+        navController.navigateUp()
+    }
+
+    /*
+    ORIGINAL CODE:
     AboutScreenContent(
         state = state,
         scrollBehavior = scrollBehavior,
@@ -178,6 +188,7 @@ fun AboutScreen(
         onRetryTranslationContributors = viewModel::retryTranslationContributors,
         onRetryDependencyLicenses = viewModel::retryDependencyLicenses,
     )
+    */
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

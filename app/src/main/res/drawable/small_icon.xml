@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    VoidTune Monoline Status Bar & Notification Icon.
+    Lucide-inspired monoline precision: Arcane celestial ring enclosing glowing musical note.
+    Complies with Android status bar monochrome silhouette tinting standards.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Outer Arcane Celestial Ring -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M 12,2.5 A 9.5,9.5 0 1,1 11.99,2.5 Z" />
+
+    <!-- Musical Quaver Note -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 12,6 C 12,5.5 12.4,5.2 13,5.2 C 14.5,5.2 16,6.2 16.5,7.8 C 16.8,8.8 16.6,10 15.8,10.8 C 15.2,10.2 14.2,9.6 13.2,9.2 L 13.2,14.2 C 12.8,13.8 12.1,13.5 11.2,13.5 C 9.5,13.5 8.2,14.6 8.2,16 C 8.2,17.4 9.5,18.5 11.2,18.5 C 12.9,18.5 14.2,17.4 14.2,16 L 14.2,8 C 15,8.8 15.8,9.5 16,10.2 L 16,7.2 C 15,6.2 13.8,5.8 12.5,5.8 L 12,5.8 Z" />
+</vector>
+<!--
+Legacy ArchiveTune vector path preserved for traceability:
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="185dp"
     android:height="185dp"
@@ -25,3 +49,4 @@
 76.3087,148.954 69.3087,146.954 62.5,144.5C 69.9692,122.011 74.9692,99.011
 77.5,75.5 Z" />
 </vector>
+-->

@@ -468,7 +468,14 @@ object YTPlayerUtils {
             visitorData == other.visitorData &&
             dataSyncId == other.dataSyncId
 
+    // [VoidTune Patch: Expose poTokenContentBinding for Fast-Start Warmth Check]
+    // CAUSE: ResolveAudioStreamUseCase needs to resolve session contentBinding to check BotGuard warmth.
+    // REASON: Making internal allows ResolveAudioStreamUseCase to query BotGuardTokenGenerator.isReadyForSession.
+    /*
+    ORIGINAL CODE:
     private fun PlaybackAuthState.poTokenContentBinding(): String? {
+    */
+    internal fun PlaybackAuthState.poTokenContentBinding(): String? {
         if (!hasLoginCookie) return visitorData?.trim()?.takeIf(String::isNotBlank)
         val normalizedDataSyncId = dataSyncId?.trim()?.takeIf(String::isNotBlank) ?: return null
         return if ("||" in normalizedDataSyncId) {

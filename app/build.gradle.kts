@@ -68,7 +68,9 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 144
-        versionName = "16.1.0"
+        // DO NOT DELETE BUT COMMENT: Original ArchiveTune version (16.1.0)
+        // versionName = "16.1.0"
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -110,10 +112,15 @@ android {
         buildConfigField("String", "DISTRIBUTION", "\"gms\"")
         buildConfigField("boolean", "UPDATER_AVAILABLE", "true")
 
+        // DO NOT DELETE BUT COMMENT: Original ArchiveTune repository owner (rukamori)
+        // val githubOwner =
+        //     System.getenv("GITHUB_OWNER")?.trim()
+        //         ?: localProperties.getProperty("GITHUB_OWNER")?.trim()
+        //         ?: "rukamori"
         val githubOwner =
             System.getenv("GITHUB_OWNER")?.trim()
                 ?: localProperties.getProperty("GITHUB_OWNER")?.trim()
-                ?: "rukamori"
+                ?: "mjurran-zaba"
         val githubRepo =
             System.getenv("GITHUB_REPO")?.trim()
                 ?: localProperties.getProperty("GITHUB_REPO")?.trim()
@@ -323,6 +330,8 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
 
     implementation(libs.material3)
+    // VoidTune UI Redesign: Lottie Compose for luxury splash screen animations
+    implementation(libs.lottie.compose)
     implementation(libs.haze)
     implementation(libs.haze.blur)
     implementation(libs.haze.glass)

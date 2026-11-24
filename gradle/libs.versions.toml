@@ -48,6 +48,8 @@ quickjsKt = "1.0.18"
 protobuf = "4.36.2"
 webkit = "1.18.0"
 haze = "2.1.0"
+# VoidTune UI Redesign: Added Lottie version for luxury splash screen light burst animation
+lottie = "6.6.2"
 
 
 [libraries]
@@ -159,6 +161,8 @@ quickjs-kt = { module = "io.github.dokar3:quickjs-kt", version.ref = "quickjsKt"
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-blur = { module = "dev.chrisbanes.haze:haze-blur", version.ref = "haze" }
 haze-glass = { module = "dev.chrisbanes.haze:haze-glass", version.ref = "haze" }
+# VoidTune UI Redesign: Lottie Compose for luxury splash screen animations
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 
 

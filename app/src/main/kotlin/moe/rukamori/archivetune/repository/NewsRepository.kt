@@ -73,9 +73,12 @@ class NewsRepository
         fun getCachedItem(id: String): NewsItem? = metadataCache?.find { it.id == id }
 
         private companion object {
+            // VoidTune: Point news to Mjurran's GitHub repository for dynamic devlogs & announcements
+            // const val METADATA_URL = "https://raw.githubusercontent.com/koiverse/ArchiveTuneNewsRepository/main/metadata.json"
+            // const val CONTENT_BASE_URL = "https://raw.githubusercontent.com/koiverse/ArchiveTuneNewsRepository/main/content/"
             const val METADATA_URL =
-                "https://raw.githubusercontent.com/koiverse/ArchiveTuneNewsRepository/main/metadata.json"
+                "https://raw.githubusercontent.com/mjurran-zaba/ArchiveTune/VoidTune/news/metadata.json"
             const val CONTENT_BASE_URL =
-                "https://raw.githubusercontent.com/koiverse/ArchiveTuneNewsRepository/main/content/"
+                "https://raw.githubusercontent.com/mjurran-zaba/ArchiveTune/VoidTune/news/content/"
         }
     }
