@@ -19,6 +19,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -192,31 +193,42 @@ fun BlurredOverflowMenu(
                             .verticalScroll(rememberScrollState())
                             .padding(vertical = 18.dp, horizontal = 8.dp),
                     ) {
-                        // VoidTune Side Drawer Brand Header (Logo removed, Gothic UnifrakturCook font + MJURRAN ARC)
-                        Column(
+                        // VoidTune Side Drawer Brand Header: Fantasy Magic Seal Logo + Gothic UnifrakturCook Typography
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(14.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 14.dp, vertical = 8.dp),
                         ) {
-                            Text(
-                                text = "VoidTune",
-                                fontFamily = unifrakturCookFont,
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontSize = 28.sp,
-                                    letterSpacing = 1.2.sp,
-                                ),
-                                color = contentColor,
+                            Image(
+                                painter = painterResource(R.drawable.ic_voidtune_seal),
+                                contentDescription = "VoidTune Magic Seal",
+                                modifier = Modifier
+                                    .size(46.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
                             )
-                            Text(
-                                text = "MJURRAN ARC",
-                                style = MaterialTheme.typography.labelMedium.copy(
-                                    fontStyle = FontStyle.Italic,
-                                    letterSpacing = 1.8.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                ),
-                                color = MaterialTheme.colorScheme.primary, // Polar Cyan (#38BDF8)
-                                modifier = Modifier.padding(top = 2.dp),
-                            )
+                            Column {
+                                Text(
+                                    text = "VoidTune",
+                                    fontFamily = unifrakturCookFont,
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontSize = 26.sp,
+                                        letterSpacing = 1.2.sp,
+                                    ),
+                                    color = contentColor,
+                                )
+                                Text(
+                                    text = "MJURRAN ARC",
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontStyle = FontStyle.Italic,
+                                        letterSpacing = 1.8.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                    ),
+                                    color = MaterialTheme.colorScheme.primary, // Polar Cyan (#38BDF8)
+                                    modifier = Modifier.padding(top = 1.dp),
+                                )
+                            }
                         }
 
                         HorizontalDivider(
