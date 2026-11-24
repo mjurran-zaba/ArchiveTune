@@ -298,4 +298,367 @@ if os.path.exists(mori_client_file):
             f.write(mori_client_content)
         print("Applied YoutubeiHttpClient Origin host match patch.")
 
+# --- Patch 6: app YoutubeiStreamRepository (Patenkan Guest Mode untuk Pemutaran Stream) ---
+repo_file = "app/src/main/kotlin/moe/rukamori/archivetune/playback/stream/YoutubeiStreamRepository.kt"
+if os.path.exists(repo_file):
+    with open(repo_file, "r", encoding="utf-8") as f:
+        repo_content = f.read()
+
+    old_repo_resolve_block = """        internal suspend fun resolve(
+            request: AudioStreamRequest,
+            priority: StreamResolutionPriority,
+        ): ResolvedAudioStream {
+            val authState = request.authState
+            if (authState.hasLoginCookie && !hasCompleteYouTubeLoginCookies(authState.cookie)) {
+                throw YTPlayerUtils.InvalidPlaybackLoginContextException(
+                    videoId = request.mediaId,
+                    targetUrl = request.mediaUrl,
+                    cause = IllegalStateException("YouTube login cookies are incomplete"),
+                )
+            }
+
+            val locale = YouTube.locale
+            var streamMediaId = request.mediaId
+            val resolved =
+                try {
+                    resolver.resolve(
+                        request =
+                            YoutubeiStreamRequest(
+                                mediaId = request.mediaId,
+                                quality = request.quality.toYoutubeiQuality(),
+                                networkMetered = request.networkMetered,
+                                authFingerprint = authState.streamCacheFingerprint,
+                                pinnedItag = request.pinnedFormatId,
+                                requiresSongMetadata = request.requiresSongMetadata,
+                                cookie = authState.cookie.takeIf { authState.hasLoginCookie },
+                                visitorData = authState.visitorData,
+                                dataSyncId = authState.dataSyncId.takeIf { authState.hasLoginCookie },
+                                accountIndex = authState.accountIndex.takeIf { authState.hasLoginCookie },
+                                sessionPoToken = authState.poTokenGvsSession,
+                                videoPoToken =
+                                    authState.poTokenGvs?.takeIf {
+                                        authState.poTokenGvsVideoId == request.mediaId
+                                    },
+                                language = locale.hl,
+                                location = locale.gl,
+                                timezone = TimeZone.getDefault().id,
+                            ),
+                        priority = priority.toYoutubeiPriority(),
+                        videoPoTokenProvider = { replacementMediaId ->
+                            streamMediaId = replacementMediaId
+                            val replacementAuthState =
+                                YTPlayerUtils.ensureYoutubeiPoTokensForPlayback(
+                                    videoId = replacementMediaId,
+                                    authState = authState,
+                                )
+                            replacementAuthState.poTokenGvs?.takeIf {
+                                replacementAuthState.poTokenGvsVideoId == replacementMediaId
+                            }
+                        },
+                    )
+                } catch (cancellation: CancellationException) {
+                    throw cancellation
+                } catch (failure: YoutubeiException) {
+                    if (failure.kind == YoutubeiFailureKind.PO_TOKEN ||
+                        failure.kind == YoutubeiFailureKind.LOGIN_REQUIRED &&
+                        YTPlayerUtils.isBotDetectionError(failure.message.orEmpty())
+                    ) {
+                        throw YTPlayerUtils.BotDetectionPlaybackException(
+                            videoId = request.mediaId,
+                            clients = setOf(if (authState.hasLoginCookie) "WEB_CREATOR" else "MWEB"),
+                            cause = failure,
+                        )
+                    }
+                    if (failure.kind == YoutubeiFailureKind.LOGIN_REQUIRED ||
+                        failure.kind == YoutubeiFailureKind.HTTP && failure.httpStatus == 401
+                    ) {
+                        if (!failure.requiresContentConfirmation()) {
+                            if (!authState.hasLoginCookie) {
+                                throw YTPlayerUtils.BadStreamPlayerResponseException(
+                                    videoId = request.mediaId,
+                                    failedClients = setOf("MWEB"),
+                                    cause = failure,
+                                )
+                            }
+                            throw YTPlayerUtils.InvalidPlaybackLoginContextException(
+                                videoId = request.mediaId,
+                                targetUrl = request.mediaUrl,
+                                cause = failure,
+                            )
+                        }
+                        throw YTPlayerUtils.LoginRequiredForPlaybackException(
+                            videoId = request.mediaId,
+                            targetUrl = request.mediaUrl,
+                            reason = failure.message,
+                            cause = failure,
+                        )
+                    }
+                    if (failure.kind == YoutubeiFailureKind.NO_FORMAT) {
+                        throw YTPlayerUtils.BadStreamPlayerResponseException(
+                            videoId = request.mediaId,
+                            failedClients =
+                                if (authState.hasLoginCookie) {
+                                    AUTHENTICATED_STREAM_CLIENTS
+                                } else {
+                                    ANONYMOUS_STREAM_CLIENTS
+                                },
+                            cause = failure,
+                        )
+                    }
+                    throw failure
+                }"""
+
+    patch_repo_resolve_block = """        internal suspend fun resolve(
+            request: AudioStreamRequest,
+            priority: StreamResolutionPriority,
+        ): ResolvedAudioStream {
+            /*
+            ORIGINAL CODE:
+            val authState = request.authState
+            if (authState.hasLoginCookie && !hasCompleteYouTubeLoginCookies(authState.cookie)) {
+                throw YTPlayerUtils.InvalidPlaybackLoginContextException(
+                    videoId = request.mediaId,
+                    targetUrl = request.mediaUrl,
+                    cause = IllegalStateException("YouTube login cookies are incomplete"),
+                )
+            }
+
+            val locale = YouTube.locale
+            var streamMediaId = request.mediaId
+            val resolved =
+                try {
+                    resolver.resolve(
+                        request =
+                            YoutubeiStreamRequest(
+                                mediaId = request.mediaId,
+                                quality = request.quality.toYoutubeiQuality(),
+                                networkMetered = request.networkMetered,
+                                authFingerprint = authState.streamCacheFingerprint,
+                                pinnedItag = request.pinnedFormatId,
+                                requiresSongMetadata = request.requiresSongMetadata,
+                                cookie = authState.cookie.takeIf { authState.hasLoginCookie },
+                                visitorData = authState.visitorData,
+                                dataSyncId = authState.dataSyncId.takeIf { authState.hasLoginCookie },
+                                accountIndex = authState.accountIndex.takeIf { authState.hasLoginCookie },
+                                sessionPoToken = authState.poTokenGvsSession,
+                                videoPoToken =
+                                    authState.poTokenGvs?.takeIf {
+                                        authState.poTokenGvsVideoId == request.mediaId
+                                    },
+                                language = locale.hl,
+                                location = locale.gl,
+                                timezone = TimeZone.getDefault().id,
+                            ),
+                        priority = priority.toYoutubeiPriority(),
+                        videoPoTokenProvider = { replacementMediaId ->
+                            streamMediaId = replacementMediaId
+                            val replacementAuthState =
+                                YTPlayerUtils.ensureYoutubeiPoTokensForPlayback(
+                                    videoId = replacementMediaId,
+                                    authState = authState,
+                                )
+                            replacementAuthState.poTokenGvs?.takeIf {
+                                replacementAuthState.poTokenGvsVideoId == replacementMediaId
+                            }
+                        },
+                    )
+                } catch (cancellation: CancellationException) {
+                    throw cancellation
+                } catch (failure: YoutubeiException) {
+                    if (failure.kind == YoutubeiFailureKind.PO_TOKEN ||
+                        failure.kind == YoutubeiFailureKind.LOGIN_REQUIRED &&
+                        YTPlayerUtils.isBotDetectionError(failure.message.orEmpty())
+                    ) {
+                        throw YTPlayerUtils.BotDetectionPlaybackException(
+                            videoId = request.mediaId,
+                            clients = setOf(if (authState.hasLoginCookie) "WEB_CREATOR" else "MWEB"),
+                            cause = failure,
+                        )
+                    }
+                    if (failure.kind == YoutubeiFailureKind.LOGIN_REQUIRED ||
+                        failure.kind == YoutubeiFailureKind.HTTP && failure.httpStatus == 401
+                    ) {
+                        if (!failure.requiresContentConfirmation()) {
+                            if (!authState.hasLoginCookie) {
+                                throw YTPlayerUtils.BadStreamPlayerResponseException(
+                                    videoId = request.mediaId,
+                                    failedClients = setOf("MWEB"),
+                                    cause = failure,
+                                )
+                            }
+                            throw YTPlayerUtils.InvalidPlaybackLoginContextException(
+                                videoId = request.mediaId,
+                                targetUrl = request.mediaUrl,
+                                cause = failure,
+                            )
+                        }
+                        throw YTPlayerUtils.LoginRequiredForPlaybackException(
+                            videoId = request.mediaId,
+                            targetUrl = request.mediaUrl,
+                            reason = failure.message,
+                            cause = failure,
+                        )
+                    }
+                    if (failure.kind == YoutubeiFailureKind.NO_FORMAT) {
+                        throw YTPlayerUtils.BadStreamPlayerResponseException(
+                            videoId = request.mediaId,
+                            failedClients =
+                                if (authState.hasLoginCookie) {
+                                    AUTHENTICATED_STREAM_CLIENTS
+                                } else {
+                                    ANONYMOUS_STREAM_CLIENTS
+                                },
+                            cause = failure,
+                        )
+                    }
+                    throw failure
+                }
+            */
+            // [VoidTune Patch: Patenkan Pemutaran Stream sebagai Guest (Bebas Akun/Cookie Web) untuk Performa Instan 1-2 Detik]
+            // MAKSUD KODE ASLI:
+            // Kode asli memeriksa kelengkapan cookie akun dan meneruskan cookie, dataSyncId, serta accountIndex
+            // milik akun Google login ke YoutubeiStreamRequest untuk meresolusi stream audio sebagai user terotentikasi.
+            // MENGAPA DIKOMEN:
+            // 1. Mengirim cookie/dataSyncId akun login memaksa morideobfuscator menganggap sesi sebagai client web (WEB_CREATOR).
+            //    Akibatnya, QuickJS terpaksa mengunduh skrip player YouTube (base.js) sebesar 4MB di jaringan ponsel (15-20 detik)
+            //    yang memicu JobCancellationException pada ExoPlayer sehingga lagu stuck/spinning tanpa henti.
+            // 2. Jika dipaksa ke client cepat VISIONOS dengan cookie browser web, YouTube menolaknya dengan HTTP 400 Bad Request
+            //    karena format header web bertabrakan dengan spesifikasi native Apple client.
+            // 3. Sesuai prinsip kerja arsitektur yang terbukti sukses: Akun login HANYA dipakai untuk sinkronisasi metadata
+            //    (Home, Quick Picks, Explore, Playlists, Liked Songs di layer YouTube.kt). Sedangkan saat memutar lagu,
+            //    kita PATENKAN sebagai GUEST murni dengan token anti-bot (visitorData + poToken) yang bersih dari beban akun web.
+            //    Jika dan hanya jika konten membutuhkan otentikasi akun (misal: private track/age-check), sistem baru fallback ke akun.
+            // KODE PERUBAHAN DI BAWAH:
+            val authState = request.authState
+            val locale = YouTube.locale
+            var streamMediaId = request.mediaId
+
+            fun createStreamRequest(asGuest: Boolean) =
+                YoutubeiStreamRequest(
+                    mediaId = request.mediaId,
+                    quality = request.quality.toYoutubeiQuality(),
+                    networkMetered = request.networkMetered,
+                    authFingerprint = if (asGuest) "guest" else authState.streamCacheFingerprint,
+                    pinnedItag = request.pinnedFormatId,
+                    requiresSongMetadata = request.requiresSongMetadata,
+                    cookie = if (asGuest) null else authState.cookie.takeIf { authState.hasLoginCookie },
+                    visitorData = authState.visitorData,
+                    dataSyncId = if (asGuest) null else authState.dataSyncId.takeIf { authState.hasLoginCookie },
+                    accountIndex = if (asGuest) null else authState.accountIndex.takeIf { authState.hasLoginCookie },
+                    sessionPoToken = authState.poTokenGvsSession,
+                    videoPoToken =
+                        authState.poTokenGvs?.takeIf {
+                            authState.poTokenGvsVideoId == request.mediaId
+                        },
+                    language = locale.hl,
+                    location = locale.gl,
+                    timezone = TimeZone.getDefault().id,
+                )
+
+            val resolved =
+                try {
+                    // Eksekusi pemutaran secara paten sebagai GUEST murni untuk kecepatan instan 1-2 detik
+                    resolver.resolve(
+                        request = createStreamRequest(asGuest = true),
+                        priority = priority.toYoutubeiPriority(),
+                        videoPoTokenProvider = { replacementMediaId ->
+                            streamMediaId = replacementMediaId
+                            val replacementAuthState =
+                                YTPlayerUtils.ensureYoutubeiPoTokensForPlayback(
+                                    videoId = replacementMediaId,
+                                    authState = authState,
+                                )
+                            replacementAuthState.poTokenGvs?.takeIf {
+                                replacementAuthState.poTokenGvsVideoId == replacementMediaId
+                            }
+                        },
+                    )
+                } catch (cancellation: CancellationException) {
+                    throw cancellation
+                } catch (failure: YoutubeiException) {
+                    val resolvedAuth =
+                        if (authState.hasLoginCookie && (failure.kind == YoutubeiFailureKind.LOGIN_REQUIRED || failure.requiresContentConfirmation())) {
+                            try {
+                                resolver.resolve(
+                                    request = createStreamRequest(asGuest = false),
+                                    priority = priority.toYoutubeiPriority(),
+                                    videoPoTokenProvider = { replacementMediaId ->
+                                        streamMediaId = replacementMediaId
+                                        val replacementAuthState =
+                                            YTPlayerUtils.ensureYoutubeiPoTokensForPlayback(
+                                                videoId = replacementMediaId,
+                                                authState = authState,
+                                            )
+                                        replacementAuthState.poTokenGvs?.takeIf {
+                                            replacementAuthState.poTokenGvsVideoId == replacementMediaId
+                                        }
+                                    },
+                                )
+                            } catch (authRetryCancellation: CancellationException) {
+                                throw authRetryCancellation
+                            } catch (authRetryFailure: Throwable) {
+                                null
+                            }
+                        } else {
+                            null
+                        }
+
+                    resolvedAuth ?: run {
+                        if (failure.kind == YoutubeiFailureKind.PO_TOKEN ||
+                            failure.kind == YoutubeiFailureKind.LOGIN_REQUIRED &&
+                            YTPlayerUtils.isBotDetectionError(failure.message.orEmpty())
+                        ) {
+                            throw YTPlayerUtils.BotDetectionPlaybackException(
+                                videoId = request.mediaId,
+                                clients = setOf(if (authState.hasLoginCookie) "WEB_CREATOR" else "MWEB"),
+                                cause = failure,
+                            )
+                        }
+                        if (failure.kind == YoutubeiFailureKind.LOGIN_REQUIRED ||
+                            failure.kind == YoutubeiFailureKind.HTTP && failure.httpStatus == 401
+                        ) {
+                            if (!failure.requiresContentConfirmation()) {
+                                if (!authState.hasLoginCookie) {
+                                    throw YTPlayerUtils.BadStreamPlayerResponseException(
+                                        videoId = request.mediaId,
+                                        failedClients = setOf("MWEB"),
+                                        cause = failure,
+                                    )
+                                }
+                                throw YTPlayerUtils.InvalidPlaybackLoginContextException(
+                                    videoId = request.mediaId,
+                                    targetUrl = request.mediaUrl,
+                                    cause = failure,
+                                )
+                            }
+                            throw YTPlayerUtils.LoginRequiredForPlaybackException(
+                                videoId = request.mediaId,
+                                targetUrl = request.mediaUrl,
+                                reason = failure.message,
+                                cause = failure,
+                            )
+                        }
+                        if (failure.kind == YoutubeiFailureKind.NO_FORMAT) {
+                            throw YTPlayerUtils.BadStreamPlayerResponseException(
+                                videoId = request.mediaId,
+                                failedClients =
+                                    if (authState.hasLoginCookie) {
+                                        AUTHENTICATED_STREAM_CLIENTS
+                                    } else {
+                                        ANONYMOUS_STREAM_CLIENTS
+                                    },
+                                cause = failure,
+                            )
+                        }
+                        throw failure
+                    }
+                }"""
+
+    if "createStreamRequest" not in repo_content and old_repo_resolve_block in repo_content:
+        repo_content = repo_content.replace(old_repo_resolve_block, patch_repo_resolve_block, 1)
+        with open(repo_file, "w", encoding="utf-8") as f:
+            f.write(repo_content)
+        print("Applied YoutubeiStreamRepository guest-patented playback patch.")
+
+
 
