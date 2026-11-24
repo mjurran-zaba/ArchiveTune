@@ -357,10 +357,17 @@ jobs:
                   curl_cmd.append(f'https://api.telegram.org/bot{bot_token}/sendDocument')
 
                   res = subprocess.run(curl_cmd, capture_output=True, text=True)
-                  if res.returncode == 0 and '"ok":true' in res.stdout:
-                      print('APK document sent successfully to Telegram via curl.')
-                      exit(0)
-                  else:
+                  try:
+                      resp_json = json.loads(res.stdout)
+                      if resp_json.get('ok') is True:
+                          print('APK document sent successfully to Telegram via curl streaming.')
+                          exit(0)
+                      else:
+                          print(f'curl sendDocument API returned error: {res.stdout}')
+                  except Exception as parse_err:
+                      if res.returncode == 0 and '\"ok\":true' in res.stdout:
+                          print('APK document sent successfully to Telegram via curl streaming.')
+                          exit(0)
                       print(f'curl sendDocument failed (code {res.returncode}): {res.stderr} {res.stdout}')
 
               # Fallback text notification if file > 50MB or sendDocument encountered an error
