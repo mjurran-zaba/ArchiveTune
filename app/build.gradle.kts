@@ -67,10 +67,10 @@ android {
     applicationId = "moe.rukamori.archivetune"
         minSdk = 26
         targetSdk = 37
-        versionCode = 144
+        versionCode = 145
         // DO NOT DELETE BUT COMMENT: Original ArchiveTune version (16.1.0)
         // versionName = "16.1.0"
-        versionName = "0.0.1"
+        versionName = "0.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
