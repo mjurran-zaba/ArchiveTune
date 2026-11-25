@@ -1,3 +1,4 @@
+// Always meticulous in everyhthing to minimize the case
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -26,7 +27,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -70,6 +74,8 @@ fun TopAppBarOverflowMenu(
     // ORIGINAL CODE:
     // val contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurface
     val contentColor = Color(0xFFF8FAFC)
+    var showSupportQrDialog by remember { mutableStateOf(false) }
+
     BlurredOverflowMenu(
         expanded = expanded,
         hazeState = hazeState,
@@ -113,6 +119,26 @@ fun TopAppBarOverflowMenu(
             hasBadge = hasUpdateAvailable,
             badgeDescription = if (hasUpdateAvailable) stringResource(R.string.new_update_available) else null,
             onClick = remember(onSelect) { { onSelect(MainMenuDestination.Settings) } },
+        )
+        // - Always meticulous in everyhthing to minimize the case
+        // [VoidTune Patch: Direct Support VoidTune QRIS Entry in Navigation Drawer]
+        // MAKSUD KODE ASLI: Hanya NewRelease, News, History, Settings
+        // MENGAPA DITAMBAH: Memudahkan pengguna untuk mendukung pengembang langsung dari drawer samping.
+        OverflowMenuDivider()
+        OverflowAction(
+            label = "Support VoidTune",
+            iconRes = R.drawable.coffee,
+            contentColor = Color(0xFFF59E0B), // Radiant Amber Gold
+            onClick = {
+                onDismissRequest()
+                showSupportQrDialog = true
+            },
+        )
+    }
+
+    if (showSupportQrDialog) {
+        SupportQrModal(
+            onDismiss = { showSupportQrDialog = false },
         )
     }
 }
