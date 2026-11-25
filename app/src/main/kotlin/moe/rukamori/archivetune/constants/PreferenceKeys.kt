@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -900,6 +904,11 @@ val SpotifyAccountNameKey = stringKey("spotify_account_name")
 val SpotifyAccountAvatarUrlKey = stringKey("spotify_account_avatar_url")
 val ShowSpotifyPlaylistsKey = booleanKey("show_spotify_playlists")
 val SpotifyLibraryPlaylistsCacheKey = stringKey("spotify_library_playlists_cache")
+
+// [VoidTune Patch: Custom Local User Profile Keys]
+// REASON: Store user's personalized local identity (custom username and picked gallery avatar) independent of cloud providers.
+val CustomProfileNameKey = stringKey("custom_profile_name")
+val CustomProfileAvatarPathKey = stringKey("custom_profile_avatar_path")
 
 val WebClientPoTokenEnabledKey = booleanKey("webClientPoTokenEnabled")
 val PoTokenGvsKey = stringKey("poTokenGvs")

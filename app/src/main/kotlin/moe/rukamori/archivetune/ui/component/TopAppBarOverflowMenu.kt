@@ -69,6 +69,13 @@ import kotlinx.coroutines.delay
 import moe.rukamori.archivetune.R
 import moe.rukamori.archivetune.viewmodels.MainMenuDestination
 import moe.rukamori.archivetune.viewmodels.MenuProfileState
+import java.io.File
+import moe.rukamori.archivetune.constants.AccountNameKey
+import moe.rukamori.archivetune.constants.CustomProfileAvatarPathKey
+import moe.rukamori.archivetune.constants.CustomProfileNameKey
+import moe.rukamori.archivetune.constants.SpotifyAccountNameKey
+import moe.rukamori.archivetune.constants.SpotifySpDcKey
+import moe.rukamori.archivetune.utils.rememberPreference
 
 @Composable
 fun TopAppBarOverflowMenu(
@@ -262,6 +269,8 @@ private fun SupportVoidTuneBadge(
     }
 }
 
+/*
+// ORIGINAL CODE:
 @Composable
 private fun MenuProfileHeader(
     state: MenuProfileState,
@@ -324,6 +333,146 @@ private fun MenuProfileHeader(
         },
         trailingIcon = {
             Icon(painterResource(R.drawable.navigate_next), null, modifier = Modifier.size(20.dp))
+        },
+        colors = MenuDefaults.itemColors(
+            textColor = contentColor,
+            leadingIconColor = Color(0xFF38BDF8),
+            trailingIconColor = Color(0xFFCBD5E1),
+        ),
+        onClick = onClick,
+    )
+}
+*/
+// [VoidTune Patch: Enhanced Personalized Profile Header with Dual Service Status Badges]
+// REASON: Render custom gallery avatar, custom username, and mini YouTube/Spotify badges directly below the avatar.
+@Composable
+private fun MenuProfileHeader(
+    state: MenuProfileState,
+    accountImageUrl: String?,
+    contentColor: Color,
+    onClick: () -> Unit,
+) {
+    val profile = (state as? MenuProfileState.Success)?.profile
+    val (customName) = rememberPreference(CustomProfileNameKey, "")
+    val (customAvatarPath) = rememberPreference(CustomProfileAvatarPathKey, "")
+    val (spotifySpDc) = rememberPreference(SpotifySpDcKey, "")
+    val (spotifyName) = rememberPreference(SpotifyAccountNameKey, "")
+    val (ytName) = rememberPreference(AccountNameKey, "")
+
+    val isSpotifyConnected = spotifySpDc.isNotBlank()
+    val isYouTubeConnected = profile != null || ytName.isNotBlank()
+
+    val displayName = when {
+        customName.isNotBlank() -> customName
+        profile != null && profile.name.isNotBlank() -> profile.name
+        isSpotifyConnected && spotifyName.isNotBlank() -> spotifyName
+        else -> stringResource(R.string.account)
+    }
+
+    val displaySubtitle = when {
+        isSpotifyConnected && isYouTubeConnected -> "Spotify & YouTube Linked"
+        isSpotifyConnected -> "Spotify Connected"
+        isYouTubeConnected -> "YouTube Connected"
+        else -> "Tap to customize profile"
+    }
+
+    DropdownMenuItem(
+        modifier = Modifier.fillMaxWidth().heightIn(min = 88.dp),
+        text = {
+            Column(modifier = Modifier.padding(start = 6.dp)) {
+                Text(
+                    text = displayName,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    color = contentColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = displaySubtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = contentColor.copy(alpha = 0.72f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        },
+        leadingIcon = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                // Slightly enlarged avatar (~54dp)
+                Box(
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .background(contentColor.copy(alpha = 0.08f))
+                        .border(1.dp, Color(0xFF38BDF8).copy(alpha = 0.4f), CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (customAvatarPath.isNotBlank() && File(customAvatarPath).exists()) {
+                        AsyncImage(
+                            model = File(customAvatarPath),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(54.dp).clip(CircleShape),
+                        )
+                    } else if (!accountImageUrl.isNullOrBlank()) {
+                        AsyncImage(
+                            model = accountImageUrl,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(54.dp).clip(CircleShape),
+                        )
+                    } else {
+                        Icon(painterResource(R.drawable.account), null, tint = contentColor, modifier = Modifier.size(28.dp))
+                    }
+                }
+
+                // Mini service badges right below the avatar
+                if (isSpotifyConnected || isYouTubeConnected) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        if (isYouTubeConnected) {
+                            Box(
+                                modifier = Modifier
+                                    .size(14.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFEF4444)),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.youtube),
+                                    contentDescription = "YouTube",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(9.dp),
+                                )
+                            }
+                        }
+                        if (isSpotifyConnected) {
+                            Box(
+                                modifier = Modifier
+                                    .size(14.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFF1DB954)),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.spotify),
+                                    contentDescription = "Spotify",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(9.dp),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        trailingIcon = {
+            Icon(painterResource(R.drawable.navigate_next), null, tint = Color(0xFFCBD5E1), modifier = Modifier.size(20.dp))
         },
         colors = MenuDefaults.itemColors(
             textColor = contentColor,

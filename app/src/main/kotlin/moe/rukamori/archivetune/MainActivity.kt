@@ -1751,6 +1751,8 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+                    /*
+                    // PREVIOUS CODE:
                     // [VoidTune Patch: 45% Glassmorphism Spotify Gateway Dialog]
                     if (showSpotifyGateDialog) {
                         SpotifyGateDialog(
@@ -1763,6 +1765,7 @@ class MainActivity : ComponentActivity() {
                             },
                         )
                     }
+                    */
 
                     val currentTitleRes =
                         remember(navBackStackEntry) {
@@ -2149,19 +2152,18 @@ class MainActivity : ComponentActivity() {
                                                         Updater.isUpdateAvailable(latestVersionName ?: BuildConfig.VERSION_NAME, BuildConfig.VERSION_NAME),
                                                     onDismissRequest = mainMenuViewModel::dismiss,
                                                     onSelect = { destination ->
-                                                        // [VoidTune Patch: Intercept Drawer Login to present 45% Glassmorphism Spotify Gateway Dialog]
-                                                        // MAKSUD KODE ASLI: Langsung memilih destinasi MainMenuDestination.Profile yang membuka halaman login Google/YouTube Music di settings/account.
-                                                        // MENGAPA DIKOMEN / DI-INTERCEPT:
-                                                        // Login Google YouTube Music sering mengalami hambatan BotGuard/error stream.
-                                                        // Alur dialihkan ke Spotify Connect yang lebih lancar dan stabil, dengan menampilkan pop-up dialog bergaya 45% glassmorphism faded grey charcoal.
-                                                        // ORIGINAL CODE:
-                                                        // mainMenuViewModel.select(destination)
+                                                        /*
+                                                        // PREVIOUS INTERCEPTION CODE:
                                                         if (destination == MainMenuDestination.Profile && menuProfileState is MenuProfileState.Empty) {
                                                             mainMenuViewModel.dismiss()
                                                             showSpotifyGateDialog = true
                                                         } else {
                                                             mainMenuViewModel.select(destination)
                                                         }
+                                                        */
+                                                        // [VoidTune Patch: Direct Navigation to Profile Screen from Drawer]
+                                                        // REASON: User requested removing intermediate popup dialogs and navigating directly to new Profile layer.
+                                                        mainMenuViewModel.select(destination)
                                                     },
                                                 )
                                             }

@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -40,7 +44,13 @@ sealed interface MenuProfileState {
 }
 
 enum class MainMenuDestination(val route: String) {
+    /*
+    // ORIGINAL CODE:
     Profile("settings/account"),
+    */
+    // [VoidTune Patch: Direct Navigation to Custom VoidTune Profile Layer]
+    // REASON: Decouple drawer profile from settings/account and route directly to dedicated ProfileScreen.
+    Profile("profile"),
     NewRelease("new_release"),
     News("news"),
     History("history"),

@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -421,6 +425,11 @@ fun NavGraphBuilder.navigationBuilder(
             latestVersionName = latestVersionName() ?: BuildConfig.VERSION_NAME,
             viewModel = homeViewModel,
         )
+    }
+    // [VoidTune Patch: Register Custom Profile Layer Screen]
+    // REASON: Host dedicated VoidTune profile management for gallery photo, custom username, and account links.
+    composable("profile") {
+        ProfileScreen(navController = navController)
     }
     composable("settings/hidden_playlists") {
         HiddenPlaylistsScreen(navController)
