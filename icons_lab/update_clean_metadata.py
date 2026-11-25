@@ -1,0 +1,121 @@
+import json
+
+METADATA_FILE = "/home/user/VoidTune/IconPack/metadata.json"
+
+clean_catalog = [
+    {
+        "Id": "void_singularity",
+        "Name": "Sound Singularity",
+        "Author": "mjurran-zaba",
+        "Source": "void_singularity.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF080511"
+    },
+    {
+        "Id": "void_monolith_v",
+        "Name": "Neon Monolith V",
+        "Author": "mjurran-zaba",
+        "Source": "void_monolith_v.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF070A12"
+    },
+    {
+        "Id": "void_sound_eclipse",
+        "Name": "Sound Eclipse",
+        "Author": "mjurran-zaba",
+        "Source": "void_sound_eclipse.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF0C0D11"
+    },
+    {
+        "Id": "void_equalizer_v",
+        "Name": "Equalizer V-Pulse",
+        "Author": "mjurran-zaba",
+        "Source": "void_equalizer_v.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF08090E"
+    },
+    {
+        "Id": "void_nordic_prism",
+        "Name": "Nordic Hex Prism",
+        "Author": "mjurran-zaba",
+        "Source": "void_nordic_prism.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF0A0E17"
+    },
+    {
+        "Id": "void_neko_beat",
+        "Name": "Kawaii Neko Beat",
+        "Author": "mjurran-zaba",
+        "Source": "void_neko_beat.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF0D0A1A"
+    },
+    {
+        "Id": "void_sakura_melody",
+        "Name": "Sakura Melody",
+        "Author": "mjurran-zaba",
+        "Source": "void_sakura_melody.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF140A1E"
+    },
+    {
+        "Id": "void_crescent_vinyl",
+        "Name": "Crescent Moon Vinyl",
+        "Author": "mjurran-zaba",
+        "Source": "void_crescent_vinyl.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF080B18"
+    },
+    {
+        "Id": "void_retro_synthwave",
+        "Name": "Retro Synthwave",
+        "Author": "mjurran-zaba",
+        "Source": "void_retro_synthwave.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF0C071C"
+    },
+    {
+        "Id": "void_sonic_shuriken",
+        "Name": "Sonic Shuriken",
+        "Author": "mjurran-zaba",
+        "Source": "void_sonic_shuriken.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF070E1A"
+    },
+    {
+        "Id": "void_sound_butterfly",
+        "Name": "Sound Butterfly",
+        "Author": "mjurran-zaba",
+        "Source": "void_sound_butterfly.svg",
+        "Link": "https://github.com/mjurran-zaba/VoidTune",
+        "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
+        "BackgroundMode": "integrated",
+        "BackgroundColor": "#FF0B0918"
+    }
+]
+
+with open(METADATA_FILE, "w", encoding="utf-8") as f:
+    json.dump(clean_catalog, f, indent=2)
+
+print(f"Updated metadata.json with exactly {len(clean_catalog)} VoidTune exclusive icons (all old ArchiveTune icons removed)!")

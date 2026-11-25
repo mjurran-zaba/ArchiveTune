@@ -55,6 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -173,6 +174,17 @@ fun BlurredOverflowMenu(
                     ),
                     modifier = Modifier.align(Alignment.CenterStart),
                 ) {
+                    // - Always meticulous in everyhthing to minimize the case
+                    // [VoidTune Patch: Violin Anime Girl Drawer Background, Zero Milky Glassmorphism Scrim, Enlarged Title, and Elevated Contrast]
+                    // MAKSUD KODE ASLI:
+                    // Menggunakan Column berlatar belakang solid surfaceColor alpha 0.94f dengan lapisan putih susu milky alpha 0.16f,
+                    // dan menampilkan logo kotak 62dp di sebelah kiri judul VoidTune.
+                    // MENGAPA DIKOMEN:
+                    // 1. User meminta foto gadis pemain biola (drawer_bg.png) dipasang sebagai background drawer dengan kontras tinggi agar tidak pudar.
+                    // 2. Lapisan putih susu glassmorphism (alpha 0.16f) membuat gambar buram dan kusam, sehingga diganti dengan Box + scrim gradasi gelap halus.
+                    // 3. Logo di kiri header dihapus agar tampilan lebih lapang, judul 'VoidTune' diperbesar (32sp), dan digabung langsung dengan bar login di header.
+                    // 4. Semua teks dan ikon dipatenkan memakai warna kontras tinggi (#F8FAFC & Polar Cyan) agar saat Light Mode tidak hilang/gelap.
+                    /*
                     Column(
                         modifier = modifier
                             .fillMaxHeight()
@@ -194,7 +206,6 @@ fun BlurredOverflowMenu(
                             .verticalScroll(rememberScrollState())
                             .padding(vertical = 18.dp, horizontal = 8.dp),
                     ) {
-                        // VoidTune Side Drawer Brand Header: Fantasy Magic Seal Logo + Gothic UnifrakturCook Typography
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(14.dp),
@@ -202,35 +213,6 @@ fun BlurredOverflowMenu(
                                 .fillMaxWidth()
                                 .padding(horizontal = 12.dp, vertical = 10.dp),
                         ) {
-                            // [VoidTune Patch: Crisp, Full-Vibrant Galactic Emblem in Drawer Header]
-                            // MAKSUD KODE ASLI: Menampilkan seal logo berukuran 56dp di dalam box 62dp dengan background surfaceContainerHighest alpha 0.45f.
-                            // MENGAPA DIUBAH:
-                            // User meminta logo baru dipasang jelas dan tajam ('jangan sampai pudar').
-                            // Logo baru ditampilkan full 62dp dengan border glow primary halus agar warna ungu galaksi dan kristal perak bersinar tajam tanpa redup.
-                            // ORIGINAL CODE:
-                            /*
-                            Box(
-                                modifier = Modifier
-                                    .size(62.dp)
-                                    .clip(RoundedCornerShape(14.dp))
-                                    .background(MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.45f))
-                                    .border(
-                                        width = 1.dp,
-                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                                        shape = RoundedCornerShape(14.dp),
-                                    ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.ic_voidtune_seal),
-                                    contentDescription = "VoidTune Magic Seal",
-                                    contentScale = ContentScale.Fit,
-                                    modifier = Modifier
-                                        .size(56.dp)
-                                        .clip(RoundedCornerShape(12.dp)),
-                                )
-                            }
-                            */
                             Box(
                                 modifier = Modifier
                                     .size(62.dp)
@@ -282,24 +264,102 @@ fun BlurredOverflowMenu(
                         )
 
                         content()
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
-                            thickness = 0.5.dp,
-                            color = Color.White.copy(alpha = 0.12f),
-                        )
-
-                        // VoidTune Drawer Footer (Exact: Developer • Mjurran | INDONESIA)
-                        Text(
-                            text = "Developer • Mjurran | INDONESIA",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                letterSpacing = 0.8.sp,
+                    */
+                    Box(
+                        modifier = modifier
+                            .fillMaxHeight()
+                            .width(310.dp)
+                            .clip(shape)
+                            .border(
+                                width = 1.dp,
+                                color = Color.White.copy(alpha = 0.25f),
+                                shape = shape,
+                            )
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {}, // Absorb click inside drawer
                             ),
-                            color = contentColor.copy(alpha = 0.50f),
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp),
+                    ) {
+                        // Background Drawer: High-Contrast Violin Anime Girl
+                        Image(
+                            painter = painterResource(R.drawable.drawer_bg),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize(),
                         )
+
+                        // Subtle dark gradient scrim: preserves illustration vibrancy while ensuring crisp text readability
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            Color.Black.copy(alpha = 0.48f),
+                                            Color.Black.copy(alpha = 0.22f),
+                                            Color.Black.copy(alpha = 0.65f),
+                                        ),
+                                    ),
+                                ),
+                        )
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets.systemBars)
+                                .verticalScroll(rememberScrollState())
+                                .padding(vertical = 18.dp, horizontal = 8.dp),
+                        ) {
+                            // VoidTune Side Drawer Brand Header: Clean Gothic Typography (No Left Logo)
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                            ) {
+                                Text(
+                                    text = "VoidTune",
+                                    fontFamily = unifrakturCookFont,
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontSize = 32.sp,
+                                        letterSpacing = 1.4.sp,
+                                        fontWeight = FontWeight.Bold,
+                                    ),
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                                Text(
+                                    text = "MJURRAN ARC",
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontStyle = FontStyle.Italic,
+                                        letterSpacing = 2.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                    ),
+                                    color = Color(0xFF38BDF8),
+                                    modifier = Modifier.padding(top = 1.dp),
+                                )
+                            }
+
+                            content()
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
+                                thickness = 0.5.dp,
+                                color = Color.White.copy(alpha = 0.18f),
+                            )
+
+                            // VoidTune Drawer Footer (Crisp, High-Contrast White)
+                            Text(
+                                text = "Developer • Mjurran | INDONESIA",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    letterSpacing = 0.8.sp,
+                                    fontWeight = FontWeight.Medium,
+                                ),
+                                color = Color.White.copy(alpha = 0.85f),
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp),
+                            )
+                        }
                     }
                 }
             }
@@ -309,9 +369,19 @@ fun BlurredOverflowMenu(
 
 @Composable
 fun OverflowMenuDivider(modifier: Modifier = Modifier) {
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Crisp Translucent White Divider on Artwork Background]
+    // ORIGINAL CODE:
+    /*
     HorizontalDivider(
         modifier = modifier.padding(horizontal = 16.dp),
         thickness = 0.5.dp,
         color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+    )
+    */
+    HorizontalDivider(
+        modifier = modifier.padding(horizontal = 16.dp),
+        thickness = 0.8.dp,
+        color = Color.White.copy(alpha = 0.20f),
     )
 }

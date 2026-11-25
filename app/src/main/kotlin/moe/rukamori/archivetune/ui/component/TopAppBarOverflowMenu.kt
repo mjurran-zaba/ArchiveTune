@@ -59,7 +59,17 @@ fun TopAppBarOverflowMenu(
     onDismissRequest: () -> Unit,
     onSelect: (MainMenuDestination) -> Unit,
 ) {
-    val contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurface
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: High-Contrast Crisp White & Polar Cyan Palette for Drawer Items]
+    // MAKSUD KODE ASLI: val contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurface
+    // MENGAPA DIKOMEN:
+    // Dalam Light Mode, onSurface adalah warna abu gelap/hitam. Karena background drawer adalah lukisan gelap gadis biola,
+    // teks hitam di Light Mode membuat menu drawer tidak terbaca sama sekali.
+    // Menetapkan contentColor secara konsisten sebagai Putih Bersih (Color(0xFFF8FAFC)) menjamin kontras tinggi dan
+    // keterbacaan sempurna di Light Mode maupun Dark Mode.
+    // ORIGINAL CODE:
+    // val contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurface
+    val contentColor = Color(0xFFF8FAFC)
     BlurredOverflowMenu(
         expanded = expanded,
         hazeState = hazeState,
@@ -172,8 +182,8 @@ private fun MenuProfileHeader(
         },
         colors = MenuDefaults.itemColors(
             textColor = contentColor,
-            leadingIconColor = contentColor,
-            trailingIconColor = contentColor,
+            leadingIconColor = Color(0xFF38BDF8),
+            trailingIconColor = Color(0xFFCBD5E1),
         ),
         onClick = onClick,
     )
@@ -198,7 +208,7 @@ private fun OverflowAction(
                 Icon(painterResource(iconRes), null, modifier = Modifier.size(24.dp))
             }
         },
-        colors = MenuDefaults.itemColors(textColor = contentColor, leadingIconColor = contentColor),
+        colors = MenuDefaults.itemColors(textColor = contentColor, leadingIconColor = Color(0xFF38BDF8)),
         onClick = onClick,
     )
 }

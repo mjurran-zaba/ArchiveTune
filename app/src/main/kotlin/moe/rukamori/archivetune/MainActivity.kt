@@ -1905,7 +1905,26 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
 
+                                // - Always meticulous in everyhthing to minimize the case
+                                // [VoidTune Patch: Aesthetic Cosmic Color Gradient Background Layout]
+                                // MAKSUD KODE ASLI: Scaffold menggunakan background default flat black / surfaceColor.
+                                // MENGAPA DIKOMEN: User meminta layout background tidak monoton hitam datar, melainkan
+                                // diberi gradasi warna kosmik yang sedikit mencolok (Cosmic Violet #140926 -> Midnight Indigo #0A0D18 -> Obsidian #040508).
+                                // ORIGINAL CODE:
+                                // Scaffold(
                                 Scaffold(
+                                    containerColor = Color.Transparent,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(
+                                            Brush.verticalGradient(
+                                                listOf(
+                                                    Color(0xFF140926),
+                                                    Color(0xFF0A0D18),
+                                                    Color(0xFF040508),
+                                                ),
+                                            ),
+                                        ),
                                     topBar = {
                                         if (shouldShowTopBar) {
                                             val shouldUseFloatingTopBar =
