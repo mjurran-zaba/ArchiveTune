@@ -94,7 +94,16 @@ import moe.rukamori.archivetune.extensions.toMediaItem
 import moe.rukamori.archivetune.playback.PlayerConnection
 import moe.rukamori.archivetune.playback.queues.ListQueue
 import moe.rukamori.archivetune.playback.queues.YouTubeQueue
+/*
+// ORIGINAL CODE:
 import moe.rukamori.archivetune.spotify.SpotifyLibraryViewModel
+import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeedItem
+import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeedSection
+*/
+// [VoidTune Patch: Import SpotifyHomeFeed Data Model]
+// REASON: Supply SpotifyHomeFeed type definition to HomeContent signature.
+import moe.rukamori.archivetune.spotify.SpotifyLibraryViewModel
+import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeed
 import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeedItem
 import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeedSection
 import moe.rukamori.archivetune.ui.component.ExpressivePullToRefreshBox
@@ -251,6 +260,8 @@ fun HomeScreen(
             }
 
             is HomeScreenState.Success -> {
+                /*
+                // ORIGINAL CODE:
                 HomeContent(
                     uiState = state.uiState,
                     mediaMetadata = mediaMetadata,
@@ -263,6 +274,23 @@ fun HomeScreen(
                     lazyListState = lazyListState,
                     forgottenFavoritesListState = forgottenFavoritesListState,
                     onAction = viewModel::onAction,
+                )
+                */
+                // [VoidTune Patch: Forward Spotify Home Feed to HomeContent]
+                // REASON: Allow HomeContent to display Spotify shelves alongside YouTube Music content.
+                HomeContent(
+                    uiState = state.uiState,
+                    mediaMetadata = mediaMetadata,
+                    isPlaying = isPlaying,
+                    navController = navController,
+                    playerConnection = playerConnection,
+                    menuState = menuState,
+                    haptic = haptic,
+                    scope = scope,
+                    lazyListState = lazyListState,
+                    forgottenFavoritesListState = forgottenFavoritesListState,
+                    onAction = viewModel::onAction,
+                    spotifyHomeFeed = spotifyHomeFeed,
                 )
             }
         }
@@ -335,6 +363,8 @@ private fun HomeStatePane(
     }
 }
 
+/*
+// ORIGINAL CODE:
 @OptIn(
     ExperimentalFoundationApi::class,
     ExperimentalMaterial3ExpressiveApi::class,
@@ -353,6 +383,29 @@ private fun HomeContent(
     forgottenFavoritesListState: LazyListState,
     onAction: (HomeAction) -> Unit,
     modifier: Modifier = Modifier,
+) {
+*/
+// [VoidTune Patch: Accept Spotify Home Feed in HomeContent Parameters]
+// REASON: Enable HomeContent to access spotifyHomeFeed state within its Composable scope.
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+)
+@Composable
+private fun HomeContent(
+    uiState: HomeUiState,
+    mediaMetadata: MediaMetadata?,
+    isPlaying: Boolean,
+    navController: NavController,
+    playerConnection: PlayerConnection,
+    menuState: MenuState,
+    haptic: HapticFeedback,
+    scope: CoroutineScope,
+    lazyListState: LazyListState,
+    forgottenFavoritesListState: LazyListState,
+    onAction: (HomeAction) -> Unit,
+    modifier: Modifier = Modifier,
+    spotifyHomeFeed: SpotifyHomeFeed? = null,
 ) {
     val remoteQuickPicks =
         uiState

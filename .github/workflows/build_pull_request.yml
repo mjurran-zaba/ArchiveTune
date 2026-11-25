@@ -1,9 +1,13 @@
 name: Build Pull Request
 
-# [VoidTune Patch: Enable CI Trigger on VoidTune Branch Push & Manual Dispatch]
-# REASON: Enable instant cloud build of debug APKs upon pushing to VoidTune branch without requiring a release keystore.
+# [VoidTune Patch: Enable CI Trigger on VoidTune & Voidv3 Branch Push & Manual Dispatch]
+# REASON: Enable instant cloud build of high-performance release APKs upon pushing to VoidTune or Voidv3 branch.
 # ORIGINAL CODE:
 # on:
+#   workflow_dispatch:
+#   push:
+#     branches:
+#       - "VoidTune"
 #   pull_request:
 #     branches:
 #       - "**"
@@ -12,6 +16,7 @@ on:
   push:
     branches:
       - "VoidTune"
+      - "Voidv3"
   pull_request:
     branches:
       - "**"
