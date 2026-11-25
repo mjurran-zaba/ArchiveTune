@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -21,6 +25,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -84,12 +89,16 @@ import moe.rukamori.archivetune.LocalPlayerConnection
 import moe.rukamori.archivetune.R
 import moe.rukamori.archivetune.constants.GridThumbnailHeight
 import moe.rukamori.archivetune.innertube.models.AlbumItem
+import moe.rukamori.archivetune.innertube.models.AlbumReleaseType
+import moe.rukamori.archivetune.innertube.models.Artist
+import moe.rukamori.archivetune.spotify.models.SpotifyAlbum
 import moe.rukamori.archivetune.ui.component.IconButton
 import moe.rukamori.archivetune.ui.component.LocalMenuState
 import moe.rukamori.archivetune.ui.component.YouTubeGridItem
 import moe.rukamori.archivetune.ui.component.shimmer.GridItemPlaceHolder
 import moe.rukamori.archivetune.ui.component.shimmer.ShimmerHost
 import moe.rukamori.archivetune.ui.menu.YouTubeAlbumMenu
+import moe.rukamori.archivetune.ui.screens.search.onlineSearchResultRoute
 import moe.rukamori.archivetune.ui.utils.backToMain
 import moe.rukamori.archivetune.ui.utils.navigateToAlbum
 import moe.rukamori.archivetune.viewmodels.NewReleaseContent
@@ -165,6 +174,8 @@ fun NewReleaseScreen(
                         activeAlbumId = mediaMetadata?.album?.id,
                         isPlaying = isPlaying,
                         coroutineScope = coroutineScope,
+                        /*
+                        // ORIGINAL CODE:
                         onReleaseClick = { album -> navController.navigateToAlbum(album.id) },
                         onReleaseLongClick = { album ->
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -174,6 +185,32 @@ fun NewReleaseScreen(
                                     navController = navController,
                                     onDismiss = menuState::dismiss,
                                 )
+                            }
+                        },
+                        */
+                        // [VoidTune Patch: Multi-Source Release Click Handler]
+                        // REASON: When clicking Spotify album releases, route directly to online search resolver to play stream.
+                        onReleaseClick = { album ->
+                            if (album.id.startsWith("spotify_album_")) {
+                                val query = "${album.title} ${album.artists?.firstOrNull()?.name.orEmpty()}".trim()
+                                navController.navigate(onlineSearchResultRoute(query))
+                            } else {
+                                navController.navigateToAlbum(album.id)
+                            }
+                        },
+                        onReleaseLongClick = { album ->
+                            if (album.id.startsWith("spotify_album_")) {
+                                val query = "${album.title} ${album.artists?.firstOrNull()?.name.orEmpty()}".trim()
+                                navController.navigate(onlineSearchResultRoute(query))
+                            } else {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                menuState.show {
+                                    YouTubeAlbumMenu(
+                                        albumItem = album,
+                                        navController = navController,
+                                        onDismiss = menuState::dismiss,
+                                    )
+                                }
                             }
                         },
                         onRefresh = viewModel::retry,
@@ -245,6 +282,8 @@ fun NewReleaseScreen(
     }
 }
 
+/*
+// ORIGINAL CODE:
 @Immutable
 private enum class NewReleaseTab(
     @StringRes val titleRes: Int,
@@ -270,6 +309,41 @@ private enum class NewReleaseTab(
         titleRes = R.string.ep,
         icon = Icons.Outlined.QueueMusic,
         contentType = "new_release_ep_grid_item",
+    ),
+}
+*/
+// [VoidTune Patch: Add Spotify Tab to New Releases]
+// REASON: Allow users to switch between YouTube Music and Spotify official new releases directly.
+@Immutable
+private enum class NewReleaseTab(
+    @StringRes val titleRes: Int,
+    val icon: ImageVector,
+    val contentType: String,
+) {
+    All(
+        titleRes = R.string.filter_all,
+        icon = Icons.Outlined.LibraryMusic,
+        contentType = "new_release_all_grid_item",
+    ),
+    Albums(
+        titleRes = R.string.albums,
+        icon = Icons.Outlined.Album,
+        contentType = "new_release_album_grid_item",
+    ),
+    Singles(
+        titleRes = R.string.singles,
+        icon = Icons.Outlined.MusicNote,
+        contentType = "new_release_single_grid_item",
+    ),
+    Ep(
+        titleRes = R.string.ep,
+        icon = Icons.Outlined.QueueMusic,
+        contentType = "new_release_ep_grid_item",
+    ),
+    Spotify(
+        titleRes = R.string.canvas_spotify,
+        icon = Icons.Outlined.Album,
+        contentType = "new_release_spotify_grid_item",
     ),
 }
 
@@ -485,17 +559,35 @@ private fun NewReleaseSummaryCard(
             NewReleaseTabs(
                 selectedTab = selectedTab,
                 onTabSelected = onTabSelected,
+                showSpotifyTab = content.spotifyReleases.isNotEmpty(),
             )
         }
     }
 }
 
+/*
+// ORIGINAL CODE:
 @Composable
 private fun NewReleaseTabs(
     selectedTab: NewReleaseTab,
     onTabSelected: (NewReleaseTab) -> Unit,
 ) {
     val tabs = remember { NewReleaseTab.entries.toList() }
+    ...
+}
+*/
+// [VoidTune Patch: Conditional Spotify Tab Support]
+// REASON: Show Spotify tab when connected, hide it cleanly when Spotify is not connected.
+@Composable
+private fun NewReleaseTabs(
+    selectedTab: NewReleaseTab,
+    onTabSelected: (NewReleaseTab) -> Unit,
+    showSpotifyTab: Boolean = false,
+) {
+    val tabs = remember(showSpotifyTab) {
+        if (showSpotifyTab) NewReleaseTab.entries.toList()
+        else NewReleaseTab.entries.filter { it != NewReleaseTab.Spotify }
+    }
     val selectedTabIndex = tabs.indexOf(selectedTab).coerceAtLeast(0)
     val tabShape = remember { RoundedCornerShape(28.dp) }
     val selectedContainer = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.56f)
@@ -520,40 +612,42 @@ private fun NewReleaseTabs(
                 Box(
                     modifier =
                         Modifier
-                            .width(76.dp)
+                            .width(36.dp)
                             .height(3.dp)
-                            .clip(RoundedCornerShape(3.dp))
+                            .clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp))
                             .background(indicatorColor),
                 )
             }
         },
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .height(66.dp),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         tabs.forEach { tab ->
-            val selected = tab == selectedTab
-            val title = stringResource(tab.titleRes)
-
+            val isSelected = tab == selectedTab
             Tab(
-                selected = selected,
+                selected = isSelected,
                 onClick = { onTabSelected(tab) },
-                icon = {
-                    Icon(
-                        imageVector = tab.icon,
-                        contentDescription = title,
-                        modifier = Modifier.size(24.dp),
-                    )
+                text = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Icon(
+                            imageVector = tab.icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Text(
+                            text = stringResource(tab.titleRes),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        )
+                    }
                 },
-                selectedContentColor = selectedContentColor,
-                unselectedContentColor = unselectedContentColor,
                 modifier =
                     Modifier
-                        .padding(horizontal = 3.dp, vertical = 6.dp)
-                        .height(56.dp)
+                        .padding(horizontal = 4.dp, vertical = 6.dp)
                         .clip(tabShape)
-                        .background(if (selected) selectedContainer else unselectedContainer),
+                        .background(if (isSelected) selectedContainer else unselectedContainer),
             )
         }
     }
@@ -584,6 +678,8 @@ private fun NewReleaseCategoryEmptyState(onRefresh: () -> Unit) {
     }
 }
 
+/*
+// ORIGINAL CODE:
 private fun NewReleaseContent.releasesFor(tab: NewReleaseTab): List<AlbumItem> =
     when (tab) {
         NewReleaseTab.All -> emptyList()
@@ -604,3 +700,48 @@ private fun NewReleaseContent.releaseSections(): List<NewReleaseSection> =
             add(NewReleaseSection(NewReleaseTab.Ep, eps))
         }
     }
+*/
+// [VoidTune Patch: Multi-Source Release Section & Tab Mapping]
+// REASON: Integrate Spotify release albums into sections and tabs seamlessly.
+private fun NewReleaseContent.releasesFor(tab: NewReleaseTab): List<AlbumItem> =
+    when (tab) {
+        NewReleaseTab.All -> emptyList()
+        NewReleaseTab.Albums -> albums
+        NewReleaseTab.Singles -> singles
+        NewReleaseTab.Ep -> eps
+        NewReleaseTab.Spotify -> spotifyReleases.map { it.toAlbumItem() }
+    }
+
+private fun NewReleaseContent.releaseSections(): List<NewReleaseSection> =
+    buildList {
+        if (albums.isNotEmpty()) {
+            add(NewReleaseSection(NewReleaseTab.Albums, albums))
+        }
+        if (singles.isNotEmpty()) {
+            add(NewReleaseSection(NewReleaseTab.Singles, singles))
+        }
+        if (eps.isNotEmpty()) {
+            add(NewReleaseSection(NewReleaseTab.Ep, eps))
+        }
+        if (spotifyReleases.isNotEmpty()) {
+            add(NewReleaseSection(NewReleaseTab.Spotify, spotifyReleases.map { it.toAlbumItem() }))
+        }
+    }
+
+private fun SpotifyAlbum.toAlbumItem(): AlbumItem =
+    AlbumItem(
+        browseId = "spotify_album_$id",
+        playlistId = id,
+        id = "spotify_album_$id",
+        title = name,
+        artists = artists.map { Artist(name = it.name, id = it.id) },
+        year = releaseDate?.take(4)?.toIntOrNull(),
+        thumbnail = images.firstOrNull()?.url.orEmpty(),
+        explicit = false,
+        releaseType =
+            when (albumType?.lowercase()) {
+                "single" -> AlbumReleaseType.SINGLE
+                "ep" -> AlbumReleaseType.EP
+                else -> AlbumReleaseType.ALBUM
+            },
+    )

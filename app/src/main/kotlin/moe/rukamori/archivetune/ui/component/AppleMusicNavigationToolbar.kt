@@ -1,3 +1,4 @@
+// Always meticulous in everyhthing to minimize the case
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -13,6 +14,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -44,6 +46,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -101,7 +104,17 @@ internal fun AppleMusicNavigationToolbar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (groupedItems.isNotEmpty()) {
-                Box(modifier = Modifier.weight(1f).fillMaxHeight().clip(shape)) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(shape)
+                        .border(
+                            width = 1.dp,
+                            color = Color.White.copy(alpha = if (pureBlack) 0.14f else 0.22f),
+                            shape = shape,
+                        ),
+                ) {
                     FloatingBarGlassBackground(
                         hazeState = hazeState,
                         shape = shape,
@@ -147,7 +160,16 @@ internal fun AppleMusicNavigationToolbar(
                 }
             }
             if (hasSearch) {
-                Box(modifier = Modifier.size(NavigationBarHeight).clip(shape)) {
+                Box(
+                    modifier = Modifier
+                        .size(NavigationBarHeight)
+                        .clip(shape)
+                        .border(
+                            width = 1.dp,
+                            color = Color.White.copy(alpha = if (pureBlack) 0.14f else 0.22f),
+                            shape = shape,
+                        ),
+                ) {
                     FloatingBarGlassBackground(
                         hazeState = hazeState,
                         shape = shape,

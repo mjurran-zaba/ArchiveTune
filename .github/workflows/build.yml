@@ -2,8 +2,13 @@ name: Build APKs
 
 on:
   workflow_dispatch:
+# [VoidTune Patch: Trigger Build APKs (Release) on Voidv3 Branch Push]
+# REASON: Enable cloud release build upon pushing to Voidv3 branch.
+# ORIGINAL CODE:
+#   push:
+#     branches: [ 'main', 'dev' ]
   push:
-    branches: [ 'main', 'dev' ]
+    branches: [ 'main', 'dev', 'Voidv3' ]
     paths-ignore:
       - 'README.md'
       - 'fastlane/**'

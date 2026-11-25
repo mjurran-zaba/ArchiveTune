@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -29,6 +33,8 @@ import moe.rukamori.archivetune.constants.SpotifyAccountNameKey
 import moe.rukamori.archivetune.constants.SpotifyLibraryPlaylistsCacheKey
 import moe.rukamori.archivetune.constants.SpotifySpDcKey
 import moe.rukamori.archivetune.constants.SpotifySpKeyKey
+import moe.rukamori.archivetune.spotify.models.SpotifyAlbum
+import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeed
 import moe.rukamori.archivetune.spotify.models.SpotifyPlaylist
 import moe.rukamori.archivetune.spotify.models.SpotifyPlaylistTracksRef
 import moe.rukamori.archivetune.spotify.models.SpotifyTrack
@@ -251,6 +257,30 @@ class SpotifyLibraryRepository
                 }
 
                 tracks
+            }
+
+        // [VoidTune Patch: Retrieve Spotify Home Feed & Daily Mixes]
+        // REASON: Unlock Spotify.home() to deliver personalized Daily Mixes, Discover Weekly, and Made For You sections.
+        suspend fun homeFeed(sectionItemsLimit: Int = 10): Result<SpotifyHomeFeed> =
+            withContext(Dispatchers.IO) {
+                runCatching {
+                    ensureAuthenticated()
+                    spotifyCallWithTokenRetry {
+                        Spotify.home(sectionItemsLimit = sectionItemsLimit).getOrThrow()
+                    }
+                }
+            }
+
+        // [VoidTune Patch: Retrieve Spotify Global New Releases]
+        // REASON: Unlock Spotify.newReleases() to provide official Spotify release radar and album releases.
+        suspend fun newReleases(limit: Int = 20): Result<List<SpotifyAlbum>> =
+            withContext(Dispatchers.IO) {
+                runCatching {
+                    ensureAuthenticated()
+                    spotifyCallWithTokenRetry {
+                        Spotify.newReleases(limit = limit).getOrThrow().albums?.items.orEmpty()
+                    }
+                }
             }
 
         private suspend fun ensureAuthenticated() {

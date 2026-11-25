@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -13,9 +17,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,10 +30,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ContainedLoadingIndicator
@@ -46,6 +57,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -53,14 +65,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil3.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
 import moe.rukamori.archivetune.LocalPlayerAwareWindowInsets
 import moe.rukamori.archivetune.LocalPlayerConnection
@@ -77,20 +94,37 @@ import moe.rukamori.archivetune.extensions.toMediaItem
 import moe.rukamori.archivetune.playback.PlayerConnection
 import moe.rukamori.archivetune.playback.queues.ListQueue
 import moe.rukamori.archivetune.playback.queues.YouTubeQueue
+import moe.rukamori.archivetune.spotify.SpotifyLibraryViewModel
+import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeedItem
+import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeedSection
 import moe.rukamori.archivetune.ui.component.ExpressivePullToRefreshBox
 import moe.rukamori.archivetune.ui.component.LocalMenuState
 import moe.rukamori.archivetune.ui.component.MenuState
+import moe.rukamori.archivetune.ui.screens.search.onlineSearchResultRoute
 import moe.rukamori.archivetune.viewmodels.HomeViewModel
 
 private val HomeFeedMaxWidth = 1_200.dp
 private val HomeSectionSpacing = 28.dp
 
+/*
+// ORIGINAL CODE:
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel,
     headerScrollConnection: NestedScrollConnection? = null,
+) {
+*/
+// [VoidTune Patch: Inject SpotifyLibraryViewModel for Personalized Home Feed]
+// REASON: Seamlessly observe Spotify Daily Mixes and personalized sections when user is connected.
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel,
+    headerScrollConnection: NestedScrollConnection? = null,
+    spotifyLibraryViewModel: SpotifyLibraryViewModel = hiltViewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
     val menuState = LocalMenuState.current
@@ -99,6 +133,11 @@ fun HomeScreen(
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
     val isPlaying by playerConnection.isPlaying.collectAsStateWithLifecycle()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsStateWithLifecycle()
+    val spotifyHomeFeed by spotifyLibraryViewModel.homeFeed.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        spotifyLibraryViewModel.loadHomeFeed()
+    }
 
     LaunchedEffect(viewModel, playerConnection, navController) {
         viewModel.events.collect { event ->
@@ -505,6 +544,40 @@ private fun HomeContent(
                         }
                     }
 
+                    // [VoidTune Patch: Render Spotify Personalized Mixes on Home Feed]
+                    // REASON: When Spotify account is authenticated, show personalized sections (Daily Mix, Discover Weekly, etc.)
+                    spotifyHomeFeed?.sections?.filter { it.items.isNotEmpty() }?.take(3)?.forEach { section ->
+                        sectionSpacer("spotify_${section.sectionUri}")
+                        item(
+                            key = "home_spotify_header_${section.sectionUri}",
+                            contentType = "section_header",
+                        ) {
+                            HomeSectionHeader(
+                                title = section.title ?: stringResource(R.string.spotify_account),
+                                label = "Spotify",
+                                thumbnail = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.spotify),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                },
+                                modifier = Modifier.animateItem(),
+                            )
+                        }
+                        item(
+                            key = "home_spotify_section_${section.sectionUri}",
+                            contentType = "spotify_shelf",
+                        ) {
+                            SpotifyHomeSectionShelf(
+                                section = section,
+                                navController = navController,
+                                modifier = Modifier.animateItem(),
+                            )
+                        }
+                    }
+
                     if (uiState.keepListening.isNotEmpty()) {
                         sectionSpacer("keep_listening")
                         item(
@@ -692,5 +765,123 @@ private fun androidx.compose.foundation.lazy.LazyListScope.sectionSpacer(key: St
         contentType = "section_spacer",
     ) {
         Spacer(Modifier.height(HomeSectionSpacing))
+    }
+}
+
+// [VoidTune Patch: Shelf Component for Spotify Home Section]
+// REASON: Horizontal scrolling shelf for Spotify playlists and albums with clean styling and 0 purple.
+@Composable
+private fun SpotifyHomeSectionShelf(
+    section: SpotifyHomeFeedSection,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+) {
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        items(
+            items = section.items,
+            key = { it.uri },
+        ) { item ->
+            when (item) {
+                is SpotifyHomeFeedItem.Playlist -> {
+                    SpotifyHomeCard(
+                        title = item.name,
+                        subtitle = item.description ?: item.ownerName ?: stringResource(R.string.spotify_playlists),
+                        imageUrl = item.imageUrl,
+                        onClick = {
+                            navController.navigate("spotify_playlist/${item.id}")
+                        },
+                    )
+                }
+                is SpotifyHomeFeedItem.Album -> {
+                    SpotifyHomeCard(
+                        title = item.name,
+                        subtitle = item.artists.joinToString(", ") { it.name },
+                        imageUrl = item.imageUrl,
+                        onClick = {
+                            val query = "${item.name} ${item.artists.firstOrNull()?.name.orEmpty()}".trim()
+                            navController.navigate(onlineSearchResultRoute(query))
+                        },
+                    )
+                }
+                is SpotifyHomeFeedItem.Artist -> {
+                    SpotifyHomeCard(
+                        title = item.name,
+                        subtitle = stringResource(R.string.artist),
+                        imageUrl = item.imageUrl,
+                        onClick = {
+                            navController.navigate(onlineSearchResultRoute(item.name))
+                        },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SpotifyHomeCard(
+    title: String,
+    subtitle: String,
+    imageUrl: String?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val cardShape = remember { RoundedCornerShape(16.dp) }
+    Column(
+        modifier =
+            modifier
+                .width(148.dp)
+                .clip(cardShape)
+                .clickable(onClick = onClick)
+                .padding(bottom = 6.dp),
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .size(148.dp)
+                    .clip(cardShape)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+        ) {
+            if (!imageUrl.isNullOrBlank()) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } else {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.spotify),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(48.dp),
+                    )
+                }
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }

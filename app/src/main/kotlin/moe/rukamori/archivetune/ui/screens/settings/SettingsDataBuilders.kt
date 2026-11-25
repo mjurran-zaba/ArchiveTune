@@ -1,3 +1,4 @@
+// Always meticulous in everyhthing to minimize the case
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -19,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +35,7 @@ fun buildSettingsContent(
     hasUpdate: Boolean,
     showAccountEntry: Boolean,
     context: Context,
+    onOpenSupportQr: () -> Unit = {},
 ): SettingsContent {
     val uriHandler = LocalUriHandler.current
     val account =
@@ -259,6 +262,20 @@ fun buildSettingsContent(
         } else {
             null
         }
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Direct Support VoidTune QRIS Entry in Settings]
+    // MAKSUD KODE ASLI: Hanya developerOptions, defaultLinks, updates, about
+    // MENGAPA DITAMBAH: Memudahkan pengguna untuk membuka modal donasi QRIS langsung dari menu Pengaturan.
+    val supportVoidTune =
+        SettingsItem(
+            key = "support_voidtune",
+            icon = painterResource(R.drawable.coffee),
+            title = "Support VoidTune",
+            subtitle = "Every single coin you offer, reforges Void's spell",
+            accentColor = Color(0xFFF59E0B), // Radiant Amber Gold
+            onClick = onOpenSupportQr,
+        )
+
     val about =
         SettingsItem(
             key = "about",
@@ -320,6 +337,7 @@ fun buildSettingsContent(
                     title = stringResource(R.string.about),
                     items =
                         buildList {
+                            add(supportVoidTune)
                             add(developerOptions)
                             defaultLinks?.let(::add)
                             updates?.let(::add)

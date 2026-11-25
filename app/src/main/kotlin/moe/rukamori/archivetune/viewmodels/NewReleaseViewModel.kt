@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -31,11 +35,15 @@ import moe.rukamori.archivetune.innertube.models.AlbumItem
 import moe.rukamori.archivetune.innertube.models.AlbumReleaseType
 import moe.rukamori.archivetune.innertube.models.filterExplicit
 import moe.rukamori.archivetune.innertube.models.filterVideo
+import moe.rukamori.archivetune.spotify.SpotifyLibraryRepository
+import moe.rukamori.archivetune.spotify.models.SpotifyAlbum
 import moe.rukamori.archivetune.utils.dataStore
 import moe.rukamori.archivetune.utils.get
 import moe.rukamori.archivetune.utils.reportException
 import javax.inject.Inject
 
+/*
+// ORIGINAL CODE:
 @Immutable
 data class NewReleaseContent(
     val albums: List<AlbumItem>,
@@ -44,6 +52,22 @@ data class NewReleaseContent(
 ) {
     val totalReleases: Int
         get() = albums.size + singles.size + eps.size
+
+    val isEmpty: Boolean
+        get() = totalReleases == 0
+}
+*/
+// [VoidTune Patch: Multi-Source New Releases supporting Spotify Albums]
+// REASON: Integrate Spotify global new releases alongside YouTube Music catalog.
+@Immutable
+data class NewReleaseContent(
+    val albums: List<AlbumItem>,
+    val singles: List<AlbumItem>,
+    val eps: List<AlbumItem>,
+    val spotifyReleases: List<SpotifyAlbum> = emptyList(),
+) {
+    val totalReleases: Int
+        get() = albums.size + singles.size + eps.size + spotifyReleases.size
 
     val isEmpty: Boolean
         get() = totalReleases == 0
@@ -61,6 +85,8 @@ sealed interface NewReleaseUiState {
     data object Error : NewReleaseUiState
 }
 
+/*
+// ORIGINAL CODE:
 @HiltViewModel
 class NewReleaseViewModel
     @Inject
@@ -69,6 +95,19 @@ class NewReleaseViewModel
         private val database: MusicDatabase,
         private val loadAiContentFilterPolicy: LoadAiContentFilterPolicyUseCase,
         private val filterAiContent: FilterAiContentUseCase,
+    ) : ViewModel() { ... }
+*/
+// [VoidTune Patch: Enhanced NewReleaseViewModel with Spotify Global Releases Bridge]
+// REASON: Pulls Spotify new releases whenever user's Spotify account is authenticated, without breaking existing YouTube Music release flow.
+@HiltViewModel
+class NewReleaseViewModel
+    @Inject
+    constructor(
+        @ApplicationContext val context: Context,
+        private val database: MusicDatabase,
+        private val loadAiContentFilterPolicy: LoadAiContentFilterPolicyUseCase,
+        private val filterAiContent: FilterAiContentUseCase,
+        private val spotifyRepository: SpotifyLibraryRepository,
     ) : ViewModel() {
         private val _uiState = MutableStateFlow<NewReleaseUiState>(NewReleaseUiState.Loading)
         val uiState = _uiState.asStateFlow()
@@ -117,7 +156,20 @@ class NewReleaseViewModel
                                 .filterBlockedArtists(blockedArtistIds),
                             aiContentFilterPolicy,
                         ).distinctBy { it.id }
-                    val content = filtered.toNewReleaseContent()
+
+                    val spotifyReleases =
+                        try {
+                            val session = spotifyRepository.restoreSession()
+                            if (session.isAuthenticated) {
+                                spotifyRepository.newReleases(limit = 20).getOrDefault(emptyList())
+                            } else {
+                                emptyList()
+                            }
+                        } catch (e: Exception) {
+                            emptyList()
+                        }
+
+                    val content = filtered.toNewReleaseContent(spotifyReleases = spotifyReleases)
                     _uiState.value =
                         if (content.isEmpty) {
                             NewReleaseUiState.Empty
@@ -133,10 +185,13 @@ class NewReleaseViewModel
             }
         }
 
-        private fun List<AlbumItem>.toNewReleaseContent(): NewReleaseContent =
+        private fun List<AlbumItem>.toNewReleaseContent(
+            spotifyReleases: List<SpotifyAlbum> = emptyList(),
+        ): NewReleaseContent =
             NewReleaseContent(
                 albums = filter { it.releaseType == AlbumReleaseType.ALBUM },
                 singles = filter { it.releaseType == AlbumReleaseType.SINGLE },
                 eps = filter { it.releaseType == AlbumReleaseType.EP },
+                spotifyReleases = spotifyReleases,
             )
     }

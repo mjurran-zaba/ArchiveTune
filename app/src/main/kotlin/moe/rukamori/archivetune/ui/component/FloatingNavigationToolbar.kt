@@ -1,3 +1,4 @@
+// Always meticulous in everyhthing to minimize the case
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -12,6 +13,8 @@ package moe.rukamori.archivetune.ui.component
 import android.os.SystemClock
 import android.view.ViewConfiguration
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -96,7 +99,8 @@ fun FloatingNavigationToolbar(
         }
     val navigationContainerColor =
         if (backgroundStyle == NavigationBarBackgroundStyle.THEME) {
-            if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
+            if (pureBlack) Color(0xFF000000).copy(alpha = 0.88f)
+            else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.88f)
         } else {
             Color.Transparent
         }
@@ -113,11 +117,16 @@ fun FloatingNavigationToolbar(
                 Modifier
                     .widthIn(max = NavigationBarMaxWidth)
                     .fillMaxWidth()
-                    .height(NavigationBarHeight),
+                    .height(NavigationBarHeight)
+                    .border(
+                        width = 1.dp,
+                        color = Color.White.copy(alpha = if (pureBlack) 0.14f else 0.22f),
+                        shape = navigationShape,
+                    ),
             shape = navigationShape,
             color = navigationContainerColor,
-            tonalElevation = NavigationBarDefaults.Elevation,
-            shadowElevation = NavigationBarDefaults.Elevation,
+            tonalElevation = 0.dp,
+            shadowElevation = if (pureBlack) 0.dp else NavigationBarDefaults.Elevation,
         ) {
             ShortNavigationBar(
                 modifier = Modifier.fillMaxSize(),
@@ -143,6 +152,13 @@ fun FloatingNavigationToolbar(
                             isAcrylic = backgroundStyle == NavigationBarBackgroundStyle.ACRYLIC,
                             pureBlack = pureBlack,
                             modifier = Modifier.fillMaxSize(),
+                        )
+                    } else {
+                        // VoidTune: 12% milk glaze matching MiniPlayer theme translucency
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.White.copy(alpha = 0.12f)),
                         )
                     }
                     Row(

@@ -1,3 +1,4 @@
+// Always meticulous in everyhthing to minimize the case
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -77,6 +78,7 @@ import moe.rukamori.archivetune.constants.AccountNameKey
 import moe.rukamori.archivetune.constants.InnerTubeCookieKey
 import moe.rukamori.archivetune.innertube.utils.hasYouTubeLoginCookie
 import moe.rukamori.archivetune.ui.component.IconButton
+import moe.rukamori.archivetune.ui.component.SupportQrModal
 import moe.rukamori.archivetune.ui.utils.appBarScrollBehavior
 import moe.rukamori.archivetune.ui.utils.backToMain
 import moe.rukamori.archivetune.utils.Updater
@@ -177,6 +179,7 @@ fun SettingsScreen(
         BuildConfig.UPDATER_AVAILABLE &&
             Updater.isUpdateAvailable(latestVersionName, BuildConfig.VERSION_NAME)
     var isUpdateDismissed by remember { mutableStateOf(false) }
+    var showSupportQrDialog by remember { mutableStateOf(false) }
     val settingsContent =
         buildSettingsContent(
             navController = navController,
@@ -184,6 +187,7 @@ fun SettingsScreen(
             hasUpdate = hasUpdate,
             showAccountEntry = loginState == false,
             context = context,
+            onOpenSupportQr = { showSupportQrDialog = true },
         )
 
     val itemFadeInSpec = motion.defaultEffectsSpec<Float>()
@@ -446,5 +450,11 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+
+    if (showSupportQrDialog) {
+        SupportQrModal(
+            onDismiss = { showSupportQrDialog = false },
+        )
     }
 }

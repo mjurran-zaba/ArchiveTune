@@ -1,3 +1,4 @@
+// Always meticulous in everyhthing to minimize the case
 /*
  * ArchiveTune / VoidTune (2026)
  * © Rukamori — github.com/rukamori
@@ -247,6 +248,52 @@ fun StarDialog(
 }
 */
 
+// - Always meticulous in everyhthing to minimize the case
+// [VoidTune Patch: StarDialog Message Polish (Choice B, No Emoji) & Fix Premature QRIS Dismissal Bug]
+// MAKSUD KODE ASLI:
+// 1. Pesan greeting memiliki typo 'plesea' dan format kalimat menyambung tanpa jeda paragraf.
+// 2. Tombol Support langsung memanggil onSupport() bersamaan dengan showQrDialog = true.
+//    Akibatnya, MainActivity langsung mereset showStarDialog = false saat DataStore selesai menulis (< 1 detik),
+//    menyebabkan modal QRIS langsung lenyap seketika sebelum sempat di-scan.
+// 3. Tombol GitHub masih mengarah ke repo ArchiveTune lama.
+// MENGAPA DIUBAH:
+// 1. Pesan dirapikan sesuai Pilihan B tanpa emoji dengan jeda paragraf yang nyaman dan tautan rapi.
+// 2. Tombol Support hanya mengaktifkan showQrDialog = true. Callback onSupport() dipindahkan ke tombol 'Close'
+//    atau onDismissRequest pada SupportQrModal, sehingga user bebas melihat/screenshot QRIS sepuasnya.
+// 3. Tautan GitHub diperbaiki ke https://github.com/mjurran-zaba/VoidTune.
+// ORIGINAL CODE:
+// val annotatedGreeting = remember(primaryColor) {
+//     buildAnnotatedString {
+//         withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+//             append("yoshaaa~ hope you always be blessed, here is Mjurran, arigatou gozaimuch for enjoying ")
+//         }
+//         withStyle(
+//             SpanStyle(
+//                 fontFamily = unifrakturCookFont,
+//                 fontStyle = FontStyle.Normal,
+//                 fontWeight = FontWeight.Bold,
+//                 color = primaryColor,
+//                 fontSize = 17.sp,
+//             )
+//         ) {
+//             append("VoidTune")
+//         }
+//         withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+//             append(", if you dont mind plesea visit ")
+//         }
+// ...
+//         Button(
+//             onClick = {
+//                 showQrDialog = true
+//                 onSupport()
+//             },
+// ...
+//         FilledTonalButton(
+//             onClick = {
+//                 uriHandler.openUri("https://github.com/mjurran-zaba/ArchiveTune")
+//                 onSupport()
+//             },
+
 // KODE PERUBAHAN DI BAWAH:
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -257,13 +304,13 @@ fun StarDialog(
 ) {
     val uriHandler = LocalUriHandler.current
     val unifrakturCookFont = remember { FontFamily(Font(R.font.unifrakturcook)) }
-    val primaryColor = MaterialTheme.colorScheme.primary
+    val primaryColor = Color(0xFF38BDF8) // Polar Cyan (Zero Purple)
     var showQrDialog by remember { mutableStateOf(false) }
 
     val annotatedGreeting = remember(primaryColor) {
         buildAnnotatedString {
             withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
-                append("yoshaaa~ hope you always be blessed, here is Mjurran, arigatou gozaimuch for enjoying ")
+                append("Yoshaaa~ Hope you're always blessed.\nThis is Mjurran, arigatou gozaimuch for enjoying ")
             }
             withStyle(
                 SpanStyle(
@@ -277,7 +324,7 @@ fun StarDialog(
                 append("VoidTune")
             }
             withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
-                append(", if you dont mind plesea visit ")
+                append("!\n\nIf you'd like to see more of my works, please visit ")
             }
             val linkStyles = TextLinkStyles(
                 style = SpanStyle(
@@ -293,7 +340,7 @@ fun StarDialog(
             addLink(LinkAnnotation.Url("https://moezaq.vercel.app/", linkStyles), hereStart, hereEnd)
 
             withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
-                append(", or support ")
+                append(", or consider supporting ")
             }
             withStyle(
                 SpanStyle(
@@ -306,132 +353,8 @@ fun StarDialog(
             ) {
                 append("VoidTune")
             }
-        }
-    }
-
-    BasicAlertDialog(
-        onDismissRequest = onDismissRequest,
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = AlertDialogDefaults.shape,
-            color = AlertDialogDefaults.containerColor,
-            contentColor = AlertDialogDefaults.textContentColor,
-            tonalElevation = AlertDialogDefaults.TonalElevation,
-        ) {
-            Column(modifier = Modifier.padding(24.dp)) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Surface(
-                        shape = MaterialTheme.shapes.large,
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.star),
-                            contentDescription = null,
-                            modifier =
-                                Modifier
-                                    .padding(12.dp)
-                                    .size(AlertDialogDefaults.IconSize),
-                        )
-                    }
-
-                    Text(
-                        text = "Support VoidTune",
-                        fontFamily = unifrakturCookFont,
-                        modifier = Modifier.weight(1f).semantics { heading() },
-                        color = AlertDialogDefaults.titleContentColor,
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                Column(
-                    modifier =
-                        Modifier
-                            .weight(1f, fill = false)
-                            .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Text(
-                        text = annotatedGreeting,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            lineHeight = 22.sp,
-                            fontSize = 14.5.sp,
-                        ),
-                    )
-                }
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    // Tombol Support: Langsung menampilkan QR Code QRIS Mjurran
-                    Button(
-                        onClick = {
-                            showQrDialog = true
-                            onSupport()
-                        },
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
-                        shapes = ButtonDefaults.shapes(),
-                        contentPadding = ButtonDefaults.contentPaddingFor(ButtonDefaults.MinHeight, hasStartIcon = true),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.coffee),
-                            contentDescription = null,
-                            modifier = Modifier.size(ButtonDefaults.IconSize),
-                        )
-                        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-                        Text(
-                            text = "Support VoidTune (QRIS)",
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                    }
-
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        TextButton(
-                            onClick = onLater,
-                            modifier = Modifier.heightIn(min = 48.dp),
-                            shapes = ButtonDefaults.shapes(),
-                        ) {
-                            Text(stringResource(R.string.later), textAlign = TextAlign.Center)
-                        }
-
-                        // Tombol GitHub: Mengarah langsung ke repository VoidTune pengembang
-                        FilledTonalButton(
-                            onClick = {
-                                uriHandler.openUri("https://github.com/mjurran-zaba/ArchiveTune")
-                                onSupport()
-                            },
-                            modifier = Modifier.heightIn(min = 48.dp),
-                            shapes = ButtonDefaults.shapes(),
-                            contentPadding = ButtonDefaults.contentPaddingFor(ButtonDefaults.MinHeight, hasStartIcon = true),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.github),
-                                contentDescription = null,
-                                modifier = Modifier.size(ButtonDefaults.IconSize),
-                            )
-                            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-                            Text(
-                                text = "GitHub",
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
-                    }
-                }
+            withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+                append(" to keep the spell alive.")
             }
         }
     }
@@ -439,15 +362,160 @@ fun StarDialog(
     if (showQrDialog) {
         SupportQrModal(
             unifrakturCookFont = unifrakturCookFont,
-            onDismiss = { showQrDialog = false },
+            onDismiss = {
+                showQrDialog = false
+                onSupport()
+            },
         )
+    } else {
+        BasicAlertDialog(
+            onDismissRequest = onDismissRequest,
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                color = Color(0xFF07121E).copy(alpha = 0.95f),
+                contentColor = Color.White,
+                border = BorderStroke(1.dp, Color(0xFF38BDF8).copy(alpha = 0.35f)),
+                tonalElevation = AlertDialogDefaults.TonalElevation,
+            ) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Surface(
+                            shape = MaterialTheme.shapes.large,
+                            color = Color(0xFF38BDF8).copy(alpha = 0.18f),
+                            contentColor = Color(0xFF38BDF8),
+                            border = BorderStroke(1.dp, Color(0xFF38BDF8).copy(alpha = 0.35f)),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.star),
+                                contentDescription = null,
+                                modifier =
+                                    Modifier
+                                        .padding(12.dp)
+                                        .size(AlertDialogDefaults.IconSize),
+                            )
+                        }
+
+                        Text(
+                            text = "Support VoidTune",
+                            fontFamily = unifrakturCookFont,
+                            modifier = Modifier.weight(1f).semantics { heading() },
+                            color = Color.White,
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Column(
+                        modifier =
+                            Modifier
+                                .weight(1f, fill = false)
+                                .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Text(
+                            text = annotatedGreeting,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                lineHeight = 22.sp,
+                                fontSize = 14.5.sp,
+                            ),
+                        )
+                    }
+
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        color = Color.White.copy(alpha = 0.12f),
+                    )
+
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        // Tombol Support: Membuka modal QRIS tanpa menutup dialog seketika
+                        Button(
+                            onClick = {
+                                showQrDialog = true
+                            },
+                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                            shapes = ButtonDefaults.shapes(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF38BDF8),
+                                contentColor = Color(0xFF07121E),
+                            ),
+                            contentPadding = ButtonDefaults.contentPaddingFor(ButtonDefaults.MinHeight, hasStartIcon = true),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.coffee),
+                                contentDescription = null,
+                                modifier = Modifier.size(ButtonDefaults.IconSize),
+                            )
+                            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                            Text(
+                                text = "Support VoidTune (QRIS)",
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
+
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            TextButton(
+                                onClick = onLater,
+                                modifier = Modifier.heightIn(min = 48.dp),
+                                shapes = ButtonDefaults.shapes(),
+                                colors = ButtonDefaults.textButtonColors(
+                                    contentColor = Color.White.copy(alpha = 0.70f),
+                                ),
+                            ) {
+                                Text(stringResource(R.string.later), textAlign = TextAlign.Center)
+                            }
+
+                            // Tombol GitHub: Mengarah langsung ke repository VoidTune pengembang
+                            FilledTonalButton(
+                                onClick = {
+                                    uriHandler.openUri("https://github.com/mjurran-zaba/VoidTune")
+                                    onSupport()
+                                },
+                                modifier = Modifier.heightIn(min = 48.dp),
+                                shapes = ButtonDefaults.shapes(),
+                                colors = ButtonDefaults.filledTonalButtonColors(
+                                    containerColor = Color.White.copy(alpha = 0.10f),
+                                    contentColor = Color.White,
+                                ),
+                                contentPadding = ButtonDefaults.contentPaddingFor(ButtonDefaults.MinHeight, hasStartIcon = true),
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.github),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(ButtonDefaults.IconSize),
+                                )
+                                Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                                Text(
+                                    text = "GitHub",
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun SupportQrModal(
-    unifrakturCookFont: FontFamily,
+fun SupportQrModal(
     onDismiss: () -> Unit,
+    unifrakturCookFont: FontFamily = remember { FontFamily(Font(R.font.unifrakturcook)) },
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Box(

@@ -1,3 +1,4 @@
+// Always meticulous in everyhthing to minimize the case
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -83,6 +84,7 @@ fun BlurredOverflowMenu(
     pureBlack: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    footer: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     // VoidTune UI Redesign: Slowly smooth physics-based Slide-In Navigation Drawer
@@ -308,40 +310,47 @@ fun BlurredOverflowMenu(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .windowInsetsPadding(WindowInsets.systemBars)
-                                .verticalScroll(rememberScrollState())
                                 .padding(vertical = 18.dp, horizontal = 8.dp),
                         ) {
-                            // VoidTune Side Drawer Brand Header: Clean Gothic Typography (No Left Logo)
                             Column(
                                 modifier = Modifier
+                                    .weight(1f)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                                    .verticalScroll(rememberScrollState()),
                             ) {
-                                Text(
-                                    text = "VoidTune",
-                                    fontFamily = unifrakturCookFont,
-                                    style = MaterialTheme.typography.headlineMedium.copy(
-                                        fontSize = 32.sp,
-                                        letterSpacing = 1.4.sp,
-                                        fontWeight = FontWeight.Bold,
-                                    ),
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                                Text(
-                                    text = "MJURRAN ARC",
-                                    style = MaterialTheme.typography.labelMedium.copy(
-                                        fontStyle = FontStyle.Italic,
-                                        letterSpacing = 2.sp,
-                                        fontWeight = FontWeight.SemiBold,
-                                    ),
-                                    color = Color(0xFF38BDF8),
-                                    modifier = Modifier.padding(top = 1.dp),
-                                )
+                                // VoidTune Side Drawer Brand Header: Clean Gothic Typography (No Left Logo)
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                                ) {
+                                    Text(
+                                        text = "VoidTune",
+                                        fontFamily = unifrakturCookFont,
+                                        style = MaterialTheme.typography.headlineMedium.copy(
+                                            fontSize = 32.sp,
+                                            letterSpacing = 1.4.sp,
+                                            fontWeight = FontWeight.Bold,
+                                        ),
+                                        color = MaterialTheme.colorScheme.primary,
+                                    )
+                                    Text(
+                                        text = "MJURRAN ARC",
+                                        style = MaterialTheme.typography.labelMedium.copy(
+                                            fontStyle = FontStyle.Italic,
+                                            letterSpacing = 2.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                        ),
+                                        color = Color(0xFF38BDF8),
+                                        modifier = Modifier.padding(top = 1.dp),
+                                    )
+                                }
+
+                                content()
                             }
 
-                            content()
-
-                            Spacer(modifier = Modifier.weight(1f))
+                            // Anchored Footer Section: Slide-In Support VoidTune Badge + Divider + Developer Info
+                            footer?.invoke()
 
                             HorizontalDivider(
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
