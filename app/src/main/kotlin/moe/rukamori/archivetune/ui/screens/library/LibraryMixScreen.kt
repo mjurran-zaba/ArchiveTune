@@ -510,18 +510,37 @@ private fun LibraryQuickAccessBento(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
+                // - Always meticulous in everyhthing to minimize the case
+                // [VoidTune Patch: Nordic Frost & Glacial Ice Accents for QuickAccess (Zero Purple)]
+                // MAKSUD KODE ASLI: accent = MaterialTheme.colorScheme.secondary / tertiary
+                // MENGAPA DIKOMEN: Disesuaikan dengan palet Nordic VoidTune: Frost Teal (#88C0D0) dan Glacial Ice (#81A1C1).
+                // ORIGINAL CODE:
+                // QuickAccessTile(
+                //     title = stringResource(R.string.offline_shortcut),
+                //     subtitle = stringResource(R.string.downloaded_desc),
+                //     iconRes = R.drawable.offline,
+                //     accent = MaterialTheme.colorScheme.secondary,
+                //     onClick = onOpenDownloaded,
+                // )
+                // QuickAccessTile(
+                //     title = stringResource(R.string.cached),
+                //     subtitle = stringResource(R.string.instant_playback),
+                //     iconRes = R.drawable.cached,
+                //     accent = MaterialTheme.colorScheme.tertiary,
+                //     onClick = onOpenCached,
+                // )
                 QuickAccessTile(
                     title = stringResource(R.string.offline_shortcut),
                     subtitle = stringResource(R.string.downloaded_desc),
                     iconRes = R.drawable.offline,
-                    accent = MaterialTheme.colorScheme.secondary,
+                    accent = Color(0xFF88C0D0), // Frost Teal
                     onClick = onOpenDownloaded,
                 )
                 QuickAccessTile(
                     title = stringResource(R.string.cached),
                     subtitle = stringResource(R.string.instant_playback),
                     iconRes = R.drawable.cached,
-                    accent = MaterialTheme.colorScheme.tertiary,
+                    accent = Color(0xFF81A1C1), // Glacial Ice
                     onClick = onOpenCached,
                 )
             }
@@ -530,11 +549,32 @@ private fun LibraryQuickAccessBento(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
+            // - Always meticulous in everyhthing to minimize the case
+            // [VoidTune Patch: Emerald Mint & Amber Gold Accents for Local and Top 50 (Zero Purple)]
+            // MAKSUD KODE ASLI: accent = MaterialTheme.colorScheme.secondary / tertiary
+            // MENGAPA DIKOMEN: Menggunakan Emerald Mint (#A3BE8C) dan Radiant Amber Gold (#F59E0B) yang prestisius.
+            // ORIGINAL CODE:
+            // QuickAccessTile(
+            //     title = stringResource(R.string.local_files),
+            //     subtitle = stringResource(R.string.on_device),
+            //     iconRes = R.drawable.snippet_folder,
+            //     accent = MaterialTheme.colorScheme.secondary,
+            //     onClick = onOpenLocal,
+            //     modifier = Modifier.weight(1f),
+            // )
+            // QuickAccessTile(
+            //     title = "${stringResource(R.string.my_top)} $topSize",
+            //     subtitle = stringResource(R.string.all_time),
+            //     iconRes = R.drawable.trending_up,
+            //     accent = MaterialTheme.colorScheme.tertiary,
+            //     onClick = onOpenTop,
+            //     modifier = Modifier.weight(1f),
+            // )
             QuickAccessTile(
                 title = stringResource(R.string.local_files),
                 subtitle = stringResource(R.string.on_device),
                 iconRes = R.drawable.snippet_folder,
-                accent = MaterialTheme.colorScheme.secondary,
+                accent = Color(0xFFA3BE8C), // Emerald Mint
                 onClick = onOpenLocal,
                 modifier = Modifier.weight(1f),
             )
@@ -542,7 +582,7 @@ private fun LibraryQuickAccessBento(
                 title = "${stringResource(R.string.my_top)} $topSize",
                 subtitle = stringResource(R.string.all_time),
                 iconRes = R.drawable.trending_up,
-                accent = MaterialTheme.colorScheme.tertiary,
+                accent = Color(0xFFF59E0B), // Radiant Amber Gold
                 onClick = onOpenTop,
                 modifier = Modifier.weight(1f),
             )
@@ -559,13 +599,31 @@ private fun LikedSongsTile(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val scale by rememberLibraryPressScale(interactionSource)
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Deep Glacier Glassmorphism with Polar Cyan Glow Border]
+    // MAKSUD KODE ASLI: color = Color.White.copy(alpha = 0.12f), border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
+    // MENGAPA DIKOMEN: Ditingkatkan dengan nuansa Deep Glacier Glass (#0A1828 55% transparan) dan glow border Polar Cyan.
+    // ORIGINAL CODE:
+    // Surface(
+    //     onClick = onClick,
+    //     interactionSource = interactionSource,
+    //     shape = RoundedCornerShape(16.dp),
+    //     color = Color.White.copy(alpha = 0.12f),
+    //     contentColor = Color.White,
+    //     border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
+    //     modifier =
+    //         modifier.graphicsLayer {
+    //             scaleX = scale
+    //             scaleY = scale
+    //         },
+    // ) {
     Surface(
         onClick = onClick,
         interactionSource = interactionSource,
         shape = RoundedCornerShape(16.dp),
-        color = Color.White.copy(alpha = 0.12f), // 35% faded white milk glassmorphism
+        color = Color(0xFF0A1828).copy(alpha = 0.60f),
         contentColor = Color.White,
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
+        border = BorderStroke(1.dp, Color(0xFF38BDF8).copy(alpha = 0.40f)),
         modifier =
             modifier.graphicsLayer {
                 scaleX = scale
@@ -623,13 +681,33 @@ private fun QuickAccessTile(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val scale by rememberLibraryPressScale(interactionSource)
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Frosted Arctic Glass Tile for Quick Access]
+    // MAKSUD KODE ASLI: color = Color.White.copy(alpha = 0.08f), border = BorderStroke(1.dp, Color.White.copy(alpha = 0.18f))
+    // MENGAPA DIKOMEN: Menyelaraskan dengan surface gelap transparan Nordic (#07121E 50% transparan) dan border halus.
+    // ORIGINAL CODE:
+    // Surface(
+    //     onClick = onClick,
+    //     interactionSource = interactionSource,
+    //     shape = RoundedCornerShape(14.dp),
+    //     color = Color.White.copy(alpha = 0.08f),
+    //     contentColor = Color.White,
+    //     border = BorderStroke(1.dp, Color.White.copy(alpha = 0.18f)),
+    //     modifier =
+    //         modifier
+    //             .fillMaxWidth()
+    //             .graphicsLayer {
+    //                 scaleX = scale
+    //                 scaleY = scale
+    //             },
+    // ) {
     Surface(
         onClick = onClick,
         interactionSource = interactionSource,
         shape = RoundedCornerShape(14.dp),
-        color = Color.White.copy(alpha = 0.08f), // 35% faded white milk glassmorphism
+        color = Color(0xFF07121E).copy(alpha = 0.55f),
         contentColor = Color.White,
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.18f)),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.16f)),
         modifier =
             modifier
                 .fillMaxWidth()

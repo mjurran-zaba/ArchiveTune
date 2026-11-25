@@ -13,7 +13,9 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -177,8 +179,16 @@ fun SettingsProfileCard(
                     scaleY = cardScale
                 },
         shape = MaterialTheme.shapes.extraLargeIncreased,
-        color = colorScheme.primaryContainer,
-        contentColor = colorScheme.onPrimaryContainer,
+        // - Always meticulous in everyhthing to minimize the case
+        // [VoidTune Patch: Frosted Arctic Glass Surface for Profile Card]
+        // MAKSUD KODE ASLI: color = colorScheme.primaryContainer, contentColor = colorScheme.onPrimaryContainer
+        // MENGAPA DIKOMEN: Menyelaraskan dengan palet Arctic VoidTune (#071422 70% transparan) dan border tipis Polar Cyan.
+        // ORIGINAL CODE:
+        // color = colorScheme.primaryContainer,
+        // contentColor = colorScheme.onPrimaryContainer,
+        color = Color(0xFF071422).copy(alpha = 0.70f),
+        contentColor = Color.White,
+        border = BorderStroke(1.dp, Color(0xFF38BDF8).copy(alpha = 0.35f)),
         interactionSource = interactionSource,
     ) {
         Column {
@@ -344,7 +354,7 @@ private fun SettingsProfileCover(
                         Brush.verticalGradient(
                             0f to Color.Transparent,
                             0.55f to Color.Transparent,
-                            1f to colorScheme.primaryContainer,
+                            1f to Color(0xFF071422),
                         ),
                     ),
         )
@@ -423,8 +433,8 @@ private fun SettingsProfileManagePill(isPressed: Boolean) {
 
     Surface(
         shape = CircleShape,
-        color = colorScheme.primary,
-        contentColor = colorScheme.onPrimary,
+        color = Color(0xFF38BDF8),
+        contentColor = Color(0xFF07121E),
         modifier = Modifier.padding(bottom = 4.dp),
     ) {
         Row(
@@ -509,32 +519,62 @@ private fun SettingsHighlightTile(
     val glyphColor: Color
     val glyphContentColor: Color
     when (highlight.tone) {
+        // - Always meticulous in everyhthing to minimize the case
+        // [VoidTune Patch: Frosted Nordic Cyber Glassmorphism for Settings Bento Tiles (Zero Purple)]
+        // MAKSUD KODE ASLI: containerColor menggunakan default M3 container (primaryContainer, dsb.)
+        // MENGAPA DIKOMEN: Diubah menjadi kartu semi-transparan Nordic Arctic (#0A1828 / #071422 / #091624 / #08121E)
+        // dengan aksen Polar Cyan (#38BDF8), Frost Teal (#88C0D0), Amber Gold (#F59E0B), dan Glacial Ice (#81A1C1).
+        // ORIGINAL CODE:
+        // SettingsTone.Primary -> {
+        //     containerColor = colorScheme.primaryContainer
+        //     contentColor = colorScheme.onPrimaryContainer
+        //     glyphColor = colorScheme.primary
+        //     glyphContentColor = colorScheme.onPrimary
+        // }
+        // SettingsTone.Secondary -> {
+        //     containerColor = colorScheme.secondaryContainer
+        //     contentColor = colorScheme.onSecondaryContainer
+        //     glyphColor = colorScheme.secondary
+        //     glyphContentColor = colorScheme.onSecondary
+        // }
+        // SettingsTone.Tertiary -> {
+        //     containerColor = colorScheme.tertiaryContainer
+        //     contentColor = colorScheme.onTertiaryContainer
+        //     glyphColor = colorScheme.tertiary
+        //     glyphContentColor = colorScheme.onTertiary
+        // }
+        // SettingsTone.Neutral -> {
+        //     containerColor = colorScheme.surfaceContainerHighest
+        //     contentColor = colorScheme.onSurface
+        //     glyphColor = colorScheme.inverseSurface
+        //     glyphContentColor = colorScheme.inverseOnSurface
+        // }
         SettingsTone.Primary -> {
-            containerColor = colorScheme.primaryContainer
-            contentColor = colorScheme.onPrimaryContainer
-            glyphColor = colorScheme.primary
-            glyphContentColor = colorScheme.onPrimary
+            containerColor = Color(0xFF0A1828).copy(alpha = 0.65f)
+            contentColor = Color.White
+            glyphColor = Color(0xFF38BDF8) // Polar Cyan
+            glyphContentColor = Color(0xFF07121E)
         }
 
         SettingsTone.Secondary -> {
-            containerColor = colorScheme.secondaryContainer
-            contentColor = colorScheme.onSecondaryContainer
-            glyphColor = colorScheme.secondary
-            glyphContentColor = colorScheme.onSecondary
+            containerColor = Color(0xFF071422).copy(alpha = 0.65f)
+            contentColor = Color.White
+            glyphColor = Color(0xFF88C0D0) // Frost Teal
+            glyphContentColor = Color(0xFF07121E)
         }
 
         SettingsTone.Tertiary -> {
-            containerColor = colorScheme.tertiaryContainer
-            contentColor = colorScheme.onTertiaryContainer
-            glyphColor = colorScheme.tertiary
-            glyphContentColor = colorScheme.onTertiary
+            containerColor = Color(0xFF091624).copy(alpha = 0.65f)
+            contentColor = Color.White
+            glyphColor = Color(0xFFF59E0B) // Radiant Amber Gold
+            glyphContentColor = Color(0xFF07121E)
         }
 
         SettingsTone.Neutral -> {
-            containerColor = colorScheme.surfaceContainerHighest
-            contentColor = colorScheme.onSurface
-            glyphColor = colorScheme.inverseSurface
-            glyphContentColor = colorScheme.inverseOnSurface
+            containerColor = Color(0xFF08121E).copy(alpha = 0.65f)
+            contentColor = Color.White
+            glyphColor = Color(0xFF81A1C1) // Glacial Ice Blue
+            glyphContentColor = Color(0xFF07121E)
         }
     }
 
@@ -564,6 +604,7 @@ private fun SettingsHighlightTile(
         shape = RoundedCornerShape(cornerRadius),
         color = containerColor,
         contentColor = contentColor,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.16f)),
         interactionSource = interactionSource,
     ) {
         Column(
@@ -627,7 +668,7 @@ fun SettingsSectionHeader(
     Text(
         text = title,
         style = MaterialTheme.typography.titleSmallEmphasized,
-        color = MaterialTheme.colorScheme.primary,
+        color = Color(0xFF38BDF8),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier =

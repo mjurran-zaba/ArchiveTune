@@ -52,6 +52,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -206,12 +207,53 @@ fun SettingsScreen(
             )
         }
 
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Make Settings Screen Background Transparent for Nordic Gradient Passthrough]
+    // MAKSUD KODE ASLI: containerColor = MaterialTheme.colorScheme.surface (solid hitam/abu pekat)
+    // MENGAPA DIKOMEN: Diubah menjadi Color.Transparent agar gradasi kosmik Nordic Arctic Mist (#0B132B -> #07121E -> #020408)
+    // tembus secara elegan di layar Settings. Top bar menggunakan background transparan dan scrolled frosted surface.
+    // ORIGINAL CODE:
+    // Scaffold(
+    //     modifier =
+    //         Modifier
+    //             .fillMaxSize()
+    //             .nestedScroll(scrollBehavior.nestedScrollConnection),
+    //     containerColor = MaterialTheme.colorScheme.surface,
+    //     contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    //     topBar = {
+    //         LargeFlexibleTopAppBar(
+    //             title = {
+    //                 Text(
+    //                     text = stringResource(R.string.settings),
+    //                     fontWeight = FontWeight.Bold,
+    //                 )
+    //             },
+    //             navigationIcon = {
+    //                 IconButton(
+    //                     onClick = navController::navigateUp,
+    //                     onLongClick = navController::backToMain,
+    //                 ) {
+    //                     Icon(
+    //                         painter = painterResource(R.drawable.arrow_back),
+    //                         contentDescription = stringResource(R.string.back_button_desc),
+    //                     )
+    //                 }
+    //             },
+    //             colors =
+    //                 TopAppBarDefaults.largeTopAppBarColors(
+    //                     containerColor = MaterialTheme.colorScheme.surface,
+    //                     scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+    //                 ),
+    //             scrollBehavior = scrollBehavior,
+    //         )
+    //     },
+    // ) { innerPadding ->
     Scaffold(
         modifier =
             Modifier
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             LargeFlexibleTopAppBar(
@@ -234,8 +276,8 @@ fun SettingsScreen(
                 },
                 colors =
                     TopAppBarDefaults.largeTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color(0xFF07121E).copy(alpha = 0.85f),
                     ),
                 scrollBehavior = scrollBehavior,
             )

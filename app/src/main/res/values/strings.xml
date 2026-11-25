@@ -481,12 +481,12 @@
     <string name="palette_tangerine_blast">Tangerine</string>
     <string name="palette_peach">Peach</string>
     <string name="palette_mango">Mango</string>
-    <string name="palette_royal_purple">Royal Purple</string>
-    <string name="palette_lavender_dream">Lavender</string>
-    <string name="palette_grape_purple">Grape</string>
-    <string name="palette_violet">Violet</string>
-    <string name="palette_amethyst">Amethyst</string>
-    <string name="palette_ultra_violet">Ultra Violet</string>
+    <string name="palette_royal_purple">Nordic Mist</string>
+    <string name="palette_lavender_dream">Glacial Ice</string>
+    <string name="palette_grape_purple">Deep Midnight</string>
+    <string name="palette_violet">Polar Cyan</string>
+    <string name="palette_amethyst">Aurora Mint</string>
+    <string name="palette_ultra_violet">Obsidian Slate</string>
     <string name="palette_cherry_blossom">Sakura</string>
     <string name="palette_rose_quartz">Rose Quartz</string>
     <string name="palette_magenta_pop">Magenta</string>
@@ -512,7 +512,7 @@
     <string name="palette_pastel_blue">Pastel Blue</string>
     <string name="palette_pastel_green">Pastel Green</string>
     <string name="palette_pastel_yellow">Pastel Yellow</string>
-    <string name="palette_pastel_purple">Pastel Purple</string>
+    <string name="palette_pastel_purple">Pastel Frost</string>
     <string name="palette_neon_green">Neon Green</string>
     <string name="palette_neon_pink">Neon Pink</string>
     <string name="palette_neon_blue">Neon Blue</string>

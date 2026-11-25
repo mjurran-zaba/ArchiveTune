@@ -517,14 +517,28 @@ object ThemePalettes {
             neutral = Color(0xFF111824),
         )
 
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Purge Purple/Violet in NotezCyberObsidian - Rule: NO ANYTHING PURPLE!]
+    // MAKSUD KODE ASLI: primary = Color(0xFF8B5CF6) violet
+    // MENGAPA DIKOMEN: Mengikuti aturan tegas NO ANYTHING PURPLE, diganti dengan Polar Cyan (#38BDF8) & Frost Teal (#88C0D0).
+    // ORIGINAL CODE:
+    // val NotezCyberObsidian =
+    //     ThemePalette(
+    //         id = "notez_cyber_obsidian",
+    //         nameResId = R.string.palette_notez_cyber_obsidian,
+    //         primary = Color(0xFF8B5CF6),
+    //         secondary = Color(0xFF9A94B8),
+    //         tertiary = Color(0xFFA78BFA),
+    //         neutral = Color(0xFF14141F),
+    //     )
     val NotezCyberObsidian =
         ThemePalette(
             id = "notez_cyber_obsidian",
             nameResId = R.string.palette_notez_cyber_obsidian,
-            primary = Color(0xFF8B5CF6),
-            secondary = Color(0xFF9A94B8),
-            tertiary = Color(0xFFA78BFA),
-            neutral = Color(0xFF14141F),
+            primary = Color(0xFF38BDF8),
+            secondary = Color(0xFF81A1C1),
+            tertiary = Color(0xFF88C0D0),
+            neutral = Color(0xFF070E1A),
         )
 
     val NotezSunsetMirage =
@@ -757,64 +771,123 @@ object ThemePalettes {
             neutral = Color(0xFFFF8243),
         )
 
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Purge Purple Family Palettes - Replace with Nordic Arctic Theme (Zero Purple)]
+    // MAKSUD KODE ASLI: RoyalPurple, LavenderDream, GrapePurple, Violet, Amethyst, UltraViolet menggunakan hex ungu/violet
+    // MENGAPA DIKOMEN: Mengikuti aturan inti NO ANYTHING PURPLE, seluruh warna diganti menjadi palet Nordic Frost & Arctic.
+    // ORIGINAL CODE:
+    // val RoyalPurple =
+    //     ThemePalette(
+    //         id = "royal_purple",
+    //         nameResId = R.string.palette_royal_purple,
+    //         primary = Color(0xFF9B59B6),
+    //         secondary = Color(0xFF9B59B6),
+    //         tertiary = Color(0xFF9B59B6),
+    //         neutral = Color(0xFF9B59B6),
+    //     )
+    // val LavenderDream =
+    //     ThemePalette(
+    //         id = "lavender_dream",
+    //         nameResId = R.string.palette_lavender_dream,
+    //         primary = Color(0xFFB39DDB),
+    //         secondary = Color(0xFFB39DDB),
+    //         tertiary = Color(0xFFB39DDB),
+    //         neutral = Color(0xFFB39DDB),
+    //     )
+    // val GrapePurple =
+    //     ThemePalette(
+    //         id = "grape_purple",
+    //         nameResId = R.string.palette_grape_purple,
+    //         primary = Color(0xFF6B5B95),
+    //         secondary = Color(0xFF6B5B95),
+    //         tertiary = Color(0xFF6B5B95),
+    //         neutral = Color(0xFF6B5B95),
+    //     )
+    // val Violet =
+    //     ThemePalette(
+    //         id = "violet",
+    //         nameResId = R.string.palette_violet,
+    //         primary = Color(0xFFEE82EE),
+    //         secondary = Color(0xFFEE82EE),
+    //         tertiary = Color(0xFFEE82EE),
+    //         neutral = Color(0xFFEE82EE),
+    //     )
+    // val Amethyst =
+    //     ThemePalette(
+    //         id = "amethyst",
+    //         nameResId = R.string.palette_amethyst,
+    //         primary = Color(0xFF9966CC),
+    //         secondary = Color(0xFF9966CC),
+    //         tertiary = Color(0xFF9966CC),
+    //         neutral = Color(0xFF9966CC),
+    //     )
+    // val UltraViolet =
+    //     ThemePalette(
+    //         id = "ultra_violet",
+    //         nameResId = R.string.palette_ultra_violet,
+    //         primary = Color(0xFF645394),
+    //         secondary = Color(0xFF645394),
+    //         tertiary = Color(0xFF645394),
+    //         neutral = Color(0xFF645394),
+    //     )
     val RoyalPurple =
         ThemePalette(
             id = "royal_purple",
             nameResId = R.string.palette_royal_purple,
-            primary = Color(0xFF9B59B6),
-            secondary = Color(0xFF9B59B6),
-            tertiary = Color(0xFF9B59B6),
-            neutral = Color(0xFF9B59B6),
+            primary = Color(0xFF88C0D0), // Nordic Mist (Frost Teal)
+            secondary = Color(0xFF88C0D0),
+            tertiary = Color(0xFF88C0D0),
+            neutral = Color(0xFF88C0D0),
         )
 
     val LavenderDream =
         ThemePalette(
             id = "lavender_dream",
             nameResId = R.string.palette_lavender_dream,
-            primary = Color(0xFFB39DDB),
-            secondary = Color(0xFFB39DDB),
-            tertiary = Color(0xFFB39DDB),
-            neutral = Color(0xFFB39DDB),
+            primary = Color(0xFF81A1C1), // Glacial Ice
+            secondary = Color(0xFF81A1C1),
+            tertiary = Color(0xFF81A1C1),
+            neutral = Color(0xFF81A1C1),
         )
 
     val GrapePurple =
         ThemePalette(
             id = "grape_purple",
             nameResId = R.string.palette_grape_purple,
-            primary = Color(0xFF6B5B95),
-            secondary = Color(0xFF6B5B95),
-            tertiary = Color(0xFF6B5B95),
-            neutral = Color(0xFF6B5B95),
+            primary = Color(0xFF5E81AC), // Deep Midnight
+            secondary = Color(0xFF5E81AC),
+            tertiary = Color(0xFF5E81AC),
+            neutral = Color(0xFF5E81AC),
         )
 
     val Violet =
         ThemePalette(
             id = "violet",
             nameResId = R.string.palette_violet,
-            primary = Color(0xFFEE82EE),
-            secondary = Color(0xFFEE82EE),
-            tertiary = Color(0xFFEE82EE),
-            neutral = Color(0xFFEE82EE),
+            primary = Color(0xFF38BDF8), // Polar Cyan
+            secondary = Color(0xFF38BDF8),
+            tertiary = Color(0xFF38BDF8),
+            neutral = Color(0xFF38BDF8),
         )
 
     val Amethyst =
         ThemePalette(
             id = "amethyst",
             nameResId = R.string.palette_amethyst,
-            primary = Color(0xFF9966CC),
-            secondary = Color(0xFF9966CC),
-            tertiary = Color(0xFF9966CC),
-            neutral = Color(0xFF9966CC),
+            primary = Color(0xFF8FBCBB), // Aurora Mint
+            secondary = Color(0xFF8FBCBB),
+            tertiary = Color(0xFF8FBCBB),
+            neutral = Color(0xFF8FBCBB),
         )
 
     val UltraViolet =
         ThemePalette(
             id = "ultra_violet",
             nameResId = R.string.palette_ultra_violet,
-            primary = Color(0xFF645394),
-            secondary = Color(0xFF645394),
-            tertiary = Color(0xFF645394),
-            neutral = Color(0xFF645394),
+            primary = Color(0xFF4C566A), // Obsidian Slate
+            secondary = Color(0xFF4C566A),
+            tertiary = Color(0xFF4C566A),
+            neutral = Color(0xFF4C566A),
         )
 
     val CherryBlossom =
@@ -837,14 +910,28 @@ object ThemePalettes {
             neutral = Color(0xFFF7CAC9),
         )
 
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Purge Magenta from Pink Palette - Rule: NO ANYTHING PURPLE / MAGENTA!]
+    // MAKSUD KODE ASLI: primary = Color(0xFFFF00FF) magenta murni
+    // MENGAPA DIKOMEN: Menghilangkan magenta/fuchsia sesuai aturan, diganti soft rose (#F48FB1).
+    // ORIGINAL CODE:
+    // val MagentaPop =
+    //     ThemePalette(
+    //         id = "magenta_pop",
+    //         nameResId = R.string.palette_magenta_pop,
+    //         primary = Color(0xFFFF00FF),
+    //         secondary = Color(0xFFFF00FF),
+    //         tertiary = Color(0xFFFF00FF),
+    //         neutral = Color(0xFFFF00FF),
+    //     )
     val MagentaPop =
         ThemePalette(
             id = "magenta_pop",
             nameResId = R.string.palette_magenta_pop,
-            primary = Color(0xFFFF00FF),
-            secondary = Color(0xFFFF00FF),
-            tertiary = Color(0xFFFF00FF),
-            neutral = Color(0xFFFF00FF),
+            primary = Color(0xFFF48FB1),
+            secondary = Color(0xFFF48FB1),
+            tertiary = Color(0xFFF48FB1),
+            neutral = Color(0xFFF48FB1),
         )
 
     val HotPink =
@@ -1067,14 +1154,28 @@ object ThemePalettes {
             neutral = Color(0xFFFDFD96),
         )
 
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Purge PastelPurple with PastelFrost - Rule: NO ANYTHING PURPLE!]
+    // MAKSUD KODE ASLI: primary = Color(0xFFB19CD9)
+    // MENGAPA DIKOMEN: Menghilangkan warna ungu pastel, diganti menjadi Pastel Frost (#D8DEE9).
+    // ORIGINAL CODE:
+    // val PastelPurple =
+    //     ThemePalette(
+    //         id = "pastel_purple",
+    //         nameResId = R.string.palette_pastel_purple,
+    //         primary = Color(0xFFB19CD9),
+    //         secondary = Color(0xFFB19CD9),
+    //         tertiary = Color(0xFFB19CD9),
+    //         neutral = Color(0xFFB19CD9),
+    //     )
     val PastelPurple =
         ThemePalette(
             id = "pastel_purple",
             nameResId = R.string.palette_pastel_purple,
-            primary = Color(0xFFB19CD9),
-            secondary = Color(0xFFB19CD9),
-            tertiary = Color(0xFFB19CD9),
-            neutral = Color(0xFFB19CD9),
+            primary = Color(0xFFD8DEE9), // Pastel Frost
+            secondary = Color(0xFFD8DEE9),
+            tertiary = Color(0xFFD8DEE9),
+            neutral = Color(0xFFD8DEE9),
         )
 
     val NeonGreen =

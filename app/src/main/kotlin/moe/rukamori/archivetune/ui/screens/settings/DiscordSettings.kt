@@ -327,9 +327,18 @@ fun DiscordSettings(navController: NavController) {
             defaultValue = true,
         )
     val (button2Label) =
+        // - Always meticulous in everyhthing to minimize the case
+        // [VoidTune Patch: Discord RPC Rebranding to VoidTune]
+        // MAKSUD KODE ASLI: defaultValue = "Go to ArchiveTune", defaultValue = "https://github.com/rukamori/ArchiveTune"
+        // MENGAPA DIKOMEN: Menyesuaikan identitas aplikasi ke VoidTune dan repositori pengguna.
+        // ORIGINAL CODE:
+        // rememberPreference(
+        //     key = DiscordActivityButton2LabelKey,
+        //     defaultValue = "Go to ArchiveTune",
+        // )
         rememberPreference(
             key = DiscordActivityButton2LabelKey,
-            defaultValue = "Go to ArchiveTune",
+            defaultValue = "Go to VoidTune",
         )
     val (button2Enabled) =
         rememberPreference(
@@ -354,7 +363,7 @@ fun DiscordSettings(navController: NavController) {
     val (button2CustomUrl) =
         rememberPreference(
             key = DiscordActivityButton2CustomUrlKey,
-            defaultValue = "https://github.com/rukamori/ArchiveTune",
+            defaultValue = "https://github.com/mjurran-zaba/VoidTune",
         )
 
     val (activityType, onActivityTypeChange) =
@@ -1212,10 +1221,10 @@ fun RichPresence(
     button1Enabled: Boolean = true,
     button1UrlSource: String = "songurl",
     button1CustomUrl: String = "",
-    button2Label: String = "Go to ArchiveTune",
+    button2Label: String = "Go to VoidTune",
     button2Enabled: Boolean = true,
     button2UrlSource: String = "custom",
-    button2CustomUrl: String = "https://github.com/rukamori/ArchiveTune",
+    button2CustomUrl: String = "https://github.com/mjurran-zaba/VoidTune",
     isPlaying: Boolean = false,
 ) {
     val context = LocalContext.current
@@ -1326,7 +1335,7 @@ fun RichPresence(
                                 when (largeImageType.lowercase()) {
                                     "thumbnail" -> song?.song?.thumbnailUrl
                                     "artist" -> song?.artists?.firstOrNull()?.thumbnailUrl
-                                    "appicon" -> "https://raw.githubusercontent.com/rukamori/ArchiveTune/main/fastlane/metadata/android/en-US/images/icon.png"
+                                    "appicon" -> "https://raw.githubusercontent.com/mjurran-zaba/VoidTune/VoidTune/fastlane/metadata/android/en-US/images/icon.png"
                                     "custom" -> largeImageCustomUrl.ifBlank { song?.song?.thumbnailUrl }
                                     else -> song?.song?.thumbnailUrl
                                 }
@@ -1356,7 +1365,7 @@ fun RichPresence(
                                 when (smallImageType.lowercase()) {
                                     "thumbnail" -> songThumb
                                     "artist" -> artistThumb
-                                    "appicon" -> "https://raw.githubusercontent.com/rukamori/ArchiveTune/main/fastlane/metadata/android/en-US/images/icon.png"
+                                    "appicon" -> "https://raw.githubusercontent.com/mjurran-zaba/VoidTune/VoidTune/fastlane/metadata/android/en-US/images/icon.png"
                                     "custom" -> smallImageCustomUrl.takeIf { it.isNotBlank() } ?: songThumb
                                     "dontshow", "none" -> null
                                     else -> artistThumb

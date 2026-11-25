@@ -100,11 +100,17 @@ object ListenBrainzManager {
                         .joinToString(" & ")
                 val releaseName = song.album?.title ?: ""
                 val releasePart = if (releaseName.isBlank()) "" else "\"release_name\":\"${escapeJson(releaseName)}\","
+                // - Always meticulous in everyhthing to minimize the case
+                // [VoidTune Patch: Update submission_client to VoidTune]
+                // MAKSUD KODE ASLI: "submission_client":"ArchiveTune"
+                // MENGAPA DIUBAH: Menyesuaikan identitas aplikasi ke VoidTune pada submission payload ListenBrainz.
+                // ORIGINAL CODE:
+                // )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"position_ms\":$positionMs,\"submission_client\":\"ArchiveTune\"}}}"
                 val trackMetadata = "{\"track_metadata\":{\"artist_name\":\"${escapeJson(
                     artistNames,
                 )}\",\"track_name\":\"${escapeJson(
                     song.title,
-                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"position_ms\":$positionMs,\"submission_client\":\"ArchiveTune\"}}}"
+                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"position_ms\":$positionMs,\"submission_client\":\"VoidTune\"}}}"
                 val listensJson = "[$trackMetadata]"
                 val bodyJson = "{\"listen_type\":\"playing_now\",\"payload\":$listensJson}"
                 Timber.tag(logTag).d("submitPlayingNow JSON: %s", bodyJson)
@@ -168,11 +174,16 @@ object ListenBrainzManager {
                     Timber.tag(logTag).w("listened_at %s looks too small, replacing with current epoch seconds", listenedAtStart)
                     listenedAtStart = System.currentTimeMillis() / 1000L
                 }
+                // - Always meticulous in everyhthing to minimize the case
+                // [VoidTune Patch: Update submission_client to VoidTune in submitFinished]
+                // MAKSUD KODE ASLI: "submission_client":"ArchiveTune"
+                // ORIGINAL CODE:
+                // )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"start_ms\":$startMs,\"end_ms\":$endMs,\"submission_client\":\"ArchiveTune\"}}}"
                 val trackMetadataSingle = "{\"listened_at\":$listenedAtStart,\"track_metadata\":{\"artist_name\":\"${escapeJson(
                     artistNames,
                 )}\",\"track_name\":\"${escapeJson(
                     song.title,
-                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"start_ms\":$startMs,\"end_ms\":$endMs,\"submission_client\":\"ArchiveTune\"}}}"
+                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"start_ms\":$startMs,\"end_ms\":$endMs,\"submission_client\":\"VoidTune\"}}}"
                 val listensJson = "[$trackMetadataSingle]"
                 val bodyJson = "{\"listen_type\":\"single\",\"payload\":$listensJson}"
                 Timber.tag(logTag).d("submitFinished JSON: %s", bodyJson)

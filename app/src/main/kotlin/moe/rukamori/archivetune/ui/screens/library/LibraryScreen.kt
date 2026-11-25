@@ -14,6 +14,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -165,13 +166,27 @@ fun LibraryScreen(
             null
         }
 
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Make Library Screen Background Transparent to let Nordic Gradient shine through]
+    // MAKSUD KODE ASLI: Box dengan .background(MaterialTheme.colorScheme.background) yang solid memblokir gradasi global.
+    // MENGAPA DIKOMEN: Background diubah menjadi Color.Transparent agar gradasi Nordic Arctic Mist (#0B132B -> #07121E -> #020408)
+    // terlihat estetik di seluruh tab Library.
+    // ORIGINAL CODE:
+    // Box(
+    //     modifier =
+    //         Modifier
+    //             .fillMaxSize()
+    //             .clipToBounds()
+    //             .nestedScroll(scrollBehavior.nestedScrollConnection)
+    //             .background(MaterialTheme.colorScheme.background),
+    // ) {
     Box(
         modifier =
             Modifier
                 .fillMaxSize()
                 .clipToBounds()
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .background(MaterialTheme.colorScheme.background),
+                .background(Color.Transparent),
     ) {
         if (!disableBlur) {
             Box(
@@ -181,10 +196,21 @@ fun LibraryScreen(
                         .height(430.dp)
                         .align(Alignment.TopCenter)
                         .drawWithCache {
+                            // - Always meticulous in everyhthing to minimize the case
+                            // [VoidTune Patch: Nordic Polar Scrim Glow without Purple]
+                            // MAKSUD KODE ASLI: Brush verticalGradient menggunakan tonalStart/tonalMiddle.
+                            // MENGAPA DIKOMEN: Menggunakan aksen Polar Cyan (#38BDF8) dan Frost Teal (#88C0D0) lembut (Zero Purple).
+                            // ORIGINAL CODE:
+                            // val brush =
+                            //     Brush.verticalGradient(
+                            //         0f to tonalStart.copy(alpha = 0.30f),
+                            //         0.42f to tonalMiddle.copy(alpha = 0.14f),
+                            //         1f to Color.Transparent,
+                            //     )
                             val brush =
                                 Brush.verticalGradient(
-                                    0f to tonalStart.copy(alpha = 0.30f),
-                                    0.42f to tonalMiddle.copy(alpha = 0.14f),
+                                    0f to Color(0xFF38BDF8).copy(alpha = 0.16f),
+                                    0.42f to Color(0xFF88C0D0).copy(alpha = 0.08f),
                                     1f to Color.Transparent,
                                 )
                             onDrawBehind { drawRect(brush) }
@@ -304,6 +330,28 @@ private fun LibrarySectionTabs(
     onSelect: (LibraryFilter) -> Unit,
 ) {
     val sectionsDescription = stringResource(R.string.library_tab_sections)
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Frosted Translucent Arctic Scrim for Library Tab Bar]
+    // MAKSUD KODE ASLI: Gradient dari background solid (alpha 0.95f) yang memblokir gradasi latar belakang.
+    // MENGAPA DIKOMEN: Menggunakan gradasi transparan gelap bernuansa Nordic (#07121E) agar menyatu halus.
+    // ORIGINAL CODE:
+    // Box(
+    //     modifier =
+    //         Modifier
+    //             .fillMaxWidth()
+    //             .height(LibraryHeaderContentPadding)
+    //             .background(
+    //                 Brush.verticalGradient(
+    //                     colors =
+    //                         listOf(
+    //                             MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
+    //                             MaterialTheme.colorScheme.background.copy(alpha = 0.85f),
+    //                             MaterialTheme.colorScheme.background.copy(alpha = 0.45f),
+    //                             Color.Transparent,
+    //                         ),
+    //                 ),
+    //             ),
+    // ) {
     Box(
         modifier =
             Modifier
@@ -313,9 +361,9 @@ private fun LibrarySectionTabs(
                     Brush.verticalGradient(
                         colors =
                             listOf(
-                                MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
-                                MaterialTheme.colorScheme.background.copy(alpha = 0.85f),
-                                MaterialTheme.colorScheme.background.copy(alpha = 0.45f),
+                                Color(0xFF07121E).copy(alpha = 0.85f),
+                                Color(0xFF07121E).copy(alpha = 0.65f),
+                                Color(0xFF07121E).copy(alpha = 0.25f),
                                 Color.Transparent,
                             ),
                     ),
@@ -356,6 +404,27 @@ private fun LibrarySectionTab(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Section Pill Tab with Crisp Nordic Border and Depth]
+    // MAKSUD KODE ASLI: Modifier.clip(RoundedCornerShape(12.dp)).heightIn(min = 40.dp).semantics { role = Role.Tab }
+    // MENGAPA DIUBAH: Menambahkan border tipis (1 dp) saat tidak aktif dan glow saat aktif agar tidak tenggelam di background gelap.
+    // ORIGINAL CODE:
+    // ToggleButton(
+    //     checked = selected,
+    //     onCheckedChange = { onClick() },
+    //     colors =
+    //         ToggleButtonDefaults.colors(
+    //             containerColor = Color.White.copy(alpha = 0.08f),
+    //             checkedContainerColor = Color(0xFF38BDF8),
+    //             contentColor = Color.White.copy(alpha = 0.85f),
+    //             checkedContentColor = Color(0xFF0D1117),
+    //         ),
+    //     modifier =
+    //         Modifier
+    //             .clip(RoundedCornerShape(12.dp))
+    //             .heightIn(min = 40.dp)
+    //             .semantics { role = Role.Tab },
+    // ) {
     ToggleButton(
         checked = selected,
         onCheckedChange = { onClick() },
@@ -364,11 +433,16 @@ private fun LibrarySectionTab(
                 containerColor = Color.White.copy(alpha = 0.08f),
                 checkedContainerColor = Color(0xFF38BDF8),
                 contentColor = Color.White.copy(alpha = 0.85f),
-                checkedContentColor = Color(0xFF0D1117),
+                checkedContentColor = Color(0xFF07121E),
             ),
         modifier =
             Modifier
                 .clip(RoundedCornerShape(12.dp))
+                .border(
+                    1.dp,
+                    if (selected) Color(0xFF38BDF8).copy(alpha = 0.65f) else Color.White.copy(alpha = 0.16f),
+                    RoundedCornerShape(12.dp),
+                )
                 .heightIn(min = 40.dp)
                 .semantics { role = Role.Tab },
     ) {

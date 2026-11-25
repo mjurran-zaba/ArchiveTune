@@ -350,11 +350,25 @@ private fun LibraryStatRow(stats: List<LibraryHeroStat>) {
 private fun LibraryStatBlock(stat: LibraryHeroStat) {
     val motion = MaterialTheme.motionScheme
     val animationsDisabled = LocalAnimationsDisabled.current
+    // - Always meticulous in everyhthing to minimize the case
+    // [VoidTune Patch: Crisp Frost Border for Library Hero Stat Blocks]
+    // MAKSUD KODE ASLI: .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.56f)) tanpa border
+    // MENGAPA DIUBAH: Menambahkan border halus (1 dp, alpha 0.14f) agar angka statistik memiliki definisi visual yang tajam.
+    // ORIGINAL CODE:
+    // Column(
+    //     modifier =
+    //         Modifier
+    //             .clip(MaterialTheme.shapes.large)
+    //             .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.56f))
+    //             .padding(horizontal = 14.dp, vertical = 10.dp)
+    //             .semantics(mergeDescendants = true) {},
+    // ) {
     Column(
         modifier =
             Modifier
                 .clip(MaterialTheme.shapes.large)
-                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.56f))
+                .background(Color(0xFF07121E).copy(alpha = 0.60f))
+                .border(1.dp, Color.White.copy(alpha = 0.14f), MaterialTheme.shapes.large)
                 .padding(horizontal = 14.dp, vertical = 10.dp)
                 .semantics(mergeDescendants = true) {},
     ) {
