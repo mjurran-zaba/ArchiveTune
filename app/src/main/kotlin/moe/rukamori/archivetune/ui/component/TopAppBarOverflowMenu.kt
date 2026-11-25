@@ -11,14 +11,29 @@
 package moe.rukamori.archivetune.ui.component
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenuItem
@@ -27,6 +42,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,11 +58,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import dev.chrisbanes.haze.HazeState
+import kotlinx.coroutines.delay
 import moe.rukamori.archivetune.R
 import moe.rukamori.archivetune.viewmodels.MainMenuDestination
 import moe.rukamori.archivetune.viewmodels.MenuProfileState
@@ -81,6 +100,24 @@ fun TopAppBarOverflowMenu(
         hazeState = hazeState,
         pureBlack = pureBlack,
         onDismissRequest = onDismissRequest,
+        footer = {
+            // - Always meticulous in everyhthing to minimize the case
+            // [VoidTune Patch: Slide-In Support VoidTune Badge Above Footer]
+            // MAKSUD KODE ASLI: Support VoidTune ditaruh sebagai item menu biasa di dalam daftar menu atas.
+            // MENGAPA DIUBAH:
+            // 1. Teks kuning polos menyatu dengan ilustrasi background anime biola di drawer.
+            // 2. Dipindahkan menjadi badge curved rectangle (RoundedCornerShape(10.dp)) dengan alas Obsidian Glass
+            //    dan border Radiant Amber Gold tepat di atas footer divider.
+            // 3. Menggunakan animasi slide ke kiri (slideInHorizontally { it }) setelah timer 2 detik di drawer.
+            // 4. Ikon menggunakan rokok berasap Lucide (R.drawable.cigarette) beraksen emas bara.
+            SupportVoidTuneBadge(
+                expanded = expanded,
+                onClick = {
+                    onDismissRequest()
+                    showSupportQrDialog = true
+                },
+            )
+        },
     ) {
         MenuProfileHeader(
             state = profileState,
@@ -120,26 +157,108 @@ fun TopAppBarOverflowMenu(
             badgeDescription = if (hasUpdateAvailable) stringResource(R.string.new_update_available) else null,
             onClick = remember(onSelect) { { onSelect(MainMenuDestination.Settings) } },
         )
-        // - Always meticulous in everyhthing to minimize the case
-        // [VoidTune Patch: Direct Support VoidTune QRIS Entry in Navigation Drawer]
-        // MAKSUD KODE ASLI: Hanya NewRelease, News, History, Settings
-        // MENGAPA DITAMBAH: Memudahkan pengguna untuk mendukung pengembang langsung dari drawer samping.
-        OverflowMenuDivider()
-        OverflowAction(
-            label = "Support VoidTune",
-            iconRes = R.drawable.coffee,
-            contentColor = Color(0xFFF59E0B), // Radiant Amber Gold
-            onClick = {
-                onDismissRequest()
-                showSupportQrDialog = true
-            },
-        )
     }
 
     if (showSupportQrDialog) {
         SupportQrModal(
             onDismiss = { showSupportQrDialog = false },
         )
+    }
+}
+
+@Composable
+private fun SupportVoidTuneBadge(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(expanded) {
+        if (expanded) {
+            isVisible = false
+            delay(2000L)
+            isVisible = true
+        } else {
+            isVisible = false
+        }
+    }
+
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInHorizontally(
+            initialOffsetX = { it },
+            animationSpec = tween(420, easing = FastOutSlowInEasing),
+        ) + fadeIn(animationSpec = tween(380)),
+        exit = slideOutHorizontally(
+            targetOffsetX = { it },
+            animationSpec = tween(280, easing = FastOutLinearInEasing),
+        ) + fadeOut(animationSpec = tween(280)),
+        modifier = modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(42.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color(0xFF0F172A).copy(alpha = 0.92f)) // Deep Obsidian Shield
+                .border(
+                    width = 1.dp,
+                    color = Color(0xFFF59E0B).copy(alpha = 0.55f), // Radiant Amber Gold rim
+                    shape = RoundedCornerShape(10.dp),
+                )
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                )
+                .padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.cigarette),
+                    contentDescription = null,
+                    tint = Color(0xFFF59E0B), // Radiant Amber Gold
+                    modifier = Modifier.size(20.dp),
+                )
+                Text(
+                    text = "Support VoidTune",
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.3.sp,
+                    ),
+                    color = Color(0xFFF8FAFC), // High-contrast crisp white
+                    maxLines = 1,
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Color(0xFFF59E0B).copy(alpha = 0.16f))
+                    .border(
+                        width = 0.8.dp,
+                        color = Color(0xFFF59E0B).copy(alpha = 0.45f),
+                        shape = RoundedCornerShape(6.dp),
+                    )
+                    .padding(horizontal = 7.dp, vertical = 2.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "QRIS",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 10.sp,
+                        letterSpacing = 0.8.sp,
+                    ),
+                    color = Color(0xFFF59E0B),
+                )
+            }
+        }
     }
 }
 
