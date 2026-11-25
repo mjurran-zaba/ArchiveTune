@@ -1,4 +1,7 @@
 // Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -432,9 +435,11 @@ private fun MenuProfileHeader(
                 // Mini service badges right below the avatar
                 if (isSpotifyConnected || isYouTubeConnected) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
+                        /*
+                        // PREVIOUS BADGE IMPLEMENTATION:
                         if (isYouTubeConnected) {
                             Box(
                                 modifier = Modifier
@@ -466,6 +471,25 @@ private fun MenuProfileHeader(
                                     modifier = Modifier.size(9.dp),
                                 )
                             }
+                        }
+                        */
+                        // [VoidTune Patch: Direct Vector Service Badges]
+                        // REASON: Render brand vector icons directly in their official colors (YouTube #EF4444 and Spotify #1DB954) for crisp, clean appearance.
+                        if (isYouTubeConnected) {
+                            Icon(
+                                painter = painterResource(R.drawable.youtube),
+                                contentDescription = "YouTube",
+                                tint = Color(0xFFEF4444),
+                                modifier = Modifier.size(14.dp),
+                            )
+                        }
+                        if (isSpotifyConnected) {
+                            Icon(
+                                painter = painterResource(R.drawable.spotify),
+                                contentDescription = "Spotify",
+                                tint = Color(0xFF1DB954),
+                                modifier = Modifier.size(14.dp),
+                            )
                         }
                     }
                 }

@@ -1,0 +1,19 @@
+<!-- Always meticulous in everyhthing to minimize the case -->
+<!-- Be honest in everything -->
+<!-- Be meticulous in everything -->
+<!-- Dont replace or delete code, coment and explain what and why, the write your change below -->
+<!--
+ * VoidTune (2026)
+ * © Mjurran — github.com/mjurran-zaba/VoidTune
+ * GPL-3.0 License
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#ffffffff"
+        android:fillType="evenOdd"
+        android:pathData="M23.498,6.186 C23.22,5.145 22.395,4.32 21.376,4.05 C19.505,3.545 12,3.545 12,3.545 C12,3.545 4.495,3.545 2.624,4.05 C1.605,4.32 0.78,5.145 0.502,6.186 C0,8.07 0,12 0,12 C0,12 0,15.93 0.502,17.814 C0.78,18.855 1.605,19.68 2.624,19.95 C4.495,20.455 12,20.455 12,20.455 C12,20.455 19.505,20.455 21.376,19.95 C22.395,19.68 23.22,18.855 23.498,17.814 C24,15.93 24,12 24,12 C24,12 24,8.07 23.498,6.186 Z M9.545,15.568 L9.545,8.432 L15.818,12 Z" />
+</vector>
