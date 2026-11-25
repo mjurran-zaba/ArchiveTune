@@ -11,7 +11,7 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF080511"
+        "BackgroundColor": "#FF060C16"
     },
     {
         "Id": "void_monolith_v",
@@ -21,7 +21,7 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF070A12"
+        "BackgroundColor": "#FF070E1A"
     },
     {
         "Id": "void_sound_eclipse",
@@ -31,7 +31,7 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF0C0D11"
+        "BackgroundColor": "#FF080C14"
     },
     {
         "Id": "void_equalizer_v",
@@ -41,7 +41,7 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF08090E"
+        "BackgroundColor": "#FF070D18"
     },
     {
         "Id": "void_nordic_prism",
@@ -61,7 +61,7 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF0D0A1A"
+        "BackgroundColor": "#FF080F1D"
     },
     {
         "Id": "void_sakura_melody",
@@ -71,7 +71,7 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF140A1E"
+        "BackgroundColor": "#FF0A1424"
     },
     {
         "Id": "void_crescent_vinyl",
@@ -91,7 +91,7 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF0C071C"
+        "BackgroundColor": "#FF070E1A"
     },
     {
         "Id": "void_sonic_shuriken",
@@ -111,11 +111,11 @@ clean_catalog = [
         "Link": "https://github.com/mjurran-zaba/VoidTune",
         "GitHubAuthorUrl": "https://github.com/mjurran-zaba",
         "BackgroundMode": "integrated",
-        "BackgroundColor": "#FF0B0918"
+        "BackgroundColor": "#FF080E1B"
     }
 ]
 
 with open(METADATA_FILE, "w", encoding="utf-8") as f:
     json.dump(clean_catalog, f, indent=2)
 
-print(f"Updated metadata.json with exactly {len(clean_catalog)} VoidTune exclusive icons (all old ArchiveTune icons removed)!")
+print("Updated metadata.json with ZERO PURPLE background colors!")

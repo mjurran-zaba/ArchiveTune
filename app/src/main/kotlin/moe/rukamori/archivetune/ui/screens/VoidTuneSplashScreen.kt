@@ -191,23 +191,62 @@ fun VoidTuneSplashScreen(
                     style = Stroke(width = 1.5.dp.toPx()),
                 )
 
-                // Radial soundwave ripple 2 (phase offset)
+                // - Always meticulous in everyhthing to minimize the case
+                // [VoidTune Patch: Purge Purple/Violet in Splash Particles - User Rule: NO ANYTHING PURPLE!]
+                // MAKSUD KODE ASLI:
+                // Radial soundwave ripple 2 menggunakan Color(0xFFA855F7), sweepGradient menggunakan 0xFFA855F7,
+                // dan satellite dot 2 menggunakan Color(0xFFA855F7).
+                // MENGAPA DIKOMEN:
+                // User memberikan instruksi tegas: "NO ANYTHING PURPLE!"
+                // Warna violet/purple 0xFFA855F7 diganti dengan Frost Teal (0xFF88C0D0), Arctic Blue (0xFF81A1C1),
+                // dan Radiant Amber Gold (0xFFF59E0B) dari palet Nordic Aurora.
+                // ORIGINAL CODE:
+                // val phase2 = (soundRipple + 0.5f) % 1f
+                // val ripple2Radius = baseRadius + phase2 * 90.dp.toPx()
+                // val ripple2Alpha = (1f - phase2) * 0.25f
+                // drawCircle(
+                //     color = Color(0xFFA855F7).copy(alpha = ripple2Alpha),
+                //     radius = ripple2Radius,
+                //     center = Offset(cx, cy),
+                //     style = Stroke(width = 1.2.dp.toPx()),
+                // )
+                // drawCircle(
+                //     brush = Brush.sweepGradient(
+                //         0f to Color(0xFF38BDF8).copy(alpha = 0.25f),
+                //         0.5f to Color(0xFFA855F7).copy(alpha = 0.35f),
+                //         1f to Color(0xFF38BDF8).copy(alpha = 0.25f),
+                //         center = Offset(cx, cy),
+                //     ),
+                //     radius = orbitRadius,
+                //     center = Offset(cx, cy),
+                //     style = Stroke(width = 1.dp.toPx()),
+                // )
+                // val rad2 = ((orbitalAngle + 180f) * PI / 180.0).toFloat()
+                // val dot2X = cx + orbitRadius * cos(rad2)
+                // val dot2Y = cy + orbitRadius * sin(rad2)
+                // drawCircle(
+                //     color = Color(0xFFA855F7),
+                //     radius = 2.5.dp.toPx(),
+                //     center = Offset(dot2X, dot2Y),
+                // )
+
+                // Radial soundwave ripple 2 (phase offset: Frost Teal, Zero Purple)
                 val phase2 = (soundRipple + 0.5f) % 1f
                 val ripple2Radius = baseRadius + phase2 * 90.dp.toPx()
                 val ripple2Alpha = (1f - phase2) * 0.25f
                 drawCircle(
-                    color = Color(0xFFA855F7).copy(alpha = ripple2Alpha),
+                    color = Color(0xFF88C0D0).copy(alpha = ripple2Alpha),
                     radius = ripple2Radius,
                     center = Offset(cx, cy),
                     style = Stroke(width = 1.2.dp.toPx()),
                 )
 
-                // Orbital Celestial Ring with 2 orbiting audio quantum dots
+                // Orbital Celestial Ring with 2 orbiting audio quantum dots (Nord Polar Cyan & Arctic Blue, Zero Purple)
                 val orbitRadius = 155.dp.toPx()
                 drawCircle(
                     brush = Brush.sweepGradient(
                         0f to Color(0xFF38BDF8).copy(alpha = 0.25f),
-                        0.5f to Color(0xFFA855F7).copy(alpha = 0.35f),
+                        0.5f to Color(0xFF81A1C1).copy(alpha = 0.35f),
                         1f to Color(0xFF38BDF8).copy(alpha = 0.25f),
                         center = Offset(cx, cy),
                     ),
@@ -231,12 +270,12 @@ fun VoidTuneSplashScreen(
                     center = Offset(dot1X, dot1Y),
                 )
 
-                // Orbiting satellite dot 2 (Electric Violet)
+                // Orbiting satellite dot 2 (Radiant Amber Gold, Zero Purple)
                 val rad2 = ((orbitalAngle + 180f) * PI / 180.0).toFloat()
                 val dot2X = cx + orbitRadius * cos(rad2)
                 val dot2Y = cy + orbitRadius * sin(rad2)
                 drawCircle(
-                    color = Color(0xFFA855F7),
+                    color = Color(0xFFF59E0B),
                     radius = 2.5.dp.toPx(),
                     center = Offset(dot2X, dot2Y),
                 )

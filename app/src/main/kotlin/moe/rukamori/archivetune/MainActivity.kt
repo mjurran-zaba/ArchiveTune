@@ -1906,25 +1906,14 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 // - Always meticulous in everyhthing to minimize the case
-                                // [VoidTune Patch: Aesthetic Cosmic Color Gradient Background Layout]
-                                // MAKSUD KODE ASLI: Scaffold menggunakan background default flat black / surfaceColor.
-                                // MENGAPA DIKOMEN: User meminta layout background tidak monoton hitam datar, melainkan
-                                // diberi gradasi warna kosmik yang sedikit mencolok (Cosmic Violet #140926 -> Midnight Indigo #0A0D18 -> Obsidian #040508).
+                                // [VoidTune Patch: Scaffold Container Transparent to let Nord Layout Gradient shine through]
+                                // MAKSUD KODE ASLI: Scaffold(
+                                // MENGAPA DIUBAH: containerColor dibuat Transparent agar gradasi latar belakang Nord Polar Mist
+                                // yang didefinisikan pada modifier di baris penutup Scaffold dapat terlihat sempurna tanpa tertimpa warna flat.
                                 // ORIGINAL CODE:
                                 // Scaffold(
                                 Scaffold(
                                     containerColor = Color.Transparent,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(
-                                            Brush.verticalGradient(
-                                                listOf(
-                                                    Color(0xFF140926),
-                                                    Color(0xFF0A0D18),
-                                                    Color(0xFF040508),
-                                                ),
-                                            ),
-                                        ),
                                     topBar = {
                                         if (shouldShowTopBar) {
                                             val shouldUseFloatingTopBar =
@@ -2622,7 +2611,27 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     },
-                                    modifier = Modifier.fillMaxSize().then(menuHazeSourceModifier),
+                                    // - Always meticulous in everyhthing to minimize the case
+                                    // [VoidTune Patch: Unified Single Modifier with Nord Arctic Cyan Gradient (NO PURPLE) + menuHazeSourceModifier]
+                                    // MAKSUD KODE ASLI: modifier = Modifier.fillMaxSize().then(menuHazeSourceModifier),
+                                    // MENGAPA DIKOMEN:
+                                    // 1. Sebelumnya modifier dipassing ganda di baris 1916 dan 2625 sehingga memicu error compiler: ARGUMENT_PASSED_TWICE.
+                                    // 2. Mengikuti aturan inti desain baru: NO ANYTHING PURPLE!
+                                    //    Gradasi background diganti menjadi palet Nord Polar Mist murni (Deep Midnight Navy #0B132B -> Dark Arctic Teal #07121E -> Deep Obsidian #020408).
+                                    // ORIGINAL CODE:
+                                    // modifier = Modifier.fillMaxSize().then(menuHazeSourceModifier),
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(
+                                            Brush.verticalGradient(
+                                                listOf(
+                                                    Color(0xFF0B132B), // Deep Midnight Navy (Zero Purple)
+                                                    Color(0xFF07121E), // Dark Glacial Cyan/Teal
+                                                    Color(0xFF020408), // Pitch Obsidian
+                                                ),
+                                            ),
+                                        )
+                                        .then(menuHazeSourceModifier),
                                 ) {
                                     var transitionDirection =
                                         AnimatedContentTransitionScope.SlideDirection.Left
