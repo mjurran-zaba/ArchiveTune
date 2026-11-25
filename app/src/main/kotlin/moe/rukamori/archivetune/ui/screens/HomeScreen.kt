@@ -863,7 +863,13 @@ private fun SpotifyHomeSectionShelf(
                 is SpotifyHomeFeedItem.Artist -> {
                     SpotifyHomeCard(
                         title = item.name,
+                        /*
+                        // ORIGINAL CODE:
                         subtitle = stringResource(R.string.artist),
+                        */
+                        // [VoidTune Patch: Fix String Resource for Artist Subtitle]
+                        // REASON: Use valid R.string.artist_subtitle from strings.xml instead of undefined R.string.artist.
+                        subtitle = stringResource(R.string.artist_subtitle),
                         imageUrl = item.imageUrl,
                         onClick = {
                             navController.navigate(onlineSearchResultRoute(item.name))
