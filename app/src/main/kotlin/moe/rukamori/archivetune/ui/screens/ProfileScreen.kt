@@ -17,6 +17,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PhotoCamera
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -52,8 +54,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,9 +71,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -110,6 +118,29 @@ fun ProfileScreen(
     val isSpotifyConnected = spotifySpDc.isNotBlank()
     val isYouTubeConnected = ytName.isNotBlank() || ytEmail.isNotBlank()
 
+    // [VoidTune Patch: Avatar Management Dialog & Dynamic Typing State]
+    // REASON:
+    // 1. showAvatarDialog allows user to change or delete avatar photo (Option 2).
+    // 2. textFieldValue manages synchronous typing in memory to eliminate cursor jump / reverse typing bugs.
+    var showAvatarDialog by remember { mutableStateOf(false) }
+
+    var textFieldValue by remember(customName) {
+        mutableStateOf(
+            TextFieldValue(
+                text = customName,
+                selection = TextRange(customName.length),
+            ),
+        )
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            if (textFieldValue.text.trim() != customName) {
+                onCustomNameChange(textFieldValue.text.trim())
+            }
+        }
+    }
+
     val photoPickerLauncher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
@@ -125,6 +156,16 @@ fun ProfileScreen(
                 }
             }
         }
+
+    val onAvatarClick = {
+        if (customAvatarPath.isNotBlank() && File(customAvatarPath).exists()) {
+            showAvatarDialog = true
+        } else {
+            photoPickerLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+            )
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -235,11 +276,7 @@ fun ProfileScreen(
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                             .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f), CircleShape)
-                            .clickable {
-                                photoPickerLauncher.launch(
-                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
-                                )
-                            },
+                            .clickable { onAvatarClick() },
                     contentAlignment = Alignment.Center,
                 ) {
                     if (customAvatarPath.isNotBlank() && File(customAvatarPath).exists()) {
@@ -268,11 +305,7 @@ fun ProfileScreen(
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.primary)
                             .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                            .clickable {
-                                photoPickerLauncher.launch(
-                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
-                                )
-                            },
+                            .clickable { onAvatarClick() },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -282,6 +315,117 @@ fun ProfileScreen(
                         modifier = Modifier.size(17.dp),
                     )
                 }
+            }
+
+            // [VoidTune Patch: Avatar Actions Dialog (Option 2)]
+            // REASON: When user already has a custom photo, tapping avatar opens a dialog to either pick a new photo or delete/reset to default.
+            if (showAvatarDialog) {
+                AlertDialog(
+                    onDismissRequest = { showAvatarDialog = false },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.PhotoCamera,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(28.dp),
+                        )
+                    },
+                    title = {
+                        Text(
+                            text = "Foto Profil",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    },
+                    text = {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            // Opsi 1: Ganti Foto Baru
+                            Button(
+                                onClick = {
+                                    showAvatarDialog = false
+                                    photoPickerLauncher.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth().height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors =
+                                    ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                                    ),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.PhotoCamera,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = "Ganti Foto Baru",
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+
+                            // Opsi 2: Hapus Foto Profil (Reset ke default VoidTune)
+                            OutlinedButton(
+                                onClick = {
+                                    showAvatarDialog = false
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        try {
+                                            if (customAvatarPath.isNotBlank()) {
+                                                val currentFile = File(customAvatarPath)
+                                                if (currentFile.exists()) {
+                                                    currentFile.delete()
+                                                }
+                                            }
+                                        } catch (_: Exception) {}
+                                        withContext(Dispatchers.Main) {
+                                            onCustomAvatarPathChange("")
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth().height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors =
+                                    ButtonDefaults.outlinedButtonColors(
+                                        contentColor = MaterialTheme.colorScheme.error,
+                                    ),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.5f)),
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.delete),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                    tint = MaterialTheme.colorScheme.error,
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = "Hapus Foto Profil",
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = { showAvatarDialog = false },
+                            colors =
+                                ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                ),
+                            shape = RoundedCornerShape(10.dp),
+                        ) {
+                            Text(text = "Batal")
+                        }
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                )
             }
 
             Spacer(Modifier.height(18.dp))
@@ -380,7 +524,7 @@ fun ProfileScreen(
                             modifier = Modifier.weight(1f),
                             contentAlignment = Alignment.CenterStart,
                         ) {
-                            if (customName.isEmpty()) {
+                            if (textFieldValue.text.isEmpty()) {
                                 Text(
                                     text = "Enter display name...",
                                     style =
@@ -391,6 +535,10 @@ fun ProfileScreen(
                                         ),
                                 )
                             }
+                            /*
+                            // PREVIOUS DIRECT DATASTORE BINDING (CAUSED CURSOR RESET & REVERSE TYPING):
+                            // Writing directly to DataStore on every character asynchronously emitted string changes without cursor/selection range,
+                            // causing Compose to reset cursor to index 0 on recomposition and type characters in reverse.
                             BasicTextField(
                                 value = customName,
                                 onValueChange = onCustomNameChange,
@@ -413,11 +561,42 @@ fun ProfileScreen(
                                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                                 modifier = Modifier.fillMaxWidth(),
                             )
+                            */
+                            // [VoidTune Patch: Synchronous TextFieldValue State with Explicit Commit]
+                            // REASON: Maintains cursor selection in local memory synchronously during typing;
+                            // persists cleanly to DataStore only upon Done action, Checklist button press, or screen dispose.
+                            BasicTextField(
+                                value = textFieldValue,
+                                onValueChange = { newValue ->
+                                    textFieldValue = newValue
+                                },
+                                singleLine = true,
+                                textStyle =
+                                    TextStyle(
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textAlign = TextAlign.Start,
+                                    ),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions =
+                                    KeyboardActions(
+                                        onDone = {
+                                            onCustomNameChange(textFieldValue.text.trim())
+                                            focusManager.clearFocus()
+                                            keyboardController?.hide()
+                                        },
+                                    ),
+                                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
                     }
                 }
 
                 // Dedicated Side-by-Side Checklist Button [ ✓ ]
+                /*
+                // PREVIOUS CHECKLIST BUTTON (ONLY CLEARED FOCUS WITHOUT COMMITTING):
                 Box(
                     modifier =
                         Modifier
@@ -425,6 +604,22 @@ fun ProfileScreen(
                             .clip(RoundedCornerShape(14.dp))
                             .background(MaterialTheme.colorScheme.primary)
                             .clickable {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            },
+                    contentAlignment = Alignment.Center,
+                )
+                */
+                // [VoidTune Patch: Checklist Button Commits Username to DataStore]
+                // REASON: Tapping [ ✓ ] saves the current input text to DataStore, clears focus, and dismisses the soft keyboard.
+                Box(
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(MaterialTheme.colorScheme.primary)
+                            .clickable {
+                                onCustomNameChange(textFieldValue.text.trim())
                                 focusManager.clearFocus()
                                 keyboardController?.hide()
                             },
@@ -589,10 +784,36 @@ private fun ConnectedServiceCard(
     }
 }
 
+/*
+// PREVIOUS IMPLEMENTATION (STATIC FILENAME):
+// Saving to a static filename `custom_profile_avatar.png` caused the file path string to never change on subsequent image picks.
+// Because savedPath was identical to customAvatarPath, DataStore ignored the edit and Coil served the stale cached bitmap,
+// making the avatar appear frozen/permanent.
 private fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
     return try {
         val inputStream = context.contentResolver.openInputStream(uri) ?: return null
         val targetFile = File(context.filesDir, "custom_profile_avatar.png")
+        FileOutputStream(targetFile).use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+        targetFile.absolutePath
+    } catch (e: Exception) {
+        null
+    }
+}
+*/
+// [VoidTune Patch: Dynamic Unique Filename & Storage Cleanup for Photo Picker]
+// REASON: Generates a timestamp-based filename so DataStore triggers state updates and Coil re-fetches the fresh image.
+// Also cleans up old avatar files in internal storage to avoid leaking disk space.
+private fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
+    return try {
+        // Clean up previous avatar files to prevent storage buildup
+        context.filesDir.listFiles { file ->
+            file.name.startsWith("custom_profile_avatar")
+        }?.forEach { it.delete() }
+
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+        val targetFile = File(context.filesDir, "custom_profile_avatar_${System.currentTimeMillis()}.png")
         FileOutputStream(targetFile).use { outputStream ->
             inputStream.copyTo(outputStream)
         }
