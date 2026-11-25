@@ -35,6 +35,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PhotoCamera
@@ -59,10 +61,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -91,6 +96,8 @@ fun ProfileScreen(
     navController: NavController,
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
     val (customName, onCustomNameChange) = rememberPreference(CustomProfileNameKey, "")
@@ -160,7 +167,8 @@ fun ProfileScreen(
         ) {
             Spacer(Modifier.height(12.dp))
 
-            // 1. Large Circular Avatar (~100dp) with Tap to Pick from Gallery
+            /*
+            // PREVIOUS AVATAR IMPLEMENTATION (CLIPPED CAMERA BADGE):
             Box(
                 modifier =
                     Modifier
@@ -211,10 +219,75 @@ fun ProfileScreen(
                     )
                 }
             }
+            */
+            // [VoidTune Patch: Unclipped Photo Picker with Floating Camera Badge]
+            // REASON: User reported camera badge being cut off because parent Box had .clip(CircleShape).
+            // Parent Box now unclipped, inner avatar clipped to CircleShape, camera badge floats fully at bottom-end.
+            Box(
+                modifier = Modifier.size(112.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                // Circular Avatar Surface
+                Box(
+                    modifier =
+                        Modifier
+                            .size(104.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                            .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f), CircleShape)
+                            .clickable {
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                                )
+                            },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (customAvatarPath.isNotBlank() && File(customAvatarPath).exists()) {
+                        AsyncImage(
+                            model = File(customAvatarPath),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.account),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(54.dp),
+                        )
+                    }
+                }
 
-            Spacer(Modifier.height(16.dp))
+                // Overlay Camera Badge (Unclipped, fully visible at bottom-end)
+                Box(
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
+                            .clickable {
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                                )
+                            },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.PhotoCamera,
+                        contentDescription = "Change photo",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(17.dp),
+                    )
+                }
+            }
 
-            // 2. Centered Username Input Column (Height ~1.5 lines, Minimalist)
+            Spacer(Modifier.height(18.dp))
+
+            /*
+            // PREVIOUS CENTERED USERNAME INPUT:
             Text(
                 text = "Username",
                 style = MaterialTheme.typography.labelMedium,
@@ -258,8 +331,115 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
+            */
+            // [VoidTune Patch: Option B Username Field with Natural Left-Aligned Typing & Side-by-Side Checklist Button]
+            // REASON: User requested Option B: Left-aligned typing in a centered container, paired with a dedicated checklist confirmation button.
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Username",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
 
-            Spacer(Modifier.height(36.dp))
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                // Natural Left-Aligned Input Field Container
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.7f))
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+                            .padding(horizontal = 14.dp),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.edit),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.CenterStart,
+                        ) {
+                            if (customName.isEmpty()) {
+                                Text(
+                                    text = "Enter display name...",
+                                    style =
+                                        TextStyle(
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                                            fontSize = 15.sp,
+                                            textAlign = TextAlign.Start,
+                                        ),
+                                )
+                            }
+                            BasicTextField(
+                                value = customName,
+                                onValueChange = onCustomNameChange,
+                                singleLine = true,
+                                textStyle =
+                                    TextStyle(
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textAlign = TextAlign.Start,
+                                    ),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions =
+                                    KeyboardActions(
+                                        onDone = {
+                                            focusManager.clearFocus()
+                                            keyboardController?.hide()
+                                        },
+                                    ),
+                                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
+                    }
+                }
+
+                // Dedicated Side-by-Side Checklist Button [ ✓ ]
+                Box(
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(MaterialTheme.colorScheme.primary)
+                            .clickable {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.check),
+                        contentDescription = "Save username",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(22.dp),
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(34.dp))
 
             // 3. Connected Services / Integrations Header
             Row(

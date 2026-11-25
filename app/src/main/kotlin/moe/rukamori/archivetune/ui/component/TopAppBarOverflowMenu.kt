@@ -365,10 +365,21 @@ private fun MenuProfileHeader(
     val isSpotifyConnected = spotifySpDc.isNotBlank()
     val isYouTubeConnected = profile != null || ytName.isNotBlank()
 
+    /*
+    // PREVIOUS DISPLAY NAME FALLBACK CODE:
     val displayName = when {
         customName.isNotBlank() -> customName
         profile != null && profile.name.isNotBlank() -> profile.name
         isSpotifyConnected && spotifyName.isNotBlank() -> spotifyName
+        else -> stringResource(R.string.account)
+    }
+    */
+    // [VoidTune Patch: Sovereign Local Profile Identity in Drawer]
+    // REASON: YouTube Music and Spotify are strictly connected services, not the drawer user identity.
+    // Display name and avatar ONLY use custom local settings (customName and customAvatarPath),
+    // never leaking Google/YouTube account name or Google profile picture into the drawer.
+    val displayName = when {
+        customName.isNotBlank() -> customName
         else -> stringResource(R.string.account)
     }
 
@@ -413,6 +424,8 @@ private fun MenuProfileHeader(
                         .border(1.dp, Color(0xFF38BDF8).copy(alpha = 0.4f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
+                    /*
+                    // PREVIOUS GOOGLE ACCOUNT AVATAR FALLBACK:
                     if (customAvatarPath.isNotBlank() && File(customAvatarPath).exists()) {
                         AsyncImage(
                             model = File(customAvatarPath),
@@ -423,6 +436,19 @@ private fun MenuProfileHeader(
                     } else if (!accountImageUrl.isNullOrBlank()) {
                         AsyncImage(
                             model = accountImageUrl,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(54.dp).clip(CircleShape),
+                        )
+                    } else {
+                        Icon(painterResource(R.drawable.account), null, tint = contentColor, modifier = Modifier.size(28.dp))
+                    }
+                    */
+                    // [VoidTune Patch: Sovereign Local Avatar in Drawer]
+                    // REASON: Only display user's custom gallery avatar if chosen; otherwise default to VoidTune account icon. Never show Google/YouTube photo.
+                    if (customAvatarPath.isNotBlank() && File(customAvatarPath).exists()) {
+                        AsyncImage(
+                            model = File(customAvatarPath),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(54.dp).clip(CircleShape),
