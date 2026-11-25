@@ -212,8 +212,10 @@ jobs:
       - name: Build Mobile Universal Release APK
         shell: bash
         run: |
-          set -euo pipefail
-          ./gradlew --console=plain assembleGmsMobileUniversalRelease --warning-mode summary 2>&1 | python3 -c "import re,sys;p=re.compile(r'^(WARNING: )?\[CXX5202\] This app only has 32-bit \[(armeabi-v7a|x86)\] native libraries\. Beginning August 1, 2019 Google Play store requires that all apps that include native libraries must provide 64-bit versions\. For more information, visit https://g\.co/64-bit-requirement\$');[sys.stdout.write(l) for l in sys.stdin if not p.match(l.rstrip())]"
+          set -o pipefail
+          ./gradlew --console=plain assembleGmsMobileUniversalRelease --warning-mode summary 2>&1 \
+            | tee /tmp/gradle_build.log \
+            | python3 -c "import re,sys;p=re.compile(r'^(WARNING: )?\[CXX5202\] This app only has 32-bit \[(armeabi-v7a|x86)\] native libraries\. Beginning August 1, 2019 Google Play store requires that all apps that include native libraries must provide 64-bit versions\. For more information, visit https://g\.co/64-bit-requirement\$');[sys.stdout.write(l) for l in sys.stdin if not p.match(l.rstrip())]"
         env:
           STORE_PASSWORD: voidtune123
           KEY_ALIAS: voidtune
@@ -278,7 +280,7 @@ jobs:
           COMMIT_HASH: ${{ github.sha }}
         run: |
           python3 -c "
-          import os, glob, urllib.request, json, uuid, subprocess
+          import os, glob, urllib.request, json, uuid, subprocess, re, html
 
           bot_token = os.environ.get('BOT_TOKEN')
           chat_id = os.environ.get('CHAT_ID')
@@ -398,12 +400,80 @@ jobs:
               except Exception as e:
                   print('sendMessage failed:', e)
           else:
+              category, location, snippet_text = 'Gradle Build Failure', 'Unknown', ''
+              log_path = '/tmp/gradle_build.log'
+              if os.path.exists(log_path):
+                  try:
+                      with open(log_path, 'r', encoding='utf-8', errors='replace') as f:
+                          lines = f.readlines()
+                      
+                      extracted = []
+                      for line in lines:
+                          line_str = line.strip()
+                          if any(k in line_str for k in ['UNRESOLVED_REFERENCE', 'Unresolved reference', 'Kotlin compiler error', 'ARGUMENT_PASSED_TWICE', 'TOO_MANY_ARGUMENTS', 'NO_VALUE_FOR_PARAMETER']) or line_str.startswith('e: '):
+                              extracted.append(line_str)
+                              if 'UNRESOLVED_REFERENCE' in line_str or 'Unresolved reference' in line_str:
+                                  category = 'Kotlin Compiler (Unresolved Reference)'
+                              elif category == 'Gradle Build Failure':
+                                  category = 'Kotlin Compiler Error'
+                              m = re.search(r'([A-Za-z0-9_]+\.kt):\(?(\d+)', line_str)
+                              if m and location == 'Unknown':
+                                  location = f'{m.group(1)} (Line {m.group(2)})'
+                              elif 'Location:' in line_str and location == 'Unknown':
+                                  m_loc = re.search(r'([A-Za-z0-9_]+\.kt):(\d+)', line_str)
+                                  if m_loc:
+                                      location = f'{m_loc.group(1)} (Line {m_loc.group(2)})'
+                          elif 'AAPT:' in line_str or ('resource' in line_str and 'not found' in line_str):
+                              extracted.append(line_str)
+                              if category == 'Gradle Build Failure':
+                                  category = 'Android Resource (AAPT2)'
+                              m = re.search(r'([A-Za-z0-9_]+\.xml):(\d+)', line_str)
+                              if m and location == 'Unknown':
+                                  location = f'{m.group(1)} (Line {m.group(2)})'
+                          elif 'R8:' in line_str or 'Missing class' in line_str:
+                              extracted.append(line_str)
+                              if category == 'Gradle Build Failure':
+                                  category = 'R8 / ProGuard Shrinker'
+                          elif 'Location:' in line_str and location == 'Unknown':
+                              extracted.append(line_str)
+                              m_loc = re.search(r'([A-Za-z0-9_]+\.kt):(\d+)', line_str)
+                              if m_loc:
+                                  location = f'{m_loc.group(1)} (Line {m_loc.group(2)})'
+
+                      if not extracted:
+                          capture = False
+                          for line in lines:
+                              if '* What went wrong:' in line:
+                                  capture = True
+                              if capture:
+                                  extracted.append(line.rstrip())
+                                  if len(extracted) >= 15:
+                                      break
+
+                      if not extracted:
+                          non_empty = [l.strip() for l in lines if l.strip()]
+                          extracted = non_empty[-12:] if non_empty else ['Tidak ada detail error yang tertangkap di log.']
+
+                      snippet_text = '\n'.join(extracted[:12])
+                      if len(snippet_text) > 2000:
+                          snippet_text = snippet_text[:2000] + '...'
+                  except Exception as parse_e:
+                      snippet_text = f'Error parsing log: {parse_e}'
+              else:
+                  snippet_text = 'File log build tidak ditemukan.'
+
+              escaped_snippet = html.escape(snippet_text)
+              escaped_commit_msg = html.escape(commit_msg)
+
               text = (
-                  f'❌ <b>VoidTune CI: Build Release GAGAL (FAILED)!</b>\n\n'
+                  f'❌ <b>VoidTune CI: Build Release GAGAL!</b>\n\n'
                   f'📌 <b>Commit:</b> <code>{commit_hash}</code>\n'
-                  f'💬 <b>Pesan:</b> {commit_msg}\n'
-                  f'⚠️ <b>What went wrong:</b> Kompilasi Release Gradle atau R8 shrinking gagal.\n\n'
-                  f'🔗 <a href=\"{run_url}\">Cek Log Error di GitHub Actions</a>'
+                  f'💬 <b>Pesan:</b> {escaped_commit_msg}\n'
+                  f'💥 <b>Kategori:</b> <code>{category}</code>\n'
+                  f'📍 <b>Lokasi:</b> <code>{location}</code>\n\n'
+                  f'📋 <b>Diagnostik Error:</b>\n'
+                  f'<pre>{escaped_snippet}</pre>\n\n'
+                  f'🔗 <a href=\"{run_url}\">Cek Log Lengkap di GitHub Actions</a>'
               )
               payload_dict = {'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'}
               if topic_id and topic_id.strip():
@@ -417,7 +487,7 @@ jobs:
               )
               try:
                   with urllib.request.urlopen(req, timeout=30) as resp:
-                      print('Build failure notification sent to Telegram.')
+                      print('Build failure notification with smart diagnostic sent to Telegram.')
               except urllib.error.HTTPError as e:
                   err_body = e.read().decode('utf-8', errors='ignore')
                   print(f'sendMessage HTTP Error {e.code}: {err_body}')
