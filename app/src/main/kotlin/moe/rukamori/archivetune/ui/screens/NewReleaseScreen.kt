@@ -612,15 +612,20 @@ private fun NewReleaseTabs(
                 Box(
                     modifier =
                         Modifier
-                            .width(36.dp)
+                            .width(44.dp)
                             .height(3.dp)
-                            .clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp))
+                            .clip(RoundedCornerShape(3.dp))
                             .background(indicatorColor),
                 )
             }
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(66.dp),
     ) {
+        /*
+        // PREVIOUS IMPLEMENTATION WITH ROW (caused vertical letter wrapping on 5 narrow tabs):
         tabs.forEach { tab ->
             val isSelected = tab == selectedTab
             Tab(
@@ -646,6 +651,41 @@ private fun NewReleaseTabs(
                 modifier =
                     Modifier
                         .padding(horizontal = 4.dp, vertical = 6.dp)
+                        .clip(tabShape)
+                        .background(if (isSelected) selectedContainer else unselectedContainer),
+            )
+        }
+        */
+        // [VoidTune Patch: Clean Icon-Only Pill Tabs Matching ArchiveTune Aesthetic]
+        // REASON: Restore pure centered 24dp icons inside capsule pills with Spotify vector logo, eliminating awkward letter wrapping.
+        tabs.forEach { tab ->
+            val isSelected = tab == selectedTab
+            val title = stringResource(tab.titleRes)
+
+            Tab(
+                selected = isSelected,
+                onClick = { onTabSelected(tab) },
+                icon = {
+                    if (tab == NewReleaseTab.Spotify) {
+                        Icon(
+                            painter = painterResource(R.drawable.spotify),
+                            contentDescription = title,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    } else {
+                        Icon(
+                            imageVector = tab.icon,
+                            contentDescription = title,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    }
+                },
+                selectedContentColor = selectedContentColor,
+                unselectedContentColor = unselectedContentColor,
+                modifier =
+                    Modifier
+                        .padding(horizontal = 3.dp, vertical = 6.dp)
+                        .height(56.dp)
                         .clip(tabShape)
                         .background(if (isSelected) selectedContainer else unselectedContainer),
             )

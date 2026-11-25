@@ -599,7 +599,13 @@ private fun HomeContent(
 
                     // [VoidTune Patch: Render Spotify Personalized Mixes on Home Feed]
                     // REASON: When Spotify account is authenticated, show personalized sections (Daily Mix, Discover Weekly, etc.)
+                    /*
+                    // PREVIOUS CODE:
                     spotifyHomeFeed?.sections?.filter { it.items.isNotEmpty() }?.take(3)?.forEach { section ->
+                    */
+                    // [VoidTune Patch: Expand Spotify Home Feed to 6 Sections]
+                    // REASON: User requested up to 6 personalized mix sections so Daily Mixes and personal radios display alongside each other.
+                    spotifyHomeFeed?.sections?.filter { it.items.isNotEmpty() }?.take(6)?.forEach { section ->
                         sectionSpacer("spotify_${section.sectionUri}")
                         item(
                             key = "home_spotify_header_${section.sectionUri}",
