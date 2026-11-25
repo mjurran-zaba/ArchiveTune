@@ -602,10 +602,11 @@ private fun HomeContent(
                     /*
                     // PREVIOUS CODE:
                     spotifyHomeFeed?.sections?.filter { it.items.isNotEmpty() }?.take(3)?.forEach { section ->
-                    */
-                    // [VoidTune Patch: Expand Spotify Home Feed to 6 Sections]
-                    // REASON: User requested up to 6 personalized mix sections so Daily Mixes and personal radios display alongside each other.
                     spotifyHomeFeed?.sections?.filter { it.items.isNotEmpty() }?.take(6)?.forEach { section ->
+                    */
+                    // [VoidTune Patch: Expand Spotify Home Feed to 10 Sections]
+                    // REASON: User requested 10 personalized mix sections for deep exploration of Daily Mixes, Discover Weekly, and Made For You.
+                    spotifyHomeFeed?.sections?.filter { it.items.isNotEmpty() }?.take(10)?.forEach { section ->
                         sectionSpacer("spotify_${section.sectionUri}")
                         item(
                             key = "home_spotify_header_${section.sectionUri}",
