@@ -6,7 +6,7 @@
 	url = https://github.com/rukamori/lyrics.git
 [submodule "IconPack"]
 	path = IconPack
-	url = https://github.com/rukamori/IconPack
+	url = https://github.com/mjurran-zaba/IconPack.git
 [submodule "morideobfuscator"]
 	path = morideobfuscator
 	url = https://github.com/rukamori/morideobfuscator.git

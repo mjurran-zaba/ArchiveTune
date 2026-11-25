@@ -221,7 +221,7 @@ fun StarDialog(
 
                         FilledTonalButton(
                             onClick = {
-                                uriHandler.openUri("https://github.com/rukamori/ArchiveTune")
+                                uriHandler.openUri("https://github.com/mjurran-zaba/VoidTune")
                                 onSupport()
                             },
                             modifier = Modifier.heightIn(min = 48.dp),
