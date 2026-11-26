@@ -42,6 +42,10 @@
     <string name="filter_videos">Video</string>
     <string name="filter_albums">Album</string>
     <string name="filter_artists">Artis</string>
+    <string name="filter_spotify">Spotify</string>
+    <string name="spotify_tracks">Lagu Spotify</string>
+    <string name="spotify_results">Hasil Spotify</string>
+    <string name="spotify_albums">Album Spotify</string>
     <string name="filter_playlists">Playlist</string>
     <string name="filter_community_playlists">Playlist komunitas</string>
     <string name="filter_featured_playlists">Playlist unggulan</string>

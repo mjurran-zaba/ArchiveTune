@@ -28,4 +28,8 @@
     <string name="support_voidtune_motto">“Bawat barya na iniaalay mo, nagpapatibay sa kapangyarihan ng Void”</string>
     <string name="support_voidtune_scan_desc">I-scan gamit ang anumang e-Wallet o Banking app (QRIS)\nDeveloper • Mjurran | INDONESIA</string>
     <string name="qris">QRIS</string>
+    <string name="filter_spotify">Spotify</string>
+    <string name="spotify_tracks">Mga Kanta sa Spotify</string>
+    <string name="spotify_results">Mga Resulta ng Spotify</string>
+    <string name="spotify_albums">Mga Album sa Spotify</string>
 </resources>

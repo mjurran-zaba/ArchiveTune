@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -25,6 +29,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import moe.rukamori.archivetune.spotify.SpotifyMapper
+import moe.rukamori.archivetune.spotify.models.SpotifyTrack
+import moe.rukamori.archivetune.ui.component.ItemThumbnail
+import moe.rukamori.archivetune.utils.makeTimeString
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -589,6 +599,135 @@ internal fun SearchInlineStatus(
                 Spacer(Modifier.width(ButtonDefaults.IconSpacing))
                 Text(stringResource(R.string.retry))
             }
+        }
+    }
+}
+
+// [VoidTune Patch: Spotify Track Result Row for Option B Unified Hybrid Search]
+// REASON: Render Spotify track item in SearchResultRow styling with authentic Spotify green emblem, artists, and duration.
+@Composable
+internal fun SpotifyTrackRow(
+    track: SpotifyTrack,
+    index: Int,
+    count: Int,
+    isActive: Boolean,
+    isPlaying: Boolean,
+    pureBlack: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val durationText = remember(track.durationMs) {
+        if (track.durationMs > 0) makeTimeString((track.durationMs / 1000).toLong()) else null
+    }
+    val supporting = remember(track.artists, durationText) {
+        joinByBullet("Spotify", track.artists.joinToString { it.name }, durationText)
+    }
+
+    SegmentedListItem(
+        onClick = onClick,
+        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
+        colors =
+            ListItemDefaults.segmentedColors(
+                containerColor = if (isActive) colorScheme.secondaryContainer else searchRowContainerColor(pureBlack),
+            ),
+        leadingContent = {
+            ItemThumbnail(
+                thumbnailUrl = SpotifyMapper.getTrackThumbnail(track),
+                isActive = isActive,
+                isPlaying = isPlaying,
+                shape = RoundedCornerShape(12.dp),
+                placeholderIconRes = R.drawable.spotify,
+                modifier = Modifier.size(SearchResultThumbnailSize),
+            )
+        },
+        supportingContent = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (track.explicit) {
+                    Icon(
+                        painter = painterResource(R.drawable.explicit),
+                        contentDescription = null,
+                        modifier =
+                            Modifier
+                                .padding(end = 4.dp)
+                                .size(16.dp),
+                    )
+                }
+                Text(
+                    text = supporting,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        },
+        trailingContent = {
+            Icon(
+                painter = painterResource(R.drawable.spotify),
+                contentDescription = "Spotify",
+                tint = androidx.compose.ui.graphics.Color(0xFF1DB954),
+                modifier = Modifier.size(20.dp),
+            )
+        },
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = track.name,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+    }
+}
+
+// [VoidTune Patch: Spotify Track Card for Unified Hybrid Shelf]
+// REASON: Compact card representation of Spotify track inside horizontal shelf on search discovery.
+@Composable
+internal fun SpotifyTrackCard(
+    track: SpotifyTrack,
+    isActive: Boolean,
+    isPlaying: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SearchMediaCard(
+        thumbnailUrl = SpotifyMapper.getTrackThumbnail(track),
+        title = track.name,
+        subtitle = track.artists.joinToString { it.name },
+        label = "Spotify",
+        explicit = track.explicit,
+        isActive = isActive,
+        isPlaying = isPlaying,
+        onClick = onClick,
+        onLongClick = null,
+        placeholderIconRes = R.drawable.spotify,
+        modifier = modifier,
+    )
+}
+
+// [VoidTune Patch: Spotify Tracks Shelf for All-Mode Hybrid Search]
+// REASON: Horizontal scrolling shelf displaying concurrently retrieved Spotify tracks.
+@Composable
+internal fun SpotifyTracksShelf(
+    tracks: List<SpotifyTrack>,
+    onTrackClick: (Int, SpotifyTrack) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        itemsIndexed(
+            items = tracks,
+            key = { index, track -> "spotify_shelf_${track.id}_$index" },
+            contentType = { _, _ -> "spotify_card" },
+        ) { index, track ->
+            SpotifyTrackCard(
+                track = track,
+                isActive = false,
+                isPlaying = false,
+                onClick = { onTrackClick(index, track) },
+                modifier = Modifier.width(AlbumCardWidth),
+            )
         }
     }
 }

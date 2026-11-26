@@ -58,6 +58,10 @@
     <string name="filter_videos">動画</string>
     <string name="filter_albums">アルバム</string>
     <string name="filter_artists">アーティスト</string>
+    <string name="filter_spotify">Spotify</string>
+    <string name="spotify_tracks">Spotify トラック</string>
+    <string name="spotify_results">Spotify 検索結果</string>
+    <string name="spotify_albums">Spotify アルバム</string>
     <string name="filter_playlists">プレイリスト</string>
     <string name="filter_community_playlists">コミュニティプレイリスト</string>
     <string name="filter_featured_playlists">注目のプレイリスト</string>

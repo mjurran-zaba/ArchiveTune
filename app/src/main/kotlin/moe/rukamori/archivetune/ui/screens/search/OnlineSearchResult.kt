@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -107,6 +111,8 @@ import moe.rukamori.archivetune.innertube.models.YTItem
 import moe.rukamori.archivetune.models.toMediaMetadata
 import moe.rukamori.archivetune.playback.queues.ListQueue
 import moe.rukamori.archivetune.playback.queues.YouTubeQueue
+import moe.rukamori.archivetune.spotify.SpotifyPlaylistQueue
+import moe.rukamori.archivetune.spotify.models.SpotifyTrack
 import moe.rukamori.archivetune.ui.component.LocalMenuState
 import moe.rukamori.archivetune.ui.utils.navigateToAlbum
 import moe.rukamori.archivetune.ui.utils.navigateToArtist
@@ -129,11 +135,19 @@ private data class SearchFilterOption(
     @StringRes val labelRes: Int,
     @DrawableRes val iconRes: Int,
     val layout: SearchResultLayout,
+    val isSpotify: Boolean = false,
 )
 
 private val SearchFilterOptions =
     listOf(
         SearchFilterOption(null, R.string.filter_all, R.drawable.search, SearchResultLayout.Rows),
+        SearchFilterOption(
+            filter = null,
+            labelRes = R.string.filter_spotify,
+            iconRes = R.drawable.spotify,
+            layout = SearchResultLayout.Rows,
+            isSpotify = true,
+        ),
         SearchFilterOption(FILTER_SONG, R.string.filter_songs, R.drawable.music_note, SearchResultLayout.Rows),
         SearchFilterOption(FILTER_VIDEO, R.string.filter_videos, R.drawable.slow_motion_video, SearchResultLayout.WideRows),
         SearchFilterOption(FILTER_ALBUM, R.string.filter_albums, R.drawable.album, SearchResultLayout.Cards),
@@ -154,14 +168,15 @@ private val SearchFilterOptions =
     )
 
 private fun SearchFilterOption.badgeShape(): RoundedPolygon =
-    when (filter) {
-        FILTER_SONG -> MaterialShapes.Cookie9Sided
-        FILTER_VIDEO -> MaterialShapes.Pill
-        FILTER_ALBUM -> MaterialShapes.Slanted
-        FILTER_ARTIST -> MaterialShapes.Clover4Leaf
-        FILTER_PODCAST -> MaterialShapes.Arch
-        FILTER_COMMUNITY_PLAYLIST -> MaterialShapes.Cookie6Sided
-        FILTER_FEATURED_PLAYLIST -> MaterialShapes.Flower
+    when {
+        isSpotify -> MaterialShapes.Cookie9Sided
+        filter == FILTER_SONG -> MaterialShapes.Cookie9Sided
+        filter == FILTER_VIDEO -> MaterialShapes.Pill
+        filter == FILTER_ALBUM -> MaterialShapes.Slanted
+        filter == FILTER_ARTIST -> MaterialShapes.Clover4Leaf
+        filter == FILTER_PODCAST -> MaterialShapes.Arch
+        filter == FILTER_COMMUNITY_PLAYLIST -> MaterialShapes.Cookie6Sided
+        filter == FILTER_FEATURED_PLAYLIST -> MaterialShapes.Flower
         else -> MaterialShapes.Sunny
     }
 
@@ -181,7 +196,15 @@ fun OnlineSearchResult(
 
     val searchFilter by viewModel.filter.collectAsStateWithLifecycle()
     val searchSort by viewModel.sort.collectAsStateWithLifecycle()
-    val selectedOption = SearchFilterOptions.first { it.filter == searchFilter }
+    var isSpotifySelected by rememberSaveable { mutableStateOf(false) }
+    val selectedOption =
+        remember(searchFilter, isSpotifySelected) {
+            if (isSpotifySelected) {
+                SearchFilterOptions.first { it.isSpotify }
+            } else {
+                SearchFilterOptions.first { it.filter == searchFilter && !it.isSpotify }
+            }
+        }
     val isScrolled by remember { derivedStateOf { gridState.canScrollBackward } }
 
     LaunchedEffect(gridState, viewModel) {
@@ -190,7 +213,7 @@ fun OnlineSearchResult(
             layoutInfo.visibleItemsInfo.any { it.key == LoadMoreKey } to layoutInfo.totalItemsCount
         }.distinctUntilChanged()
             .collect { (loadMoreVisible, _) ->
-                if (loadMoreVisible) viewModel.loadMore()
+                if (loadMoreVisible && !selectedOption.isSpotify) viewModel.loadMore()
             }
     }
 
@@ -198,9 +221,28 @@ fun OnlineSearchResult(
         viewModel.sort.drop(1).collect { gridState.scrollToItem(0) }
     }
 
-    val selectFilter: (YouTube.SearchFilter?) -> Unit = { filter ->
-        viewModel.selectFilter(filter)
-        coroutineScope.launch { gridState.scrollToItem(0) }
+    val selectFilterOption: (SearchFilterOption) -> Unit = { option ->
+        if (option.isSpotify) {
+            isSpotifySelected = true
+            viewModel.selectFilter(null)
+            coroutineScope.launch {
+                viewModel.loadSpotifyResultsIfNeeded()
+                gridState.scrollToItem(0)
+            }
+        } else {
+            isSpotifySelected = false
+            viewModel.selectFilter(option.filter)
+            coroutineScope.launch { gridState.scrollToItem(0) }
+        }
+    }
+    val onSpotifyTrackClick: (Int, SpotifyTrack) -> Unit = { index, _ ->
+        playerConnection.playQueue(
+            SpotifyPlaylistQueue(
+                initialTracks = viewModel.spotifyTracks,
+                startIndex = index,
+                title = "Spotify • ${viewModel.query}",
+            ),
+        )
     }
     val openItemMenu: (YTItem) -> Unit = { item ->
         if (item.hasSearchResultMenu()) {
@@ -274,7 +316,7 @@ fun OnlineSearchResult(
     val topResults = viewModel.summaryPage?.summaries?.firstOrNull()?.items.orEmpty()
     val allModeSections by remember(viewModel, searchSort) {
         derivedStateOf {
-            SearchFilterOptions.drop(1).mapNotNull { option ->
+            SearchFilterOptions.drop(1).filterNot { it.isSpotify }.mapNotNull { option ->
                 val filterKey = option.filter?.value ?: return@mapNotNull null
                 viewModel.viewStateMap[filterKey]
                     ?.items
@@ -310,8 +352,8 @@ fun OnlineSearchResult(
                 .background(MaterialTheme.colorScheme.background),
     ) {
         SearchFilterBar(
-            selectedFilter = searchFilter,
-            onSelect = selectFilter,
+            selectedOption = selectedOption,
+            onSelect = selectFilterOption,
             elevated = isScrolled,
             modifier =
                 Modifier
@@ -337,32 +379,58 @@ fun OnlineSearchResult(
                     .weight(1f)
                     .fillMaxWidth(),
         ) {
-            if (searchFilter == null) {
-                allModeContent(
-                    query = viewModel.query,
-                    topResults = topResults,
-                    sections = allModeSections,
-                    resolved = viewModel.allModeResolved,
-                    error = viewModel.summaryError ?: viewModel.filterErrors.values.firstOrNull(),
-                    actions = actions,
-                    itemMotion = itemMotion,
-                    onSeeAll = selectFilter,
-                    onRetry = viewModel::retry,
-                )
-            } else {
-                filteredContent(
-                    query = viewModel.query,
-                    option = selectedOption,
-                    items = filteredItems,
-                    loaded = itemsPage != null,
-                    hasMore = itemsPage?.continuation != null,
-                    error = filterKey?.let { viewModel.filterErrors[it] },
-                    loadMoreError = viewModel.loadMoreError,
-                    actions = actions,
-                    itemMotion = itemMotion,
-                    onRetry = viewModel::retry,
-                    onLoadMore = viewModel::loadMore,
-                )
+            when {
+                searchFilter == null && !selectedOption.isSpotify -> {
+                    allModeContent(
+                        query = viewModel.query,
+                        topResults = topResults,
+                        sections = allModeSections,
+                        spotifyTracks = viewModel.spotifyTracks,
+                        onSpotifyTrackClick = onSpotifyTrackClick,
+                        onSeeAllSpotify = { selectFilterOption(SearchFilterOptions.first { it.isSpotify }) },
+                        resolved = viewModel.allModeResolved,
+                        error = viewModel.summaryError ?: viewModel.filterErrors.values.firstOrNull(),
+                        actions = actions,
+                        itemMotion = itemMotion,
+                        onSeeAll = { filter ->
+                            selectFilterOption(SearchFilterOptions.first { it.filter == filter && !it.isSpotify })
+                        },
+                        onRetry = viewModel::retry,
+                    )
+                }
+
+                selectedOption.isSpotify -> {
+                    spotifyFilteredContent(
+                        query = viewModel.query,
+                        tracks = viewModel.spotifyTracks,
+                        isLoading = viewModel.isSpotifyLoading,
+                        error = viewModel.spotifyError,
+                        actions = actions,
+                        onTrackClick = onSpotifyTrackClick,
+                        itemMotion = itemMotion,
+                        onRetry = {
+                            coroutineScope.launch {
+                                viewModel.loadSpotifyResultsIfNeeded()
+                            }
+                        },
+                    )
+                }
+
+                else -> {
+                    filteredContent(
+                        query = viewModel.query,
+                        option = selectedOption,
+                        items = filteredItems,
+                        loaded = itemsPage != null,
+                        hasMore = itemsPage?.continuation != null,
+                        error = filterKey?.let { viewModel.filterErrors[it] },
+                        loadMoreError = viewModel.loadMoreError,
+                        actions = actions,
+                        itemMotion = itemMotion,
+                        onRetry = viewModel::retry,
+                        onLoadMore = viewModel::loadMore,
+                    )
+                }
             }
         }
     }
@@ -401,6 +469,9 @@ private fun LazyGridScope.allModeContent(
     query: String,
     topResults: List<YTItem>,
     sections: List<Pair<SearchFilterOption, List<YTItem>>>,
+    spotifyTracks: List<SpotifyTrack>,
+    onSpotifyTrackClick: (Int, SpotifyTrack) -> Unit,
+    onSeeAllSpotify: () -> Unit,
     resolved: Boolean,
     error: SearchLoadError?,
     actions: SearchResultActions,
@@ -408,7 +479,7 @@ private fun LazyGridScope.allModeContent(
     onSeeAll: (YouTube.SearchFilter?) -> Unit,
     onRetry: () -> Unit,
 ) {
-    val hasContent = topResults.isNotEmpty() || sections.isNotEmpty()
+    val hasContent = topResults.isNotEmpty() || sections.isNotEmpty() || spotifyTracks.isNotEmpty()
 
     if (!hasContent) {
         fullLineItem(key = "all_state", contentType = "state") {
@@ -471,6 +542,34 @@ private fun LazyGridScope.allModeContent(
                     modifier = gridItemModifier(itemMotion),
                 )
             }
+        }
+    }
+
+    if (spotifyTracks.isNotEmpty()) {
+        fullLineItem(key = "spotify_header", contentType = "section_header") {
+            val spotifyTitle = stringResource(R.string.spotify_tracks)
+            val seeAllDescription = stringResource(R.string.search_see_all_section, spotifyTitle)
+            DiscoverySectionHeader(
+                title = spotifyTitle,
+                iconRes = R.drawable.spotify,
+                badgeShape = MaterialShapes.Cookie9Sided,
+                modifier = gridItemModifier(itemMotion).padding(top = 8.dp),
+                action = {
+                    TextButton(
+                        onClick = onSeeAllSpotify,
+                        modifier = Modifier.semantics { contentDescription = seeAllDescription },
+                    ) {
+                        Text(stringResource(R.string.see_all))
+                    }
+                },
+            )
+        }
+        fullLineItem(key = "spotify_shelf", contentType = "spotify_shelf") {
+            SpotifyTracksShelf(
+                tracks = spotifyTracks,
+                onTrackClick = onSpotifyTrackClick,
+                modifier = gridItemModifier(itemMotion),
+            )
         }
     }
 
@@ -645,10 +744,78 @@ private fun LazyGridScope.filteredContent(
     }
 }
 
+// [VoidTune Patch: Spotify Filtered Results Grid for Unified Hybrid Search]
+// REASON: When user selects Spotify filter pill, displays full list of Spotify tracks formatted as SearchResultRows.
+private fun LazyGridScope.spotifyFilteredContent(
+    query: String,
+    tracks: List<SpotifyTrack>,
+    isLoading: Boolean,
+    error: String?,
+    actions: SearchResultActions,
+    onTrackClick: (Int, SpotifyTrack) -> Unit,
+    itemMotion: SearchItemMotion,
+    onRetry: () -> Unit,
+) {
+    if (isLoading) {
+        fullLineItem(key = "spotify_loading", contentType = "state") {
+            SearchLoadingPanel(
+                message = stringResource(R.string.search_results_loading),
+                modifier = gridItemModifier(itemMotion),
+            )
+        }
+        return
+    }
+
+    if (error != null && tracks.isEmpty()) {
+        fullLineItem(key = "spotify_error", contentType = "state") {
+            SearchErrorPanel(
+                error = SearchLoadError.Failed,
+                onRetry = onRetry,
+                modifier = gridItemModifier(itemMotion),
+            )
+        }
+        return
+    }
+
+    if (tracks.isEmpty()) {
+        fullLineItem(key = "spotify_empty", contentType = "state") {
+            SearchEmptyPanel(query = query, modifier = gridItemModifier(itemMotion))
+        }
+        return
+    }
+
+    fullLineItem(key = "spotify_filter_header", contentType = "section_header") {
+        DiscoverySectionHeader(
+            title = stringResource(R.string.spotify_tracks),
+            iconRes = R.drawable.spotify,
+            badgeShape = MaterialShapes.Cookie9Sided,
+            modifier = gridItemModifier(itemMotion),
+        )
+    }
+
+    itemsIndexed(
+        items = tracks,
+        key = { index, track -> "spotify_filtered_${track.id}_$index" },
+        span = { _, _ -> GridItemSpan(maxLineSpan) },
+        contentType = { _, _ -> "spotify_result_row" },
+    ) { index, track ->
+        SpotifyTrackRow(
+            track = track,
+            index = index,
+            count = tracks.size,
+            isActive = false,
+            isPlaying = false,
+            pureBlack = false,
+            onClick = { onTrackClick(index, track) },
+            modifier = gridItemModifier(itemMotion),
+        )
+    }
+}
+
 @Composable
 private fun SearchFilterBar(
-    selectedFilter: YouTube.SearchFilter?,
-    onSelect: (YouTube.SearchFilter?) -> Unit,
+    selectedOption: SearchFilterOption,
+    onSelect: (SearchFilterOption) -> Unit,
     elevated: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -660,7 +827,7 @@ private fun SearchFilterBar(
         label = "searchFilterBarContainer",
     )
     val rowState = rememberLazyListState()
-    val selectedIndex = SearchFilterOptions.indexOfFirst { it.filter == selectedFilter }.coerceAtLeast(0)
+    val selectedIndex = SearchFilterOptions.indexOf(selectedOption).coerceAtLeast(0)
     val filterLabel = stringResource(R.string.search_filter_label)
 
     LaunchedEffect(selectedIndex) {
@@ -682,13 +849,13 @@ private fun SearchFilterBar(
         ) {
             items(
                 items = SearchFilterOptions,
-                key = { option -> option.filter?.value ?: "all" },
+                key = { option -> if (option.isSpotify) "spotify" else (option.filter?.value ?: "all") },
                 contentType = { "filter_toggle" },
             ) { option ->
-                val checked = option.filter == selectedFilter
+                val checked = option == selectedOption
                 ToggleButton(
                     checked = checked,
-                    onCheckedChange = { onSelect(option.filter) },
+                    onCheckedChange = { onSelect(option) },
                     modifier = Modifier.semantics { role = Role.RadioButton },
                 ) {
                     Icon(

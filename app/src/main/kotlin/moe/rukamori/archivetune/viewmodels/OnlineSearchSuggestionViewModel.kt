@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -14,10 +18,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -38,7 +45,7 @@ import moe.rukamori.archivetune.utils.getAsync
 import java.io.IOException
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class OnlineSearchSuggestionViewModel
     @Inject
@@ -55,7 +62,14 @@ class OnlineSearchSuggestionViewModel
 
         init {
             viewModelScope.launch {
+                // ORIGINAL CODE:
+                // combine(query, retryRequests) { query, _ -> query }
+                //     .flatMapLatest { query ->
+                // [VoidTune Patch: Search Debounce for Smooth Typing & Rate-Limit Prevention]
+                // REASON: Fast typing without debounce fires redundant network requests; 300ms debounce ensures optimal responsiveness while keeping 0ms instant display for cleared queries.
                 combine(query, retryRequests) { query, _ -> query }
+                    .debounce { q -> if (q.isBlank()) 0L else 300L }
+                    .distinctUntilChanged()
                     .flatMapLatest { query ->
                         if (query.isBlank()) {
                             database.searchHistory().map { history ->

@@ -37,6 +37,7 @@ import moe.rukamori.archivetune.spotify.models.SpotifyAlbum
 import moe.rukamori.archivetune.spotify.models.SpotifyHomeFeed
 import moe.rukamori.archivetune.spotify.models.SpotifyPlaylist
 import moe.rukamori.archivetune.spotify.models.SpotifyPlaylistTracksRef
+import moe.rukamori.archivetune.spotify.models.SpotifySearchResult
 import moe.rukamori.archivetune.spotify.models.SpotifyTrack
 import moe.rukamori.archivetune.utils.clearWebAuthSession
 import moe.rukamori.archivetune.utils.dataStore
@@ -279,6 +280,18 @@ class SpotifyLibraryRepository
                     ensureAuthenticated()
                     spotifyCallWithTokenRetry {
                         Spotify.newReleases(limit = limit).getOrThrow().albums?.items.orEmpty()
+                    }
+                }
+            }
+
+        // [VoidTune Patch: Unified Hybrid Search Spotify Query]
+        // REASON: Query Spotify GraphQL searchDesktop endpoint with token refresh retry to power Option B Unified Hybrid Search.
+        suspend fun search(query: String, limit: Int = 20): Result<SpotifySearchResult> =
+            withContext(Dispatchers.IO) {
+                runCatching {
+                    ensureAuthenticated()
+                    spotifyCallWithTokenRetry {
+                        Spotify.search(query = query, limit = limit).getOrThrow()
                     }
                 }
             }

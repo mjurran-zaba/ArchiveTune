@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -45,6 +49,9 @@ import moe.rukamori.archivetune.innertube.models.filterExplicit
 import moe.rukamori.archivetune.innertube.models.filterVideo
 import moe.rukamori.archivetune.innertube.pages.SearchSummaryPage
 import moe.rukamori.archivetune.models.ItemsPage
+import moe.rukamori.archivetune.spotify.SpotifyLibraryRepository
+import moe.rukamori.archivetune.spotify.models.SpotifyAlbum
+import moe.rukamori.archivetune.spotify.models.SpotifyTrack
 import moe.rukamori.archivetune.ui.screens.search.OnlineSearchResultArgument
 import moe.rukamori.archivetune.ui.screens.search.decodeOnlineSearchQuery
 import moe.rukamori.archivetune.utils.dataStore
@@ -78,12 +85,23 @@ enum class SearchLoadError {
 
 @HiltViewModel
 class OnlineSearchViewModel
+    // ORIGINAL CODE:
+    // @Inject
+    // constructor(
+    //     @ApplicationContext val context: Context,
+    //     private val savedStateHandle: SavedStateHandle,
+    //     private val loadAiContentFilterPolicy: LoadAiContentFilterPolicyUseCase,
+    //     private val filterAiContent: FilterAiContentUseCase,
+    // ) : ViewModel() {
+    // [VoidTune Patch: Option B Unified Hybrid Search (YouTube Music + Spotify)]
+    // REASON: Inject SpotifyLibraryRepository to enable concurrent Spotify search alongside YouTube Music in single search session.
     @Inject
     constructor(
         @ApplicationContext val context: Context,
         private val savedStateHandle: SavedStateHandle,
         private val loadAiContentFilterPolicy: LoadAiContentFilterPolicyUseCase,
         private val filterAiContent: FilterAiContentUseCase,
+        val spotifyRepository: SpotifyLibraryRepository,
     ) : ViewModel() {
         val query =
             decodeOnlineSearchQuery(
@@ -102,6 +120,17 @@ class OnlineSearchViewModel
             private set
         private val _sort = MutableStateFlow(restoreSort())
         val sort: StateFlow<OnlineSearchSort> = _sort.asStateFlow()
+
+        // [VoidTune Patch: Spotify Search Results State for Unified Hybrid Search]
+        // REASON: Store concurrently fetched Spotify tracks and albums for seamless hybrid presentation.
+        var spotifyTracks by mutableStateOf<List<SpotifyTrack>>(emptyList())
+            private set
+        var spotifyAlbums by mutableStateOf<List<SpotifyAlbum>>(emptyList())
+            private set
+        var isSpotifyLoading by mutableStateOf(false)
+            private set
+        var spotifyError by mutableStateOf<String?>(null)
+            private set
 
         private val allModeFilters =
             listOf(
@@ -136,14 +165,54 @@ class OnlineSearchViewModel
             }
         }
 
+        // ORIGINAL CODE:
+        // private fun loadAllMode() {
+        //     viewModelScope.launch {
+        //         loadSummaryIfNeeded()
+        //     }
+        //     allModeFilters.forEach { allModeFilter ->
+        //         viewModelScope.launch {
+        //             loadFilterIfNeeded(allModeFilter)
+        //         }
+        //     }
+        // }
+        // [VoidTune Patch: Concurrent Spotify & YouTube Search for Unified Hybrid Search]
+        // REASON: Single search query dispatches both YouTube Music and Spotify queries concurrently.
         private fun loadAllMode() {
             viewModelScope.launch {
                 loadSummaryIfNeeded()
+            }
+            viewModelScope.launch {
+                loadSpotifyResultsIfNeeded()
             }
             allModeFilters.forEach { allModeFilter ->
                 viewModelScope.launch {
                     loadFilterIfNeeded(allModeFilter)
                 }
+            }
+        }
+
+        // [VoidTune Patch: Fetch Spotify Search Results Concurrently]
+        // REASON: Queries Spotify API for tracks and albums without blocking YouTube Music pipeline.
+        suspend fun loadSpotifyResultsIfNeeded() {
+            if (spotifyTracks.isNotEmpty() || isSpotifyLoading) return
+            isSpotifyLoading = true
+            spotifyError = null
+            try {
+                spotifyRepository.search(query, limit = 20).fold(
+                    onSuccess = { result ->
+                        spotifyTracks = result.tracks?.items.orEmpty()
+                        spotifyAlbums = result.albums?.items.orEmpty()
+                    },
+                    onFailure = { error ->
+                        spotifyError = error.message
+                    },
+                )
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                spotifyError = e.message
+            } finally {
+                isSpotifyLoading = false
             }
         }
 
@@ -182,11 +251,30 @@ class OnlineSearchViewModel
             )
         }
 
+        // ORIGINAL CODE:
+        // fun retry() {
+        //     val selectedFilter = filter.value
+        //     if (selectedFilter == null) {
+        //         summaryError = null
+        //         filterErrors.clear()
+        //         loadAllMode()
+        //     } else {
+        //         filterErrors.remove(selectedFilter.value)
+        //         viewModelScope.launch {
+        //             loadFilterIfNeeded(selectedFilter)
+        //         }
+        //     }
+        // }
+        // [VoidTune Patch: Reset and Reload Both YouTube and Spotify on Retry]
+        // REASON: Clears Spotify cached error and tracks when retrying unified all-mode search.
         fun retry() {
             val selectedFilter = filter.value
             if (selectedFilter == null) {
                 summaryError = null
                 filterErrors.clear()
+                spotifyError = null
+                spotifyTracks = emptyList()
+                spotifyAlbums = emptyList()
                 loadAllMode()
             } else {
                 filterErrors.remove(selectedFilter.value)

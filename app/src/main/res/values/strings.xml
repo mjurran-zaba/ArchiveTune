@@ -58,6 +58,10 @@
     <string name="filter_videos">Videos</string>
     <string name="filter_albums">Albums</string>
     <string name="filter_artists">Artists</string>
+    <string name="filter_spotify">Spotify</string>
+    <string name="spotify_tracks">Spotify Tracks</string>
+    <string name="spotify_results">Spotify Results</string>
+    <string name="spotify_albums">Spotify Albums</string>
     <string name="filter_playlists">Playlists</string>
     <string name="filter_community_playlists">Community playlists</string>
     <string name="filter_featured_playlists">Featured playlists</string>
