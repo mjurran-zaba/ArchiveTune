@@ -1,3 +1,7 @@
+# Always meticulous in everyhthing to minimize the case
+# Be honest in everything
+# Be meticulous in everything
+# Dont replace or delete code, coment and explain what and why, the write your change below
 name: Bump to new version
 on:
   push:
@@ -27,7 +31,7 @@ jobs:
             exit 1
           fi
 
-          NEW_VERSION=$(grep -oP 'versionName\s*=\s*"\K[^"]+' app/build.gradle.kts || echo "")
+          NEW_VERSION=$(grep -E '^\s*versionName\s*=' app/build.gradle.kts | grep -oP '"\K[^"]+' | tail -n 1 || grep -oP 'versionName\s*=\s*"\K[^"]+' app/build.gradle.kts | tail -n 1)
 
           if [ -z "$NEW_VERSION" ]; then
             echo "Error: Could not find versionName in app/build.gradle.kts"

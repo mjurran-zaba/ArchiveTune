@@ -71,11 +71,10 @@ android {
     applicationId = "moe.rukamori.archivetune"
         minSdk = 26
         targetSdk = 37
-        // versionCode = 145
+        // Previous versionCode history: 144, 145
         versionCode = 146
         // DO NOT DELETE BUT COMMENT: Original ArchiveTune version (16.1.0)
-        // versionName = "16.1.0"
-        // versionName = "0.0.2"
+        // Previous versionName history: 16.1.0, 0.0.2
         versionName = "0.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
