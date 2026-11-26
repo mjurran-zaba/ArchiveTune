@@ -332,7 +332,7 @@ fun ProfileScreen(
                     },
                     title = {
                         Text(
-                            text = "Profile Photo",
+                            text = stringResource(R.string.profile_photo),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                         )
@@ -365,7 +365,7 @@ fun ProfileScreen(
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = "Change Photo",
+                                    text = stringResource(R.string.change_photo),
                                     fontWeight = FontWeight.SemiBold,
                                 )
                             }
@@ -404,7 +404,7 @@ fun ProfileScreen(
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = "Remove Photo",
+                                    text = stringResource(R.string.remove_photo),
                                     fontWeight = FontWeight.SemiBold,
                                 )
                             }
@@ -420,7 +420,7 @@ fun ProfileScreen(
                                 ),
                             shape = RoundedCornerShape(10.dp),
                         ) {
-                            Text(text = "Cancel")
+                            Text(text = stringResource(R.string.cancel_button))
                         }
                     },
                     shape = RoundedCornerShape(20.dp),
@@ -483,7 +483,7 @@ fun ProfileScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Username",
+                    text = stringResource(R.string.username),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -526,7 +526,7 @@ fun ProfileScreen(
                         ) {
                             if (textFieldValue.text.isEmpty()) {
                                 Text(
-                                    text = "Enter display name...",
+                                    text = stringResource(R.string.enter_display_name),
                                     style =
                                         TextStyle(
                                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
@@ -642,7 +642,7 @@ fun ProfileScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Connected Services",
+                    text = stringResource(R.string.connected_services),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -657,11 +657,11 @@ fun ProfileScreen(
                 iconRes = R.drawable.spotify,
                 iconTint = Color(0xFF1DB954),
                 isConnected = isSpotifyConnected,
-                accountDetail = if (isSpotifyConnected) spotifyName.ifBlank { "Connected" } else "Not connected",
+                accountDetail = if (isSpotifyConnected) spotifyName.ifBlank { stringResource(R.string.connected) } else stringResource(R.string.not_connected),
                 onActionClick = {
                     navController.navigate("settings/integration") { launchSingleTop = true }
                 },
-                actionLabel = if (isSpotifyConnected) "Manage" else "Connect",
+                actionLabel = if (isSpotifyConnected) stringResource(R.string.manage) else stringResource(R.string.connect),
                 actionContainerColor = if (isSpotifyConnected) MaterialTheme.colorScheme.surfaceContainerHighest else Color(0xFF1DB954),
                 actionContentColor = if (isSpotifyConnected) MaterialTheme.colorScheme.onSurface else Color.White,
             )
@@ -674,7 +674,7 @@ fun ProfileScreen(
                 iconRes = R.drawable.youtube,
                 iconTint = Color(0xFFEF4444),
                 isConnected = isYouTubeConnected,
-                accountDetail = if (isYouTubeConnected) ytName.ifBlank { ytEmail.ifBlank { "Logged in" } } else "Guest Mode (Not logged in)",
+                accountDetail = if (isYouTubeConnected) ytName.ifBlank { ytEmail.ifBlank { stringResource(R.string.connected) } } else stringResource(R.string.guest_mode_not_logged_in),
                 onActionClick = {
                     if (isYouTubeConnected) {
                         navController.navigate("settings/account") { launchSingleTop = true }
@@ -682,7 +682,7 @@ fun ProfileScreen(
                         navController.navigate("login") { launchSingleTop = true }
                     }
                 },
-                actionLabel = if (isYouTubeConnected) "Manage" else "Login",
+                actionLabel = if (isYouTubeConnected) stringResource(R.string.manage) else stringResource(R.string.login),
                 actionContainerColor = if (isYouTubeConnected) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.primary,
                 actionContentColor = if (isYouTubeConnected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary,
             )

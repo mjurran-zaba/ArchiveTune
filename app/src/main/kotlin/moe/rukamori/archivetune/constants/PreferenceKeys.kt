@@ -942,6 +942,7 @@ val LanguageCodeToName =
         "th" to "ไทย",
         "id" to "Bahasa Indonesia",
         "ms" to "Bahasa Melayu",
+        "tl" to "Tagalog (Filipino)",
         "uk" to "Українська",
         "cs" to "Čeština",
         "el" to "Ελληνικά",

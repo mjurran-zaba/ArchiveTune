@@ -237,7 +237,7 @@ private fun SupportVoidTuneBadge(
                     modifier = Modifier.size(20.dp),
                 )
                 Text(
-                    text = "Support VoidTune",
+                    text = stringResource(R.string.support_voidtune),
                     style = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.3.sp,
@@ -259,7 +259,7 @@ private fun SupportVoidTuneBadge(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "QRIS",
+                    text = stringResource(R.string.qris),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 10.sp,

@@ -32,7 +32,7 @@
     <string name="last_week">Minggu lalu</string>
     <string name="most_played_songs">Lagu yang paling banyak diputar</string>
     <string name="search">Cari</string>
-    <string name="search_yt_music">Telusuri YouTube Music</string>
+    <string name="search_yt_music">Grab Your Spell</string>
     <string name="search_library">Cari pustaka</string>
     <string name="filter_library">Pustaka</string>
     <string name="filter_liked">Disukai</string>
@@ -1061,4 +1061,20 @@
     <string name="scheduled_backup_load_failed">Pengaturan pencadangan terjadwal tidak dapat dimuat</string>
     <string name="scheduled_backup_update_failed">Pengaturan pencadangan terjadwal tidak dapat disimpan</string>
     <string name="gatekeeper_connection_blocked">Koneksi diblokir oleh ArchiveTune Remote. Aplikasi ini tidak dapat diverifikasi sebagai build ArchiveTune resmi. Instal build resmi dari https://github.com/rukamori/ArchiveTune atau https://t.me/ArchiveTuneGC.</string>
+
+    <!-- VoidTune Profile & Localization Strings -->
+    <string name="profile_photo">Foto Profil</string>
+    <string name="change_photo">Ganti Foto</string>
+    <string name="remove_photo">Hapus Foto</string>
+    <string name="enter_display_name">Masukkan nama profil…</string>
+    <string name="connected_services">Layanan Terhubung</string>
+    <string name="manage">Kelola</string>
+    <string name="connect">Hubungkan</string>
+    <string name="connected">Terhubung</string>
+    <string name="not_connected">Belum terhubung</string>
+    <string name="guest_mode_not_logged_in">Mode Tamu (Belum login)</string>
+    <string name="support_voidtune">Dukung VoidTune</string>
+    <string name="support_voidtune_motto">“Setiap koin yang kau persembahkan, memperkuat mantra Void”</string>
+    <string name="support_voidtune_scan_desc">Pindai dengan aplikasi e-Wallet atau Perbankan apa pun (QRIS)\nPengembang • Mjurran | INDONESIA</string>
+    <string name="qris">QRIS</string>
 </resources>

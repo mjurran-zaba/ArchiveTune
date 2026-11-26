@@ -1,4 +1,7 @@
 // Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune / VoidTune (2026)
  * © Rukamori — github.com/rukamori
@@ -401,7 +404,7 @@ fun StarDialog(
                         }
 
                         Text(
-                            text = "Support VoidTune",
+                            text = stringResource(R.string.support_voidtune),
                             fontFamily = unifrakturCookFont,
                             modifier = Modifier.weight(1f).semantics { heading() },
                             color = Color.White,
@@ -456,7 +459,7 @@ fun StarDialog(
                             )
                             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
                             Text(
-                                text = "Support VoidTune (QRIS)",
+                                text = "${stringResource(R.string.support_voidtune)} (${stringResource(R.string.qris)})",
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.SemiBold,
                             )
@@ -535,7 +538,7 @@ fun SupportQrModal(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 Text(
-                    text = "Support VoidTune",
+                    text = stringResource(R.string.support_voidtune),
                     fontFamily = unifrakturCookFont,
                     style =
                         MaterialTheme.typography.titleLarge.copy(
@@ -547,7 +550,7 @@ fun SupportQrModal(
                 )
 
                 Text(
-                    text = "“Every single coin you offer, reforges Void's spell”",
+                    text = stringResource(R.string.support_voidtune_motto),
                     style =
                         MaterialTheme.typography.bodySmall.copy(
                             fontStyle = FontStyle.Italic,
@@ -576,7 +579,7 @@ fun SupportQrModal(
                 }
 
                 Text(
-                    text = "Scan using any e-Wallet or Banking app (QRIS)\nDeveloper • Mjurran | INDONESIA",
+                    text = stringResource(R.string.support_voidtune_scan_desc),
                     style =
                         MaterialTheme.typography.labelSmall.copy(
                             fontSize = 10.5.sp,

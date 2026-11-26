@@ -48,7 +48,7 @@
     <string name="last_week">先週</string>
     <string name="most_played_songs">最も再生された曲</string>
     <string name="search">検索</string>
-    <string name="search_yt_music">YouTube 音楽を検索</string>
+    <string name="search_yt_music">Grab Your Spell</string>
     <string name="search_library">ライブラリを検索する</string>
     <string name="filter_library">図書館</string>
     <string name="filter_liked">気に入った</string>
@@ -1469,4 +1469,20 @@
         <item quantity="other">%d 曲をインポートできませんでした</item>
     </plurals>
     <string name="import_result_failed_items">インポートできませんでした</string>
+
+    <!-- VoidTune Profile & Localization Strings -->
+    <string name="profile_photo">プロフィール写真</string>
+    <string name="change_photo">写真を変更</string>
+    <string name="remove_photo">写真を削除</string>
+    <string name="enter_display_name">表示名を入力…</string>
+    <string name="connected_services">連携サービス</string>
+    <string name="manage">管理</string>
+    <string name="connect">接続</string>
+    <string name="connected">接続済み</string>
+    <string name="not_connected">未接続</string>
+    <string name="guest_mode_not_logged_in">ゲストモード（未ログイン）</string>
+    <string name="support_voidtune">VoidTuneを支援</string>
+    <string name="support_voidtune_motto">「捧げられし一銭一銭が、Voidの呪文を再び紡ぐ」</string>
+    <string name="support_voidtune_scan_desc">QRIS対応ウォレットまたは銀行アプリでスキャン\n開発者 • Mjurran | インドネシア</string>
+    <string name="qris">QRIS</string>
 </resources>

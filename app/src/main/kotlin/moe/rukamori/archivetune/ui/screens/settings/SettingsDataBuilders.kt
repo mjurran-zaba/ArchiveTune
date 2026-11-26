@@ -1,4 +1,7 @@
 // Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -270,8 +273,8 @@ fun buildSettingsContent(
         SettingsItem(
             key = "support_voidtune",
             icon = painterResource(R.drawable.coffee),
-            title = "Support VoidTune",
-            subtitle = "Every single coin you offer, reforges Void's spell",
+            title = stringResource(R.string.support_voidtune),
+            subtitle = stringResource(R.string.support_voidtune_motto),
             accentColor = Color(0xFFF59E0B), // Radiant Amber Gold
             onClick = onOpenSupportQr,
         )
