@@ -1,17 +1,38 @@
-# 🚀 VoidTune v0.0.3 — Unified Hybrid Search Released!
+# 🚀 VoidTune v0.0.3 — Unified Hybrid Search & Spotify Bridge
 
-Selamat datang di pembaruan besar **VoidTune v0.0.3**!
+Selamat datang di pembaruan besar **VoidTune v0.0.3**! 
 
-### ✨ Fitur Baru yang Hadir:
-1. **Option B: Unified Hybrid Search**:
-   - Sekali ketik kata kunci, sistem secara asinkron mencari ke **YouTube Music** dan **Spotify Desktop GraphQL** secara bersamaan.
-2. **Smart 300ms Debounce**:
-   - Menghilangkan lag dan mencegah spam request saat mengetik cepat di kolom pencarian.
-3. **Komponen Expressive Spotify**:
-   - Tampilan `SpotifyTrackRow` dan `SpotifyTrackCard` dengan aksen hijau Spotify (`#1DB954`).
-   - Shelf horizontal khusus *"Spotify Tracks"* dengan tombol *"See all"*.
-4. **Multi-Tier Audio Resolver**:
-   - Lagu Spotify langsung diputar melalui Spotify preview atau resolusi audio YouTube secara seamless.
+Versi ini membawa lompatan besar dalam pengalaman eksplorasi musik, memadukan katalog tak terbatas YouTube Music dengan presisi kurasi Spotify Desktop GraphQL ke dalam satu sesi pencarian terpadu.
 
 ---
-*Developed with passion by Mjurran | INDONESIA*
+
+### ✨ Apa yang Baru di VoidTune v0.0.3?
+
+#### 1. 🔍 Option B: Unified Hybrid Search (YouTube Music + Spotify GraphQL)
+* **Pencarian Sekali Ketik untuk Semua**: Anda tidak perlu lagi memilih sumber manual. Saat Anda mengetikkan nama lagu atau artis di bilah pencarian atas, VoidTune secara otomatis dan asinkron menembak query ke **YouTube Music** dan **Spotify Desktop GraphQL** (`spotifyDesktopSearchDesktop`) secara paralel.
+* **Smart 300ms Debounce**: Mengetik cepat tidak lagi membebani jaringan atau memicu throttling API. Kami mengimplementasikan debounce 300ms dengan filter `distinctUntilChanged` yang menjaga aplikasi tetap ringan dan hemat kuota, namun tetap responsif instan (0ms) saat teks dihapus.
+* **Auto Token Refresh**: Jika sesi otentikasi Spotify kadaluarsa saat Anda mencari, sistem secara otomatis me-refresh token di latar belakang tanpa memutus navigasi Anda.
+
+#### 2. 🎨 Komponen UI Material 3 Expressive Spotify
+* **`SpotifyTrackRow` & `SpotifyTrackCard`**: Didesain dengan bahasa desain Material 3 Expressive, aksen rounded elegan, thumbnail resolusi tinggi via Coil, judul lagu tajam, subtitle artis, dan badge hijau khas Spotify (`#1DB954`).
+* **`SpotifyTracksShelf`**: Rak horizontal baru di mode pencarian *Semua* (*All Mode*) yang dilengkapi tombol **"See all"** untuk langsung beralih ke grid lengkap lagu-lagu Spotify.
+* **Filter Pill Khusus**: Tab filter atas kini memiliki opsi **Spotify** di samping *Lagu YouTube, Album, Artis, dan Playlist*.
+
+#### 3. ⚡ Arsitektur Pemutaran Multi-Tier (Multi-Tier Playback Resolver)
+Saat Anda mengetuk lagu dari hasil pencarian Spotify:
+1. Lagu langsung dimasukkan ke antrean baru `SpotifyPlaylistQueue`.
+2. Audio dipetakan secara cerdas melalui resolver bertingkat: dari audio preview resmi Spotify, dialihkan ke mesin pemutaran YouTube beresolusi tinggi (Piped / NewPipe), hingga fallback instan jika salah satu stream terhambat.
+
+#### 4. 🌐 Lokalisasi Bahasa Global (i18n)
+* Seluruh string baru dilokalisasi secara penuh ke dalam **4 Bahasa**:
+  * **English (`en`)**
+  * **Indonesia (`id`)**
+  * **Jepang (`ja`)**
+  * **Tagalog (`tl`)**
+* Placeholder pencarian baru yang ikonik: *"Grab Your Spell"*.
+
+#### 5. 🛠️ Build Release Ringan & Optimal (R8 / ProGuard)
+* APK release resmi dioptimasi menggunakan **R8 Code Shrinking** dan **Resource Minification**, memangkas ukuran APK hingga ~37MB dan menjamin animasi 60/120Hz yang sangat mulus di semua perangkat Android.
+
+---
+*Dikembangkan dengan penuh dedikasi oleh Mjurran | INDONESIA*

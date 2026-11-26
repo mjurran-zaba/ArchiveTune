@@ -2,118 +2,118 @@
   {
     "id": "voidtune_v0_0_3_release",
     "Title": "🚀 VoidTune v0.0.3 — Unified Hybrid Search Released!",
-    "Description": "Pencarian lagu bersamaan YouTube Music + Spotify GraphQL, 300ms debounce, shelf Spotify, dan Multi-Tier resolver.",
+    "Description": "Pembaruan besar VoidTune: integrasi pencarian hibrida bersamaan YouTube Music & Spotify Desktop GraphQL, smart debounce 300ms, shelf Spotify Material 3 Expressive, dan arsitektur pemutaran multi-tier.",
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798253247
+    "Date": 1798253628
   },
   {
     "id": "voidtune_arc_v1",
     "Title": "VoidTune Arcane Edition — The Rebirth",
-    "Description": "Optimized network throughput for slow connections and completely overhauled the UI for a fluid, lag-free experience.",
+    "Description": "Kilas balik transformasi arsitektur VoidTune: optimalisasi throughput koneksi lambat, perombakan antarmuka AMOLED Pure Black dengan sentuhan Polar Cyan, dan eliminasi total frame-drops.",
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797389247
+    "Date": 1797389628
   },
   {
     "id": "trend_tiktok_reels_radar",
     "Title": "🔥 TikTok & Reels Viral Radar: Top Trending Sounds",
-    "Description": "Track the hottest viral songs dominating FYP videos, Instagram Reels, and daily streaming charts.",
+    "Description": "Analisis mendalam lagu-lagu yang mendominasi FYP TikTok dan Instagram Reels pekan ini, serta lonjakan jutaan streaming harian di platform global.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&crop=1"
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795658247
+    "Date": 1795658628
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Trending hashtags and viral discussions on X: Thanksgiving, Corinthians, Packers, Tucker Kraft...",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, Corinthians, Packers, Tucker Kraft.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795657247
+    "Date": 1795657628
   },
   {
     "id": "trend_billboard_850df5b86a",
     "Title": "🏆 Hold Your Turkeys! Macy’s 100th Thanksgiving Day Parade Has Been Postponed: Here’s the New Date",
-    "Description": "After waiting 100 years for the parade’s centennial edition, what’s a few more days?",
+    "Description": "After waiting 100 years for the parade’s centennial edition, what’s a few more days? Macy’s 100th Thanksgiving Day parade will be postponed to Saturday, Nov. 28, because of severe weather.",
     "ImageURL": [
       "https://www.billboard.com/wp-content/uploads/2026/11/2248725138-e1795643537931.jpg?w=800&crop=1"
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795661247
+    "Date": 1795661628
   },
   {
     "id": "trend_billboard_07d5921a5c",
     "Title": "🏆 Brandi Carlile Slams ICE for ‘Horrific’ Detainments in Seattle: ‘We Need to Do Something About It’",
-    "Description": "Brandi Carlile is joining the outcry in her home state of Washington following the controversial ICE detainments of two people ...",
+    "Description": "Brandi Carlile is joining the outcry in her home state of Washington following the controversial ICE detainments of two people at Seattle-Tacoma International Airport.",
     "ImageURL": [
       "https://www.billboard.com/wp-content/uploads/2026/11/P105Z6UG-e1795631318217.jpg?w=800&crop=1"
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795660947
+    "Date": 1795661328
   },
   {
     "id": "trend_billboard_73c5fd2411",
     "Title": "🏆 Ariana Grande Says ‘Insane’ Backlash to ‘Petal’ Music Video Felt Like ‘Black Mirror’",
-    "Description": "Ariana Grande never predicted that the response to her “Petal” music video earlier this year would directly mirror what she was...",
+    "Description": "Ariana Grande never predicted that the response to her “Petal” music video earlier this year would directly mirror what she was trying to speak out against in the song in the first place.",
     "ImageURL": [
       "https://www.billboard.com/wp-content/uploads/2026/11/P108X7V9-e1795625684793.jpg?w=800&crop=1"
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795660647
+    "Date": 1795661028
   },
   {
     "id": "trend_billboard_92b1329930",
     "Title": "🏆 ‘Dancing With the Stars’ Crowns Season 35 Champion",
-    "Description": "Ezra Frech and Daniella Karagach shimmied off with the Len Goodman Mirrorball trophy after winning season 35 of ABC’s Dancing W...",
+    "Description": "Ezra Frech and Daniella Karagach shimmied off with the Len Goodman Mirrorball trophy after winning season 35 of ABC’s Dancing With The Stars.",
     "ImageURL": [
       "https://www.billboard.com/wp-content/uploads/2026/11/P104DLXC-e1795584399622.jpg?w=800&crop=1"
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795660347
+    "Date": 1795660728
   },
   {
     "id": "trend_nme_882d9a2a8e",
     "Title": "🎸 Duran Duran pay tribute after death of guitarist Andy Taylor, age 65: “His playing drove the songs that took us around the world”",
-    "Description": "Guitarist Andy Taylor of Duran Duran, London, 1981. (Photo by Michael Putland/Getty Images)",
+    "Description": "Guitarist Andy Taylor of Duran Duran, London, 1981. (Photo by Michael Putland/Getty Images) Duran Duran have led tributes after the death of guitarist Andy Taylor, who has died aged 65.",
     "ImageURL": [
       "https://www.nme.com/wp-content/uploads/2026/11/duran_duran_andy_taylor.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795659747
+    "Date": 1795660128
   },
   {
     "id": "trend_nme_c674f28ec5",
     "Title": "🎸 Jungle announce run of huge summer 2027 UK shows",
-    "Description": "Jungle have announced a run of massive UK shows for next summer, including a headline slot at Latitude.",
+    "Description": "Jungle have announced a run of massive UK shows for next summer, including a headline slot at Latitude. The dates come in support of the BRIT-award winning trio dropping their uplifting fifth album ‘Sunshine’ earlier ...",
     "ImageURL": [
       "https://www.nme.com/wp-content/uploads/2026/11/jungle@2000x1270.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795659447
+    "Date": 1795659828
   },
   {
     "id": "trend_nme_819e379084",
     "Title": "🎸 Getdown Services announce ‘The Massive Champion Ship’ curated UK Summer 2027 shows",
-    "Description": "Getdown Services perform live in 2026. CREDIT: James Klug/Getty Images",
+    "Description": "Getdown Services perform live in 2026. CREDIT: James Klug/Getty Images Getdown Services have announced a series of ‘The Massive Champion Ship’ curated live shows for the UK next summer, and dropped a new music video f...",
     "ImageURL": [
       "https://www.nme.com/wp-content/uploads/2026/11/getdown-services@2000x1270.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795659147
+    "Date": 1795659528
   }
 ]

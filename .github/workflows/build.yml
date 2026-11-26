@@ -2,22 +2,20 @@ name: Build APKs
 
 on:
   workflow_dispatch:
-# [VoidTune Patch: Trigger Build APKs (Release) on Voidv3 Branch Push]
-# REASON: Keep upstream multi-matrix build on main and dev only. Fast single-pipeline release build is managed via build_pull_request.yml.
-# ORIGINAL CODE:
-#   push:
-#     branches: [ 'main', 'dev' ]
-  push:
-    branches: [ 'main', 'dev' ]
-    paths-ignore:
-      - 'README.md'
-      - 'fastlane/**'
-      - 'assets/**'
-      - '.github/**/*.md'
-      - '.github/FUNDING.yml'
-      - '.github/ISSUE_TEMPLATE/**'
-      - 'news/**'
-      - 'tools/**'
+  # [VoidTune Patch: Disable Auto-Trigger for Legacy Upstream Multi-Matrix Build]
+  # REASON: Upstream build.yml attempts to upload 8 architectures to a private Cloudflare R2 bucket (R2_ACCESS_KEY_ID),
+  # which fails and turns red on forks. VoidTune uses build_pull_request.yml and release.yml instead.
+  # push:
+  #   branches: [ 'main', 'dev' ]
+  #   paths-ignore:
+  #     - 'README.md'
+  #     - 'fastlane/**'
+  #     - 'assets/**'
+  #     - '.github/**/*.md'
+  #     - '.github/FUNDING.yml'
+  #     - '.github/ISSUE_TEMPLATE/**'
+  #     - 'news/**'
+  #     - 'tools/**'
 
 permissions:
   contents: read
