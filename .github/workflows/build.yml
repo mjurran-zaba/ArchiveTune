@@ -16,6 +16,8 @@ on:
       - '.github/**/*.md'
       - '.github/FUNDING.yml'
       - '.github/ISSUE_TEMPLATE/**'
+      - 'news/**'
+      - 'tools/**'
 
 permissions:
   contents: read

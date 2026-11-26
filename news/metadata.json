@@ -7,5 +7,49 @@
     "Important": true,
     "Author": "Mjurran",
     "Date": 1795450000
+  },
+  {
+    "id": "trend_billboard_850df5b86a",
+    "Title": "🎵 Hold Your Turkeys! Macy’s 100th Thanksgiving Day Parade Has Been Postponed: Here’s the New Date",
+    "Description": "After waiting 100 years for the parade’s centennial edition, what’s a few more days?",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/2248725138-e1795643537931.jpg?w=800&crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard Trends",
+    "Date": 1795660088
+  },
+  {
+    "id": "trend_billboard_07d5921a5c",
+    "Title": "🎵 Brandi Carlile Slams ICE for ‘Horrific’ Detainments in Seattle: ‘We Need to Do Something About It’",
+    "Description": "Brandi Carlile is joining the outcry in her home state of Washington following the controversial ICE detainments of two people ...",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/P105Z6UG-e1795631318217.jpg?w=800&crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard Trends",
+    "Date": 1795659968
+  },
+  {
+    "id": "trend_billboard_73c5fd2411",
+    "Title": "🎵 Ariana Grande Says ‘Insane’ Backlash to ‘Petal’ Music Video Felt Like ‘Black Mirror’",
+    "Description": "Ariana Grande never predicted that the response to her “Petal” music video earlier this year would directly mirror what she was...",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/P108X7V9-e1795625684793.jpg?w=800&crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard Trends",
+    "Date": 1795659848
+  },
+  {
+    "id": "trend_billboard_92b1329930",
+    "Title": "🎵 ‘Dancing With the Stars’ Crowns Season 35 Champion",
+    "Description": "Ezra Frech and Daniella Karagach shimmied off with the Len Goodman Mirrorball trophy after winning season 35 of ABC’s Dancing W...",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/P104DLXC-e1795584399622.jpg?w=800&crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard Trends",
+    "Date": 1795659728
   }
 ]

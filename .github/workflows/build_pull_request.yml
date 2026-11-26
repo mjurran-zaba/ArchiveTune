@@ -17,9 +17,17 @@ on:
     branches:
       - "VoidTune"
       - "Voidv3"
+    paths-ignore:
+      - "news/**"
+      - "tools/**"
+      - ".github/workflows/update_music_news.yml"
   pull_request:
     branches:
       - "**"
+    paths-ignore:
+      - "news/**"
+      - "tools/**"
+      - ".github/workflows/update_music_news.yml"
 
 jobs:
   build:
