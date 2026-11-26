@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798289102
+    "Date": 1798304337
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797425102
+    "Date": 1797440337
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,62 +26,62 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795695302
+    "Date": 1795710537
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #ゴールデンラヴィット, Happy Thanksgiving, 🟥🟥ランダムマスターデッキ, #あなたを沼らせたAぇLIVE.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #FoolInLoveEP15, #にじONELIFE, SO MUCH FOR LOVE.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795693502
+    "Date": 1795708737
   },
   {
-    "id": "news_nme_913276cec4",
-    "Title": "🎸 Mad Cool announces name change and huge site enhancements for 2027",
-    "Description": "There will also be more stages than at the 2026 edition, as well as enhanced audiovisual production, new spaces for relaxation and more The post Mad Cool announces name change and huge site enhancements for 2027 appea...",
+    "id": "news_nme_08aac73572",
+    "Title": "🎸 BBC Radio 1’s Big Weekend 2027 set to take place in Brighton",
+    "Description": "“It’s actually stupid that it’s taken so long for us to do a Big Weekend there. Sorry about that” The post BBC Radio 1’s Big Weekend 2027 set to take place in Brighton appeared first on NME .",
     "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/mad-cool@2000x1270.jpg"
+      "https://www.nme.com/wp-content/uploads/2026/11/radio-1-big-weekend@2000x1270.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795696497
+    "Date": 1795711399
   },
   {
-    "id": "news_nme_f200774f41",
-    "Title": "🎸 Westside Cowboy, Gurriers, Lime Garden lead stacked Dot To Dot 2027 line-up",
-    "Description": "Other names announced include Turnspit, KNATS and The Joy Hotel The post Westside Cowboy, Gurriers, Lime Garden lead stacked Dot To Dot 2027 line-up appeared first on NME .",
+    "id": "news_nme_835a9ece16",
+    "Title": "🎸 Substance released at Don Toliver Co-Op live show could be linked to jewellery thefts and robberies, police say",
+    "Description": "Officers said that “similar robberies” have been reported at two previous Don Toliver gigs The post Substance released at Don Toliver Co-Op live show could be linked to jewellery thefts and robberies, police say appea...",
     "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/dot-to-dot@2000x1270.jpg"
+      "https://www.nme.com/wp-content/uploads/2026/11/don-toliver@2000x1270.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795694402
+    "Date": 1795710490
   },
   {
-    "id": "news_billboard_4e1069fa55",
-    "Title": "🏆 ‘What A Talent’: Belinda Carlisle, UB40, Spandau Ballet & More Remember Andy Taylor",
-    "Description": "Tributes are flooding in for Andy Taylor, the brawny founding guitarist for Duran Duran and The Power Station, who has passed away after a years-long battle with prostate cancer.",
+    "id": "news_billboard_3fceead66e",
+    "Title": "🏆 Wu-Tang Clan Halftime Show 2026: Here’s Where to Watch Chicago Bears vs. Detroit Lions Live Online Free",
+    "Description": "Thanksgiving Day Game: Livestream the CHI Bears taking on the DET Lions on Nov. 26. Watch Wu-Tang Clan perform at halftime.",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/1883277-e1795679974133.jpg?w=1024"
+      "https://www.billboard.com/wp-content/uploads/2024/11/directv-stream.png?w=512&#038;h=512&#038;crop=1"
     ],
     "Important": false,
     "Author": "Billboard",
-    "Date": 1795680240
+    "Date": 1795705200
   },
   {
-    "id": "news_billboard_1c0259a79b",
-    "Title": "🏆 Andy Taylor Was Full of Surprises: Six Deep-Dive Career Moments",
-    "Description": "Following his death at the age of 65, Billboard has highlighted some impressive, but overlooked moments from Andy Taylor’s Hall of Fame career.",
+    "id": "news_billboard_f2bb331e11",
+    "Title": "🏆 Inside the Madcap World of Chuyín: ‘Everyone Sings About the Neverending Party. I Sing About the Hangover’",
+    "Description": "Meet Billboard ’s Latin Up-and-Comer Artist of the Month for November.",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/3356710.jpg?w=1024"
+      "https://www.billboard.com/wp-content/uploads/2026/05/CHUYINHORIZONTALPOST-Street-Mob-Records-billboard-1800.jpg?crop=0px%2C42px%2C1800px%2C1116px&#038;resize=237%2C147"
     ],
     "Important": false,
     "Author": "Billboard",
-    "Date": 1795674473
+    "Date": 1795705200
   },
   {
     "id": "news_rolling_e85394c7cc",
@@ -110,7 +110,7 @@
     "Title": "🎼 King Crimson Co-Founder Michael Giles Dies at 84",
     "Description": "The drummer played an essential role in the recording of In the Court of the Crimson King",
     "ImageURL": [
-      "https://media.pitchfork.com/photos/6b0773df7ac68071266746d4/16:9/w_1280,c_limit/GettyImages-74279841.jpg"
+      "https://media.pitchfork.com/photos/6b0843a997681df23b6bd68a/16:9/w_1280,c_limit/michael-giles-king-crimson.jpg"
     ],
     "Important": false,
     "Author": "Pitchfork",
