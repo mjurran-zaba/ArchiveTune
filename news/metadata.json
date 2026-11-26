@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798253628
+    "Date": 1798269256
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797389628
+    "Date": 1797405256
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,18 +26,18 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795658628
+    "Date": 1795674256
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, Corinthians, Packers, Tucker Kraft.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #ConstitutionDay, Jordan Love, #中古iPad買うならソフマップ.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795657628
+    "Date": 1795673256
   },
   {
     "id": "trend_billboard_850df5b86a",
@@ -48,7 +48,7 @@
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795661628
+    "Date": 1795677256
   },
   {
     "id": "trend_billboard_07d5921a5c",
@@ -59,7 +59,7 @@
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795661328
+    "Date": 1795676956
   },
   {
     "id": "trend_billboard_73c5fd2411",
@@ -70,7 +70,7 @@
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795661028
+    "Date": 1795676656
   },
   {
     "id": "trend_billboard_92b1329930",
@@ -81,7 +81,7 @@
     ],
     "Important": false,
     "Author": "Billboard Charts",
-    "Date": 1795660728
+    "Date": 1795676356
   },
   {
     "id": "trend_nme_882d9a2a8e",
@@ -92,7 +92,7 @@
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795660128
+    "Date": 1795675756
   },
   {
     "id": "trend_nme_c674f28ec5",
@@ -103,7 +103,7 @@
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795659828
+    "Date": 1795675456
   },
   {
     "id": "trend_nme_819e379084",
@@ -114,6 +114,6 @@
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795659528
+    "Date": 1795675156
   }
 ]
