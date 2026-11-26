@@ -1,0 +1,17 @@
+# 🚀 VoidTune v0.0.3 — Unified Hybrid Search Released!
+
+Selamat datang di pembaruan besar **VoidTune v0.0.3**!
+
+### ✨ Fitur Baru yang Hadir:
+1. **Option B: Unified Hybrid Search**:
+   - Sekali ketik kata kunci, sistem secara asinkron mencari ke **YouTube Music** dan **Spotify Desktop GraphQL** secara bersamaan.
+2. **Smart 300ms Debounce**:
+   - Menghilangkan lag dan mencegah spam request saat mengetik cepat di kolom pencarian.
+3. **Komponen Expressive Spotify**:
+   - Tampilan `SpotifyTrackRow` dan `SpotifyTrackCard` dengan aksen hijau Spotify (`#1DB954`).
+   - Shelf horizontal khusus *"Spotify Tracks"* dengan tombol *"See all"*.
+4. **Multi-Tier Audio Resolver**:
+   - Lagu Spotify langsung diputar melalui Spotify preview atau resolusi audio YouTube secara seamless.
+
+---
+*Developed with passion by Mjurran | INDONESIA*

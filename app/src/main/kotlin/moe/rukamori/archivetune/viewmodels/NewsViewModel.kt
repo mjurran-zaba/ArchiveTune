@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 /*
  * ArchiveTune (2026)
  * © Rukamori — github.com/rukamori
@@ -114,7 +118,14 @@ class NewsViewModel
             viewModelScope.launch {
                 _loadState.value = NewsUiState.Loading
                 runCatching {
-                    repository.fetchNews().sortedByDescending { it.timestamp }
+                    // ORIGINAL CODE:
+                    // repository.fetchNews().sortedByDescending { it.timestamp }
+                    // [VoidTune Patch: Prioritize Pinned Developer Announcements]
+                    // REASON: Anchor announcements marked 'important' (e.g. Developer updates and devlogs) at the very top of the feed so they never sink below incoming news items.
+                    repository.fetchNews().sortedWith(
+                        compareByDescending<NewsItem> { it.important }
+                            .thenByDescending { it.timestamp }
+                    )
                 }.onSuccess { items ->
                     _rawItems.value = items
                     _loadState.value = if (items.isEmpty()) NewsUiState.Empty else NewsUiState.Success(items)
