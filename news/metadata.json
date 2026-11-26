@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798304337
+    "Date": 1798317992
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797440337
+    "Date": 1797453992
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,18 +26,84 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795710537
+    "Date": 1795724192
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #FoolInLoveEP15, #にじONELIFE, SO MUCH FOR LOVE.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #BJKvHBS, Beşiktaş, İsrail.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795708737
+    "Date": 1795722392
+  },
+  {
+    "id": "news_billboard_397762b370",
+    "Title": "🏆 Feid and Snoop Dogg Drop Thanksgiving Collaboration ‘Gracias x Todo’",
+    "Description": "The two stars previewed the song at the 2026 Latin Grammy Awards.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/Feid-Photographer-Sismatyc.jpg?w=237&#038;h=147&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795724754
+  },
+  {
+    "id": "news_rolling_6cae83a742",
+    "Title": "⚡ Watch Wu-Tang Clan Perform ‘Triumph,’ ‘Bring Da Ruckus’ at NFL Thanksgiving Halftime Show",
+    "Description": "The New York hip-hop group were joined by Red Hot Chili Peppers' Chad Smith on drums",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2307026484-1.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795724512
+  },
+  {
+    "id": "news_pitchfork_a493ad28c5",
+    "Title": "🎼 Watch Wu-Tang Clan Perform the 2026 NFL Thanksgiving Day Halftime Show",
+    "Description": "The New York group took the stage in Detroit for the Bears vs. Lions football game",
+    "ImageURL": [
+      "https://media.pitchfork.com/photos/6b0893231870e4024bc0d352/16:9/w_1280,c_limit/GettyImages-2307026484.jpg"
+    ],
+    "Important": false,
+    "Author": "Pitchfork",
+    "Date": 1795724369
+  },
+  {
+    "id": "news_billboard_00b44c7ba9",
+    "Title": "🏆 Michael Giles, King Crimson Co-Founder and Original Drummer, Dies at 84",
+    "Description": "\"His unique contribution to the evolution of progressive music will never be forgotten,” the band's label wrote.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/08/dolly-parton-1974-billboard-1800.jpg?w=237&#038;h=147&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795719155
+  },
+  {
+    "id": "news_pitchfork_e491ad8369",
+    "Title": "🎼 PUP Compose New Music for Sample Pack Benefitting Kids in Toronto",
+    "Description": "Proceeds from the eight new songs will go to Community Music Schools of Toronto",
+    "ImageURL": [
+      "https://media.pitchfork.com/photos/6b0871b197681df23b6bd690/16:9/w_1280,c_limit/pup-sample-pack.jpg"
+    ],
+    "Important": false,
+    "Author": "Pitchfork",
+    "Date": 1795715827
+  },
+  {
+    "id": "news_rolling_0fe05ef5a4",
+    "Title": "⚡ Snoop Dogg Teams Up With Feid for Thanksgiving Single ‘Gracias x Todo’",
+    "Description": "The musicians recently previewed the track during a performance at the Latin Grammy Awards",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/Ferxxo-X-Snoop-Dogg-45-1.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795714802
   },
   {
     "id": "news_nme_08aac73572",
@@ -60,71 +126,5 @@
     "Important": false,
     "Author": "NME Music",
     "Date": 1795710490
-  },
-  {
-    "id": "news_billboard_3fceead66e",
-    "Title": "🏆 Wu-Tang Clan Halftime Show 2026: Here’s Where to Watch Chicago Bears vs. Detroit Lions Live Online Free",
-    "Description": "Thanksgiving Day Game: Livestream the CHI Bears taking on the DET Lions on Nov. 26. Watch Wu-Tang Clan perform at halftime.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2024/11/directv-stream.png?w=512&#038;h=512&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795705200
-  },
-  {
-    "id": "news_billboard_f2bb331e11",
-    "Title": "🏆 Inside the Madcap World of Chuyín: ‘Everyone Sings About the Neverending Party. I Sing About the Hangover’",
-    "Description": "Meet Billboard ’s Latin Up-and-Comer Artist of the Month for November.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/05/CHUYINHORIZONTALPOST-Street-Mob-Records-billboard-1800.jpg?crop=0px%2C42px%2C1800px%2C1116px&#038;resize=237%2C147"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795705200
-  },
-  {
-    "id": "news_rolling_e85394c7cc",
-    "Title": "⚡ U2 Perform Dolly Parton’s Final Recording During NFL Halftime Show",
-    "Description": "The band delivered the moving Parton and Bono duet, \"Torn,\" during Wednesday night's performance",
-    "ImageURL": [
-      "https://www.rollingstone.com/wp-content/uploads/2026/11/u2-halftime-show-dolly-parton-tribute.jpg?w=1600&#038;h=900&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Rolling Stone",
-    "Date": 1795670121
-  },
-  {
-    "id": "news_rolling_cc1e67b5f0",
-    "Title": "⚡ Ariana Grande Says Reaction to ‘Petal’ Video Felt Like ‘Black Mirror’",
-    "Description": "\"I wouldn't change a thing,\" Grande said of the video. \"I would put it out again today, exactly as is\"",
-    "ImageURL": [
-      "https://www.rollingstone.com/wp-content/uploads/2026/11/Ariana-Grande-petal-video.jpg?w=1600&#038;h=900&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Rolling Stone",
-    "Date": 1795666381
-  },
-  {
-    "id": "news_pitchfork_129f0faae6",
-    "Title": "🎼 King Crimson Co-Founder Michael Giles Dies at 84",
-    "Description": "The drummer played an essential role in the recording of In the Court of the Crimson King",
-    "ImageURL": [
-      "https://media.pitchfork.com/photos/6b0843a997681df23b6bd68a/16:9/w_1280,c_limit/michael-giles-king-crimson.jpg"
-    ],
-    "Important": false,
-    "Author": "Pitchfork",
-    "Date": 1795650728
-  },
-  {
-    "id": "news_pitchfork_daf44bae6c",
-    "Title": "🎼 Duran Duran’s Andy Taylor Dies at 65",
-    "Description": "The guitarist was diagnosed with prostate cancer in 2018",
-    "ImageURL": [
-      "https://media.pitchfork.com/photos/6b075e3a6adc3ee0200d3c71/16:9/w_1280,c_limit/GettyImages-621400816.jpg"
-    ],
-    "Important": false,
-    "Author": "Pitchfork",
-    "Date": 1795645546
   }
 ]
