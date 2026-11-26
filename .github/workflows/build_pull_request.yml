@@ -499,3 +499,17 @@ jobs:
               except Exception as e:
                   print('sendMessage failed:', e)
           "
+
+      # [VoidTune Patch: Auto-merge Voidv3 to main on successful build]
+      # REASON: User requested: "kalau build berhasil maka auto merge main, publish release".
+      # When release build succeeds on Voidv3, auto-merge into main to automatically trigger release.yml and publish v0.0.3.
+      - name: Auto-merge Voidv3 to main and publish release
+        if: github.ref == 'refs/heads/Voidv3' && success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.RELEASE_PAT }}@github.com/${{ github.repository }}.git
+          git fetch origin main
+          git checkout main
+          git merge --ff-only Voidv3 || git merge -X theirs --no-edit Voidv3
+          git push origin main

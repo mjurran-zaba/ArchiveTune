@@ -332,7 +332,7 @@ fun ProfileScreen(
                     },
                     title = {
                         Text(
-                            text = "Foto Profil",
+                            text = "Profile Photo",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                         )
@@ -342,7 +342,7 @@ fun ProfileScreen(
                             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
-                            // Opsi 1: Ganti Foto Baru
+                            // Option 1: Change Photo
                             Button(
                                 onClick = {
                                     showAvatarDialog = false
@@ -365,12 +365,12 @@ fun ProfileScreen(
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = "Ganti Foto Baru",
+                                    text = "Change Photo",
                                     fontWeight = FontWeight.SemiBold,
                                 )
                             }
 
-                            // Opsi 2: Hapus Foto Profil (Reset ke default VoidTune)
+                            // Option 2: Remove Photo (Reset to default VoidTune avatar)
                             OutlinedButton(
                                 onClick = {
                                     showAvatarDialog = false
@@ -404,7 +404,7 @@ fun ProfileScreen(
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = "Hapus Foto Profil",
+                                    text = "Remove Photo",
                                     fontWeight = FontWeight.SemiBold,
                                 )
                             }
@@ -420,7 +420,7 @@ fun ProfileScreen(
                                 ),
                             shape = RoundedCornerShape(10.dp),
                         ) {
-                            Text(text = "Batal")
+                            Text(text = "Cancel")
                         }
                     },
                     shape = RoundedCornerShape(20.dp),

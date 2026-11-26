@@ -4,7 +4,7 @@
 <img src="app/src/main/res/drawable/ic_voidtune_seal.png" width="110" height="110" alt="VoidTune Emblem" style="border-radius: 22px;" /><br/><br/>
 <b>VoidTune</b><br/>
 <sub><i>Mjurran Arc</i></sub><br/><br/>
-<a href="https://github.com/mjurran-zaba/VoidTune/releases"><img src="https://img.shields.io/badge/Release-v0.0.2-purple?style=flat-square&logo=android" alt="Download Release" /></a>
+<a href="https://github.com/mjurran-zaba/VoidTune/releases"><img src="https://img.shields.io/badge/Release-v0.0.3-0284c7?style=flat-square&logo=android" alt="Download Release" /></a>
 </td>
 <td valign="top">
 

@@ -1,3 +1,7 @@
+// Always meticulous in everyhthing to minimize the case
+// Be honest in everything
+// Be meticulous in everything
+// Dont replace or delete code, coment and explain what and why, the write your change below
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -67,10 +71,12 @@ android {
     applicationId = "moe.rukamori.archivetune"
         minSdk = 26
         targetSdk = 37
-        versionCode = 145
+        // versionCode = 145
+        versionCode = 146
         // DO NOT DELETE BUT COMMENT: Original ArchiveTune version (16.1.0)
         // versionName = "16.1.0"
-        versionName = "0.0.2"
+        // versionName = "0.0.2"
+        versionName = "0.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
