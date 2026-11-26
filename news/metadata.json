@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798269256
+    "Date": 1798289102
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,105 +15,116 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797405256
+    "Date": 1797425102
   },
   {
     "id": "trend_tiktok_reels_radar",
     "Title": "🔥 TikTok & Reels Viral Radar: Top Trending Sounds",
-    "Description": "Analisis mendalam lagu-lagu yang mendominasi FYP TikTok dan Instagram Reels pekan ini, serta lonjakan jutaan streaming harian di platform global.",
+    "Description": "Analisis mendalam lagu-lagu yang mendominasi FYP TikTok dan Instagram Reels pekan ini, serta lonjakan streaming harian di platform global.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&crop=1"
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795674256
+    "Date": 1795695302
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #ConstitutionDay, Jordan Love, #中古iPad買うならソフマップ.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #ゴールデンラヴィット, Happy Thanksgiving, 🟥🟥ランダムマスターデッキ, #あなたを沼らせたAぇLIVE.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795673256
+    "Date": 1795693502
   },
   {
-    "id": "trend_billboard_850df5b86a",
-    "Title": "🏆 Hold Your Turkeys! Macy’s 100th Thanksgiving Day Parade Has Been Postponed: Here’s the New Date",
-    "Description": "After waiting 100 years for the parade’s centennial edition, what’s a few more days? Macy’s 100th Thanksgiving Day parade will be postponed to Saturday, Nov. 28, because of severe weather.",
+    "id": "news_nme_913276cec4",
+    "Title": "🎸 Mad Cool announces name change and huge site enhancements for 2027",
+    "Description": "There will also be more stages than at the 2026 edition, as well as enhanced audiovisual production, new spaces for relaxation and more The post Mad Cool announces name change and huge site enhancements for 2027 appea...",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/2248725138-e1795643537931.jpg?w=800&crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard Charts",
-    "Date": 1795677256
-  },
-  {
-    "id": "trend_billboard_07d5921a5c",
-    "Title": "🏆 Brandi Carlile Slams ICE for ‘Horrific’ Detainments in Seattle: ‘We Need to Do Something About It’",
-    "Description": "Brandi Carlile is joining the outcry in her home state of Washington following the controversial ICE detainments of two people at Seattle-Tacoma International Airport.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/P105Z6UG-e1795631318217.jpg?w=800&crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard Charts",
-    "Date": 1795676956
-  },
-  {
-    "id": "trend_billboard_73c5fd2411",
-    "Title": "🏆 Ariana Grande Says ‘Insane’ Backlash to ‘Petal’ Music Video Felt Like ‘Black Mirror’",
-    "Description": "Ariana Grande never predicted that the response to her “Petal” music video earlier this year would directly mirror what she was trying to speak out against in the song in the first place.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/P108X7V9-e1795625684793.jpg?w=800&crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard Charts",
-    "Date": 1795676656
-  },
-  {
-    "id": "trend_billboard_92b1329930",
-    "Title": "🏆 ‘Dancing With the Stars’ Crowns Season 35 Champion",
-    "Description": "Ezra Frech and Daniella Karagach shimmied off with the Len Goodman Mirrorball trophy after winning season 35 of ABC’s Dancing With The Stars.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/P104DLXC-e1795584399622.jpg?w=800&crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard Charts",
-    "Date": 1795676356
-  },
-  {
-    "id": "trend_nme_882d9a2a8e",
-    "Title": "🎸 Duran Duran pay tribute after death of guitarist Andy Taylor, age 65: “His playing drove the songs that took us around the world”",
-    "Description": "Guitarist Andy Taylor of Duran Duran, London, 1981. (Photo by Michael Putland/Getty Images) Duran Duran have led tributes after the death of guitarist Andy Taylor, who has died aged 65.",
-    "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/duran_duran_andy_taylor.jpg"
+      "https://www.nme.com/wp-content/uploads/2026/11/mad-cool@2000x1270.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795675756
+    "Date": 1795696497
   },
   {
-    "id": "trend_nme_c674f28ec5",
-    "Title": "🎸 Jungle announce run of huge summer 2027 UK shows",
-    "Description": "Jungle have announced a run of massive UK shows for next summer, including a headline slot at Latitude. The dates come in support of the BRIT-award winning trio dropping their uplifting fifth album ‘Sunshine’ earlier ...",
+    "id": "news_nme_f200774f41",
+    "Title": "🎸 Westside Cowboy, Gurriers, Lime Garden lead stacked Dot To Dot 2027 line-up",
+    "Description": "Other names announced include Turnspit, KNATS and The Joy Hotel The post Westside Cowboy, Gurriers, Lime Garden lead stacked Dot To Dot 2027 line-up appeared first on NME .",
     "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/jungle@2000x1270.jpg"
+      "https://www.nme.com/wp-content/uploads/2026/11/dot-to-dot@2000x1270.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795675456
+    "Date": 1795694402
   },
   {
-    "id": "trend_nme_819e379084",
-    "Title": "🎸 Getdown Services announce ‘The Massive Champion Ship’ curated UK Summer 2027 shows",
-    "Description": "Getdown Services perform live in 2026. CREDIT: James Klug/Getty Images Getdown Services have announced a series of ‘The Massive Champion Ship’ curated live shows for the UK next summer, and dropped a new music video f...",
+    "id": "news_billboard_4e1069fa55",
+    "Title": "🏆 ‘What A Talent’: Belinda Carlisle, UB40, Spandau Ballet & More Remember Andy Taylor",
+    "Description": "Tributes are flooding in for Andy Taylor, the brawny founding guitarist for Duran Duran and The Power Station, who has passed away after a years-long battle with prostate cancer.",
     "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/getdown-services@2000x1270.jpg"
+      "https://www.billboard.com/wp-content/uploads/2026/11/1883277-e1795679974133.jpg?w=1024"
     ],
     "Important": false,
-    "Author": "NME Music",
-    "Date": 1795675156
+    "Author": "Billboard",
+    "Date": 1795680240
+  },
+  {
+    "id": "news_billboard_1c0259a79b",
+    "Title": "🏆 Andy Taylor Was Full of Surprises: Six Deep-Dive Career Moments",
+    "Description": "Following his death at the age of 65, Billboard has highlighted some impressive, but overlooked moments from Andy Taylor’s Hall of Fame career.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/3356710.jpg?w=1024"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795674473
+  },
+  {
+    "id": "news_rolling_e85394c7cc",
+    "Title": "⚡ U2 Perform Dolly Parton’s Final Recording During NFL Halftime Show",
+    "Description": "The band delivered the moving Parton and Bono duet, \"Torn,\" during Wednesday night's performance",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/u2-halftime-show-dolly-parton-tribute.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795670121
+  },
+  {
+    "id": "news_rolling_cc1e67b5f0",
+    "Title": "⚡ Ariana Grande Says Reaction to ‘Petal’ Video Felt Like ‘Black Mirror’",
+    "Description": "\"I wouldn't change a thing,\" Grande said of the video. \"I would put it out again today, exactly as is\"",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/Ariana-Grande-petal-video.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795666381
+  },
+  {
+    "id": "news_pitchfork_129f0faae6",
+    "Title": "🎼 King Crimson Co-Founder Michael Giles Dies at 84",
+    "Description": "The drummer played an essential role in the recording of In the Court of the Crimson King",
+    "ImageURL": [
+      "https://media.pitchfork.com/photos/6b0773df7ac68071266746d4/16:9/w_1280,c_limit/GettyImages-74279841.jpg"
+    ],
+    "Important": false,
+    "Author": "Pitchfork",
+    "Date": 1795650728
+  },
+  {
+    "id": "news_pitchfork_daf44bae6c",
+    "Title": "🎼 Duran Duran’s Andy Taylor Dies at 65",
+    "Description": "The guitarist was diagnosed with prostate cancer in 2018",
+    "ImageURL": [
+      "https://media.pitchfork.com/photos/6b075e3a6adc3ee0200d3c71/16:9/w_1280,c_limit/GettyImages-621400816.jpg"
+    ],
+    "Important": false,
+    "Author": "Pitchfork",
+    "Date": 1795645546
   }
 ]

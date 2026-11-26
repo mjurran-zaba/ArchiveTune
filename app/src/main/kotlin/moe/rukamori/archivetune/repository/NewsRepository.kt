@@ -44,8 +44,22 @@ class NewsRepository
         @Volatile private var metadataCache: List<NewsItem>? = null
 
         suspend fun fetchNews(): List<NewsItem> {
+            // [VoidTune Patch: Cache-Busting Query Parameter for Instant Fresh News]
+            // REASON: GitHub Raw (raw.githubusercontent.com) utilizes Fastly CDN which caches responses with max-age=300 (5 minutes).
+            // Appending `?ts=${System.currentTimeMillis()}` guarantees that whenever the user refreshes, Fastly edge cache is bypassed,
+            // immediately loading newly synced music articles and devlogs from GitHub.
+            // ORIGINAL CODE:
+            // val response =
+            //     client.get(METADATA_URL) {
+            //         headers {
+            //             append(HttpHeaders.CacheControl, "no-cache, no-store, must-revalidate")
+            //             append(HttpHeaders.Pragma, "no-cache")
+            //             append(HttpHeaders.Expires, "0")
+            //         }
+            //     }
+            val cacheBustUrl = "$METADATA_URL?ts=${System.currentTimeMillis()}"
             val response =
-                client.get(METADATA_URL) {
+                client.get(cacheBustUrl) {
                     headers {
                         append(HttpHeaders.CacheControl, "no-cache, no-store, must-revalidate")
                         append(HttpHeaders.Pragma, "no-cache")
@@ -59,8 +73,20 @@ class NewsRepository
         }
 
         suspend fun fetchNewsContent(id: String): String {
+            // [VoidTune Patch: Cache-Busting Query Parameter for Full News Articles]
+            // REASON: Ensure full markdown article bodies bypass Fastly edge caching when read.
+            // ORIGINAL CODE:
+            // val response =
+            //     client.get("$CONTENT_BASE_URL$id") {
+            //         headers {
+            //             append(HttpHeaders.CacheControl, "no-cache, no-store, must-revalidate")
+            //             append(HttpHeaders.Pragma, "no-cache")
+            //             append(HttpHeaders.Expires, "0")
+            //         }
+            //     }
+            val cacheBustUrl = "$CONTENT_BASE_URL$id?ts=${System.currentTimeMillis()}"
             val response =
-                client.get("$CONTENT_BASE_URL$id") {
+                client.get(cacheBustUrl) {
                     headers {
                         append(HttpHeaders.CacheControl, "no-cache, no-store, must-revalidate")
                         append(HttpHeaders.Pragma, "no-cache")
@@ -76,9 +102,17 @@ class NewsRepository
             // VoidTune: Point news to Mjurran's GitHub repository for dynamic devlogs & announcements
             // const val METADATA_URL = "https://raw.githubusercontent.com/koiverse/ArchiveTuneNewsRepository/main/metadata.json"
             // const val CONTENT_BASE_URL = "https://raw.githubusercontent.com/koiverse/ArchiveTuneNewsRepository/main/content/"
+            // [VoidTune Patch: Target canonical VoidTune repository name]
+            // REASON: Upstream repository was renamed from ArchiveTune to VoidTune.
+            // Point directly to mjurran-zaba/VoidTune/VoidTune branch.
+            // ORIGINAL CODE:
+            // const val METADATA_URL =
+            //     "https://raw.githubusercontent.com/mjurran-zaba/ArchiveTune/VoidTune/news/metadata.json"
+            // const val CONTENT_BASE_URL =
+            //     "https://raw.githubusercontent.com/mjurran-zaba/ArchiveTune/VoidTune/news/content/"
             const val METADATA_URL =
-                "https://raw.githubusercontent.com/mjurran-zaba/ArchiveTune/VoidTune/news/metadata.json"
+                "https://raw.githubusercontent.com/mjurran-zaba/VoidTune/VoidTune/news/metadata.json"
             const val CONTENT_BASE_URL =
-                "https://raw.githubusercontent.com/mjurran-zaba/ArchiveTune/VoidTune/news/content/"
+                "https://raw.githubusercontent.com/mjurran-zaba/VoidTune/VoidTune/news/content/"
         }
     }
