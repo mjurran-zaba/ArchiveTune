@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798317992
+    "Date": 1798333091
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797453992
+    "Date": 1797469091
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,29 +26,40 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795724192
+    "Date": 1795739291
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #BJKvHBS, Beşiktaş, İsrail.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #DebateA4RTVE, Abascal, Colau.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795722392
+    "Date": 1795737491
   },
   {
-    "id": "news_billboard_397762b370",
-    "Title": "🏆 Feid and Snoop Dogg Drop Thanksgiving Collaboration ‘Gracias x Todo’",
-    "Description": "The two stars previewed the song at the 2026 Latin Grammy Awards.",
+    "id": "news_billboard_45ca770f3d",
+    "Title": "🏆 Anuel AA’s ‘RHLM2’ Album Is Finally Here: ‘I Made It With My Heart and Soul’",
+    "Description": "The long-awaited album is a sequel to his 2018 debut, Real Hasta La Muerte, and his first in four years.",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/Feid-Photographer-Sismatyc.jpg?w=237&#038;h=147&#038;crop=1"
+      "https://www.billboard.com/wp-content/uploads/2026/11/P108R0S5-e1795470518512.jpg?w=237&#038;h=147&#038;crop=1"
     ],
     "Important": false,
     "Author": "Billboard",
-    "Date": 1795724754
+    "Date": 1795737600
+  },
+  {
+    "id": "news_billboard_bf5b59e0a2",
+    "Title": "🏆 Lana Del Rey Says New Albums Are ‘Getting Close’ to Completion: ‘I’m Happy With Them’",
+    "Description": "The singer-songwriter updated fans on Stove and its companion album, Spyda , while seemingly teasing cryptic lyrics.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/02/P101SEZ1-e1770489259722.jpg?w=237&#038;h=147&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795731275
   },
   {
     "id": "news_rolling_6cae83a742",
@@ -71,17 +82,6 @@
     "Important": false,
     "Author": "Pitchfork",
     "Date": 1795724369
-  },
-  {
-    "id": "news_billboard_00b44c7ba9",
-    "Title": "🏆 Michael Giles, King Crimson Co-Founder and Original Drummer, Dies at 84",
-    "Description": "\"His unique contribution to the evolution of progressive music will never be forgotten,” the band's label wrote.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/08/dolly-parton-1974-billboard-1800.jpg?w=237&#038;h=147&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795719155
   },
   {
     "id": "news_pitchfork_e491ad8369",
