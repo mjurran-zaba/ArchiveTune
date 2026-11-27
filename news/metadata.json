@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798361735
+    "Date": 1798376372
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797497735
+    "Date": 1797512372
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,40 +26,62 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795767935
+    "Date": 1795782572
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #金曜日のごほうびにザ・クレープ, #MainKuisShopee1212, #ローソンで冬のご褒美ゴディバ, #MOSCHINOxTleFirstone.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #Mステ, マリニン, #ハマダ歌謡祭, Dear WOMAN.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795766135
+    "Date": 1795780772
   },
   {
-    "id": "news_billboard_21030fccbd",
-    "Title": "🏆 John Farnham’s Family Gives Rare Update on Legendary Singer’s Health",
-    "Description": "Farnham continues to stay out of the spotlight after undergoing marathon surgery to remove a cancerous tumor from his throat in 2022.",
+    "id": "news_nme_b1abcfdacb",
+    "Title": "🎸 Echo & The Bunnymen and Happy Mondays announce joint 2027 UK ‘greatest hits’ tour",
+    "Description": "Dates include a stop at London’s O2 Brixton Academy and two shows in Edinburgh The post Echo & The Bunnymen and Happy Mondays announce joint 2027 UK ‘greatest hits’ tour appeared first on NME .",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/05/john-farnham-2018-1800.jpg?w=1024"
+      "https://www.nme.com/wp-content/uploads/2026/11/echo-bunnymen-happy-mondays@2000x1270.jpg"
+    ],
+    "Important": false,
+    "Author": "NME Music",
+    "Date": 1795782621
+  },
+  {
+    "id": "news_billboard_c36c49a983",
+    "Title": "🏆 Watch ‘Sesame Street’ Get Festive With an Adorable Spoof of Mariah Carey’s ‘All I Want for Christmas Is You’",
+    "Description": "All the fuzzy gang wants this holiday season is ... well ... U!",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/Mariah-Carey-2026-credit-Dennis-Leupold-billboard-1800.jpg?w=237&#038;h=147&#038;crop=1"
     ],
     "Important": false,
     "Author": "Billboard",
-    "Date": 1795769002
+    "Date": 1795782600
   },
   {
-    "id": "news_billboard_e11a201f42",
-    "Title": "🏆 ‘True Family’: Nile Rodgers Remembers Duran Duran’s Andy Taylor",
-    "Description": "\"RIP my dear friend. We were always happy when we were together. I love you,\" Rodgers writes.",
+    "id": "news_nme_1d7a744064",
+    "Title": "🎸 Lana Del Rey shares Thanksgiving update on incoming new albums: “It feels meant to be – it makes me wonder where I would even go after this”",
+    "Description": "She also said she was \"close to wrapping up, although they did take so many unexpected turns over the years” The post Lana Del Rey shares Thanksgiving update on incoming new albums: “It feels meant to be – it makes me...",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2023/01/andy-taylor-1548-e1795766912297.jpg?w=1024"
+      "https://www.nme.com/wp-content/uploads/2024/08/Reading24_NME_AFORD_LANADELREY-629943.jpg"
+    ],
+    "Important": false,
+    "Author": "NME Music",
+    "Date": 1795780714
+  },
+  {
+    "id": "news_billboard_513a51a972",
+    "Title": "🏆 Best Black Friday Ticket Deals 2026: Here’s How to Shop Affordable Concert Tickets Online",
+    "Description": "From Vivid Seats to SeatGeek, ShopBillboard has the best promo and coupon codes on concert tickets.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2025/03/vivid-seats-logo.png?w=600&amp;h=600&amp;crop=1"
     ],
     "Important": false,
     "Author": "Billboard",
-    "Date": 1795767070
+    "Date": 1795777200
   },
   {
     "id": "news_rolling_644af09108",
@@ -104,27 +126,5 @@
     "Important": false,
     "Author": "Pitchfork",
     "Date": 1795715827
-  },
-  {
-    "id": "news_nme_08aac73572",
-    "Title": "🎸 BBC Radio 1’s Big Weekend 2027 set to take place in Brighton",
-    "Description": "“It’s actually stupid that it’s taken so long for us to do a Big Weekend there. Sorry about that” The post BBC Radio 1’s Big Weekend 2027 set to take place in Brighton appeared first on NME .",
-    "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/radio-1-big-weekend@2000x1270.jpg"
-    ],
-    "Important": false,
-    "Author": "NME Music",
-    "Date": 1795711399
-  },
-  {
-    "id": "news_nme_835a9ece16",
-    "Title": "🎸 Substance released at Don Toliver Co-Op live show could be linked to jewellery thefts and robberies, police say",
-    "Description": "Officers said that “similar robberies” have been reported at two previous Don Toliver gigs The post Substance released at Don Toliver Co-Op live show could be linked to jewellery thefts and robberies, police say appea...",
-    "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/don-toliver@2000x1270.jpg"
-    ],
-    "Important": false,
-    "Author": "NME Music",
-    "Date": 1795710490
   }
 ]
