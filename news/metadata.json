@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798376372
+    "Date": 1798390652
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797512372
+    "Date": 1797526652
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,105 +26,105 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795782572
+    "Date": 1795796852
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #Mステ, マリニン, #ハマダ歌謡祭, Dear WOMAN.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #SixTONES_Closer, Black Friday, #東方キャラ性格診断, #正門良規誕生祭2026.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795780772
+    "Date": 1795795052
   },
   {
-    "id": "news_nme_b1abcfdacb",
-    "Title": "🎸 Echo & The Bunnymen and Happy Mondays announce joint 2027 UK ‘greatest hits’ tour",
-    "Description": "Dates include a stop at London’s O2 Brixton Academy and two shows in Edinburgh The post Echo & The Bunnymen and Happy Mondays announce joint 2027 UK ‘greatest hits’ tour appeared first on NME .",
+    "id": "news_pitchfork_907236ea12",
+    "Title": "🎼 Olivia Rodrigo Delivers Another Christmas Song",
+    "Description": "Listen to “Miss This Christmas”",
     "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/echo-bunnymen-happy-mondays@2000x1270.jpg"
-    ],
-    "Important": false,
-    "Author": "NME Music",
-    "Date": 1795782621
-  },
-  {
-    "id": "news_billboard_c36c49a983",
-    "Title": "🏆 Watch ‘Sesame Street’ Get Festive With an Adorable Spoof of Mariah Carey’s ‘All I Want for Christmas Is You’",
-    "Description": "All the fuzzy gang wants this holiday season is ... well ... U!",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/Mariah-Carey-2026-credit-Dennis-Leupold-billboard-1800.jpg?w=237&#038;h=147&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795782600
-  },
-  {
-    "id": "news_nme_1d7a744064",
-    "Title": "🎸 Lana Del Rey shares Thanksgiving update on incoming new albums: “It feels meant to be – it makes me wonder where I would even go after this”",
-    "Description": "She also said she was \"close to wrapping up, although they did take so many unexpected turns over the years” The post Lana Del Rey shares Thanksgiving update on incoming new albums: “It feels meant to be – it makes me...",
-    "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2024/08/Reading24_NME_AFORD_LANADELREY-629943.jpg"
-    ],
-    "Important": false,
-    "Author": "NME Music",
-    "Date": 1795780714
-  },
-  {
-    "id": "news_billboard_513a51a972",
-    "Title": "🏆 Best Black Friday Ticket Deals 2026: Here’s How to Shop Affordable Concert Tickets Online",
-    "Description": "From Vivid Seats to SeatGeek, ShopBillboard has the best promo and coupon codes on concert tickets.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2025/03/vivid-seats-logo.png?w=600&amp;h=600&amp;crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795777200
-  },
-  {
-    "id": "news_rolling_644af09108",
-    "Title": "⚡ Olivia Rodrigo Drops Official Version of Melancholy ‘Miss This Christmas’ on Amazon Music",
-    "Description": "Earlier this week, the singer debuted the piano ballad at a Nashville concert",
-    "ImageURL": [
-      "https://www.rollingstone.com/wp-content/uploads/2026/11/olivia-rodrigo-holiday-song.jpg?crop=0px%2C39px%2C1800px%2C1014px&#038;resize=1600%2C900"
-    ],
-    "Important": false,
-    "Author": "Rolling Stone",
-    "Date": 1795755720
-  },
-  {
-    "id": "news_rolling_6cae83a742",
-    "Title": "⚡ Watch Wu-Tang Clan Perform ‘Triumph,’ ‘Bring Da Ruckus’ at NFL Thanksgiving Halftime Show",
-    "Description": "The New York hip-hop group were joined by Red Hot Chili Peppers' Chad Smith on drums",
-    "ImageURL": [
-      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2307026484-1.jpg?w=1600&#038;h=900&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Rolling Stone",
-    "Date": 1795724512
-  },
-  {
-    "id": "news_pitchfork_a493ad28c5",
-    "Title": "🎼 Watch Wu-Tang Clan Perform the 2026 NFL Thanksgiving Day Halftime Show",
-    "Description": "The New York group took the stage in Detroit for the Bears vs. Lions football game",
-    "ImageURL": [
-      "https://media.pitchfork.com/photos/6b0893231870e4024bc0d352/16:9/w_1280,c_limit/GettyImages-2307026484.jpg"
+      "https://media.pitchfork.com/photos/6b09b2b2114076789c0bb78f/16:9/w_1280,c_limit/Olivia%20Rodrigo%20-%20miss%20this%20christmas%20-%20AMO%20Art.png"
     ],
     "Important": false,
     "Author": "Pitchfork",
-    "Date": 1795724369
+    "Date": 1795798044
   },
   {
-    "id": "news_pitchfork_e491ad8369",
-    "Title": "🎼 PUP Compose New Music for Sample Pack Benefitting Kids in Toronto",
-    "Description": "Proceeds from the eight new songs will go to Community Music Schools of Toronto",
+    "id": "news_rolling_b8d8fb8f40",
+    "Title": "⚡ The Killers Dave Keuning Reveals He Suffered ‘Major Stroke’: ‘I Am Alive and Well’",
+    "Description": "\"The doctors said I had a 40% chance or survival and I would have disabilities after, but by some miracle I am fine\"",
     "ImageURL": [
-      "https://media.pitchfork.com/photos/6b0871b197681df23b6bd690/16:9/w_1280,c_limit/pup-sample-pack.jpg"
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2245887357-1.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795796382
+  },
+  {
+    "id": "news_nme_6e4e57f7da",
+    "Title": "🎸 Heartworms explores “time, escape, limitlessness, self-reflection and rebirth” on “spiritual” new single ‘The Window’",
+    "Description": "The musician recently told NME that she'd \"finished recording\" her second album The post Heartworms explores “time, escape, limitlessness, self-reflection and rebirth” on “spiritual” new single ‘The Window’ appeared f...",
+    "ImageURL": [
+      "https://www.nme.com/wp-content/uploads/2026/11/HeartwormsnewsingleTheWindow-news-story.jpg"
+    ],
+    "Important": false,
+    "Author": "NME Music",
+    "Date": 1795796312
+  },
+  {
+    "id": "news_billboard_0f6d008cb5",
+    "Title": "🏆 Audible’s Black Friday Deal Gets You a Subscription to Bestselling Books for Only $.99 Per Month",
+    "Description": "Until Dec. 28, Audible's biggest sale of the season gives eligible customers 90% off a Standard membership, bringing the monthly price down to just $0.99.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/Shop-Audible-Black-Friday-Deal-Online.jpg?w=942&#038;h=623&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795795629
+  },
+  {
+    "id": "news_pitchfork_a797d096fb",
+    "Title": "🎼 The Killers’ Dave Keuning Survived a “Major Stroke” This Month",
+    "Description": "The group’s co-founding guitarist says doctors gave him a “40% chance of survival”",
+    "ImageURL": [
+      "https://media.pitchfork.com/photos/6b09a81b08af8f45c0997288/16:9/w_1280,c_limit/killers-dave-keunig-stroke.jpg"
     ],
     "Important": false,
     "Author": "Pitchfork",
-    "Date": 1795715827
+    "Date": 1795795112
+  },
+  {
+    "id": "news_nme_efce6e0508",
+    "Title": "🎸 The Killers’ Dave Keuning speaks out after surviving a life-threatening stroke",
+    "Description": "\"By some miracle I am fine\" The post The Killers’ Dave Keuning speaks out after surviving a life-threatening stroke appeared first on NME .",
+    "ImageURL": [
+      "https://www.nme.com/wp-content/uploads/2022/10/Dave-Keuning-Chris-Phelps.jpg"
+    ],
+    "Important": false,
+    "Author": "NME Music",
+    "Date": 1795793573
+  },
+  {
+    "id": "news_rolling_03eee781ae",
+    "Title": "⚡ Former Buzzcocks Drummer Phil Barker Dead at 65",
+    "Description": "The musician performed in the British punk rock band for 14 years and recorded on five of their albums",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-531554263-1.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795793413
+  },
+  {
+    "id": "news_billboard_a0a142a143",
+    "Title": "🏆 From Amazon to Zara, Here Are All the Best Black Friday Deals, Promo Codes & Coupons",
+    "Description": "Black Friday is here! Shop Billboard put together a list of deals on audio essentials, fashion, tech and other product categories from retailers across the web.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/09/Abercrombie-Fitch-Logo-BB-Embed.jpg?w=942&amp;h=623&amp;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795790720
   }
 ]
