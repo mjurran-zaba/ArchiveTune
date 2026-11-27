@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798390652
+    "Date": 1798404435
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797526652
+    "Date": 1797540435
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,18 +26,62 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795796852
+    "Date": 1795810635
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #SixTONES_Closer, Black Friday, #東方キャラ性格診断, #正門良規誕生祭2026.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Black Friday, Igor Jesus, #DasBiblischeWort, #الاتحاد_نيوم.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795795052
+    "Date": 1795808835
+  },
+  {
+    "id": "news_billboard_b45c6a9a8e",
+    "Title": "🏆 Best Black Friday Audio Deals 2026: Save Up to 60% Off Bose, Apple & Beats, Sonos, Sony & More Online",
+    "Description": "Shop the best Black Friday headphones, earbuds, soundbars, turntables and other audio deals — save up to 60% off the top brands.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/Apple-AirPods-Pro-3-BB-Embed.jpg?w=942&amp;h=623&amp;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795810160
+  },
+  {
+    "id": "news_billboard_360dec77af",
+    "Title": "🏆 Goo Goo Dolls Fans Slam NBC Over Thanksgiving Halftime Show Snub: ‘Badly Handled’",
+    "Description": "The network aired just 90 seconds of the band's performance in favor of Aaron Rodgers coverage.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/How-to-Watch-Goo-Goo-Dolls-Halftime-Show-at-the-Chiefs-Thanksgiving-Game-for-Free.png?w=237&#038;h=147&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795809549
+  },
+  {
+    "id": "news_rolling_84650e124d",
+    "Title": "⚡ Watch Goo Goo Dolls’ Complete NFL Halftime Show",
+    "Description": "The band performed \"Iris,\" \"Broadway,\" and \"Slide\" during the Kansas City Chiefs vs. Buffalo Bills game as the broadcast was cut by NBC",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2307062312-1.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795809516
+  },
+  {
+    "id": "news_nme_4ad893e0e5",
+    "Title": "🎸 Mastodon follow Grammy nomination and ‘GTA 6’ appearance with first UK and European tour in eight years",
+    "Description": "Tickets are on sale now The post Mastodon follow Grammy nomination and ‘GTA 6’ appearance with first UK and European tour in eight years appeared first on NME .",
+    "ImageURL": [
+      "https://www.nme.com/wp-content/uploads/2026/07/Mastodon-live-2026.jpg"
+    ],
+    "Important": false,
+    "Author": "NME Music",
+    "Date": 1795800247
   },
   {
     "id": "news_pitchfork_907236ea12",
@@ -73,17 +117,6 @@
     "Date": 1795796312
   },
   {
-    "id": "news_billboard_0f6d008cb5",
-    "Title": "🏆 Audible’s Black Friday Deal Gets You a Subscription to Bestselling Books for Only $.99 Per Month",
-    "Description": "Until Dec. 28, Audible's biggest sale of the season gives eligible customers 90% off a Standard membership, bringing the monthly price down to just $0.99.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/Shop-Audible-Black-Friday-Deal-Online.jpg?w=942&#038;h=623&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795795629
-  },
-  {
     "id": "news_pitchfork_a797d096fb",
     "Title": "🎼 The Killers’ Dave Keuning Survived a “Major Stroke” This Month",
     "Description": "The group’s co-founding guitarist says doctors gave him a “40% chance of survival”",
@@ -93,38 +126,5 @@
     "Important": false,
     "Author": "Pitchfork",
     "Date": 1795795112
-  },
-  {
-    "id": "news_nme_efce6e0508",
-    "Title": "🎸 The Killers’ Dave Keuning speaks out after surviving a life-threatening stroke",
-    "Description": "\"By some miracle I am fine\" The post The Killers’ Dave Keuning speaks out after surviving a life-threatening stroke appeared first on NME .",
-    "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2022/10/Dave-Keuning-Chris-Phelps.jpg"
-    ],
-    "Important": false,
-    "Author": "NME Music",
-    "Date": 1795793573
-  },
-  {
-    "id": "news_rolling_03eee781ae",
-    "Title": "⚡ Former Buzzcocks Drummer Phil Barker Dead at 65",
-    "Description": "The musician performed in the British punk rock band for 14 years and recorded on five of their albums",
-    "ImageURL": [
-      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-531554263-1.jpg?w=1600&#038;h=900&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Rolling Stone",
-    "Date": 1795793413
-  },
-  {
-    "id": "news_billboard_a0a142a143",
-    "Title": "🏆 From Amazon to Zara, Here Are All the Best Black Friday Deals, Promo Codes & Coupons",
-    "Description": "Black Friday is here! Shop Billboard put together a list of deals on audio essentials, fashion, tech and other product categories from retailers across the web.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/09/Abercrombie-Fitch-Logo-BB-Embed.jpg?w=942&amp;h=623&amp;crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795790720
   }
 ]
