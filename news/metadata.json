@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798333091
+    "Date": 1798347491
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797469091
+    "Date": 1797483491
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,40 +26,40 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795739291
+    "Date": 1795753691
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Thanksgiving, #DebateA4RTVE, Abascal, Colau.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: Cowboys, Thanksgiving, Joe Milton, Eagles.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795737491
+    "Date": 1795751891
   },
   {
-    "id": "news_billboard_45ca770f3d",
-    "Title": "🏆 Anuel AA’s ‘RHLM2’ Album Is Finally Here: ‘I Made It With My Heart and Soul’",
-    "Description": "The long-awaited album is a sequel to his 2018 debut, Real Hasta La Muerte, and his first in four years.",
+    "id": "news_billboard_55e16a8cc6",
+    "Title": "🏆 Miranda Lambert Heats Up Halftime at Dallas Cowboys’ NFL Thanksgiving Game: Watch",
+    "Description": "The three-time Grammy Award-winning star delivered a nearly seven-minute medley -- with support from the Dallas Cowboys Cheerleaders, a full band and a strings section.",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/P108R0S5-e1795470518512.jpg?w=237&#038;h=147&#038;crop=1"
+      "https://www.billboard.com/wp-content/uploads/2026/06/MIranda-Lambert-Crisco-album-cover-billboard-1800.jpg?w=1024"
     ],
     "Important": false,
     "Author": "Billboard",
-    "Date": 1795737600
+    "Date": 1795755489
   },
   {
-    "id": "news_billboard_bf5b59e0a2",
-    "Title": "🏆 Lana Del Rey Says New Albums Are ‘Getting Close’ to Completion: ‘I’m Happy With Them’",
-    "Description": "The singer-songwriter updated fans on Stove and its companion album, Spyda , while seemingly teasing cryptic lyrics.",
+    "id": "news_billboard_864a83357e",
+    "Title": "🏆 It’s a Shaolin Thanksgiving! Wu-Tang Clan, Chad Smith Light Up Halftime at Detroit Lions NFL Game",
+    "Description": "The hip-hop legends hit a nearly seven-minute tag-team medley of greatest hits that was announced as “the wrap-up” of its Wu-Tang Forever: The Final Chamber farewell tour.",
     "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/02/P101SEZ1-e1770489259722.jpg?w=237&#038;h=147&#038;crop=1"
+      "https://www.billboard.com/wp-content/uploads/2026/11/NFL-Wu-Tang-Clan-Chicago-Bears-vs.-Detroit-Lions-Getty-Billboard-1548.jpg?w=1024"
     ],
     "Important": false,
     "Author": "Billboard",
-    "Date": 1795731275
+    "Date": 1795751906
   },
   {
     "id": "news_rolling_6cae83a742",
