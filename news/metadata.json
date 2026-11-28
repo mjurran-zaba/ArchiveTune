@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798433562
+    "Date": 1798447530
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797569562
+    "Date": 1797583530
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,18 +26,40 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795839762
+    "Date": 1795853730
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #GMMTVStarlympics2026, Bronson Reed, セシリア先生, 伊藤大海.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #GMMTVStarlympics2026, #ベストアーティスト2026, #スパリクWフォローRPCP, PERTHSANTA DOMIIA FAMIGNITE.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795837962
+    "Date": 1795851930
+  },
+  {
+    "id": "news_nme_1a4441a99f",
+    "Title": "🎸 “Small group of organised criminals” sought over Don Toliver show evacuation at Manchester’s Co-op Live",
+    "Description": "Police are looking to contact more than 100 concertgoers and are investigating similar incidents at two of the rapper’s European shows The post “Small group of organised criminals” sought over Don Toliver show evacuat...",
+    "ImageURL": [
+      "https://www.nme.com/wp-content/uploads/2026/11/don_toliver_live-1.jpg"
+    ],
+    "Important": false,
+    "Author": "NME Music",
+    "Date": 1795855017
+  },
+  {
+    "id": "news_billboard_e4a4caddfe",
+    "Title": "🏆 The Killers’ Dave Keuning Says He Survived a Major Stroke: ‘By Some Miracle I Am Fine’",
+    "Description": "The guitarist says doctors gave him a 40% chance of survival — and that the first thing he checked after surgery was whether he could still play.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/05/P102ZN6U-e1780074938228.jpg?w=1024"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795847549
   },
   {
     "id": "news_billboard_a2131d568f",
@@ -49,17 +71,6 @@
     "Important": false,
     "Author": "Billboard",
     "Date": 1795826470
-  },
-  {
-    "id": "news_billboard_b74faee35c",
-    "Title": "🏆 Brandy Returns in ‘Christmas Everyday: Married and Bright’ — Stream Lifetime Holiday Movie Online Free Here",
-    "Description": "Premiering Nov. 28, the new film is a follow-up to last year's holiday hit, Christmas Everyday .",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/Christmas-Everyday-Married-and-Bright-e1795819332744.webp?w=1024"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795823331
   },
   {
     "id": "news_rolling_84650e124d",
@@ -104,17 +115,6 @@
     "Important": false,
     "Author": "Rolling Stone",
     "Date": 1795796382
-  },
-  {
-    "id": "news_nme_6e4e57f7da",
-    "Title": "🎸 Heartworms explores “time, escape, limitlessness, self-reflection and rebirth” on “spiritual” new single ‘The Window’",
-    "Description": "The musician recently told NME that she'd \"finished recording\" her second album The post Heartworms explores “time, escape, limitlessness, self-reflection and rebirth” on “spiritual” new single ‘The Window’ appeared f...",
-    "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/HeartwormsnewsingleTheWindow-news-story.jpg"
-    ],
-    "Important": false,
-    "Author": "NME Music",
-    "Date": 1795796312
   },
   {
     "id": "news_pitchfork_a797d096fb",
