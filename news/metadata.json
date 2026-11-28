@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798447530
+    "Date": 1798462159
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797583530
+    "Date": 1797598159
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,29 +26,51 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795853730
+    "Date": 1795868359
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #GMMTVStarlympics2026, #ベストアーティスト2026, #スパリクWフォローRPCP, PERTHSANTA DOMIIA FAMIGNITE.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #ベストアーティスト2026, #GMMTVStarlympics2026, #ザッツすぎて滅, #SixTONES_Closer.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795851930
+    "Date": 1795866559
   },
   {
-    "id": "news_nme_1a4441a99f",
-    "Title": "🎸 “Small group of organised criminals” sought over Don Toliver show evacuation at Manchester’s Co-op Live",
-    "Description": "Police are looking to contact more than 100 concertgoers and are investigating similar incidents at two of the rapper’s European shows The post “Small group of organised criminals” sought over Don Toliver show evacuat...",
+    "id": "news_nme_ef0ed41b03",
+    "Title": "🎸 Morrissey writes to Queen Mary University to end “grotesque” sepsis experiments on mice",
+    "Description": "The singer has offered to meet with the university’s president alongside PETA scientists during his upcoming UK tour The post Morrissey writes to Queen Mary University to end “grotesque” sepsis experiments on mice app...",
     "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/11/don_toliver_live-1.jpg"
+      "https://www.nme.com/wp-content/uploads/2026/11/morrissey_live_2026.jpg"
     ],
     "Important": false,
     "Author": "NME Music",
-    "Date": 1795855017
+    "Date": 1795866091
+  },
+  {
+    "id": "news_nme_a0bd184e33",
+    "Title": "🎸 Lost Daft Punk mix from 1997 discovered, restored and released: “It’s nice to make people happy”",
+    "Description": "The hour-long vinyl mix was rescued from a damaged, mould-covered tape by a team of specialists in Bristol The post Lost Daft Punk mix from 1997 discovered, restored and released: “It’s nice to make people happy” appe...",
+    "ImageURL": [
+      "https://www.nme.com/wp-content/uploads/2026/11/daft_punk_2006.jpg"
+    ],
+    "Important": false,
+    "Author": "NME Music",
+    "Date": 1795862330
+  },
+  {
+    "id": "news_billboard_7204b0d5de",
+    "Title": "🏆 Where to Watch the 100th Macy’s Thanksgiving Day Parade for Free to See Queen Latifah, LL Cool J & Dolly Parton Tribute",
+    "Description": "The centennial event will take place Saturday, Nov. 28, at 8:30 a.m. ET on NBC and Telemundo, but you can watch across several streaming platforms with a free trial.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/11/GettyImages-616081212-e1795550773410.jpg?w=237&amp;h=147&amp;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795858200
   },
   {
     "id": "news_billboard_e4a4caddfe",
@@ -62,17 +84,6 @@
     "Date": 1795847549
   },
   {
-    "id": "news_billboard_a2131d568f",
-    "Title": "🏆 Olivia Rodrigo Shares Second Holiday Song ‘Miss This Christmas’ on Amazon Music",
-    "Description": "The new track follows the pop star’s debut holiday song, “Take Me Home (4 Christmas).”",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/11/P107VA0M-e1794928638204.jpg?w=237&#038;h=147&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795826470
-  },
-  {
     "id": "news_rolling_84650e124d",
     "Title": "⚡ Watch Goo Goo Dolls’ Complete NFL Halftime Show",
     "Description": "The band performed \"Iris,\" \"Broadway,\" and \"Slide\" during the Kansas City Chiefs vs. Buffalo Bills game as the broadcast was cut by NBC",
@@ -82,17 +93,6 @@
     "Important": false,
     "Author": "Rolling Stone",
     "Date": 1795809516
-  },
-  {
-    "id": "news_nme_4ad893e0e5",
-    "Title": "🎸 Mastodon follow Grammy nomination and ‘GTA 6’ appearance with first UK and European tour in eight years",
-    "Description": "Tickets are on sale now The post Mastodon follow Grammy nomination and ‘GTA 6’ appearance with first UK and European tour in eight years appeared first on NME .",
-    "ImageURL": [
-      "https://www.nme.com/wp-content/uploads/2026/07/Mastodon-live-2026.jpg"
-    ],
-    "Important": false,
-    "Author": "NME Music",
-    "Date": 1795800247
   },
   {
     "id": "news_pitchfork_907236ea12",
