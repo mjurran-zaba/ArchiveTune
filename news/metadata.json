@@ -6,7 +6,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1798462159
+    "Date": 1798476020
   },
   {
     "id": "voidtune_arc_v1",
@@ -15,7 +15,7 @@
     "ImageURL": [],
     "Important": true,
     "Author": "Mjurran",
-    "Date": 1797598159
+    "Date": 1797612020
   },
   {
     "id": "trend_tiktok_reels_radar",
@@ -26,18 +26,51 @@
     ],
     "Important": false,
     "Author": "TikTok & Reels Radar",
-    "Date": 1795868359
+    "Date": 1795882220
   },
   {
     "id": "trend_x_social_pulse",
     "Title": "⚡ X / Twitter Music Pulse: What's Buzzing Today",
-    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #ベストアーティスト2026, #GMMTVStarlympics2026, #ザッツすぎて滅, #SixTONES_Closer.",
+    "Description": "Rangkuman komprehensif topik hangat, perbincangan fandom musik, dan hashtag terpopuler yang merajai linimasa X/Twitter hari ini: #SixTONESANN, #GMMTVStarlympics2026, #ベストアーティスト2026, #الهلال_الاتفاق.",
     "ImageURL": [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&crop=1"
     ],
     "Important": false,
     "Author": "X / Twitter Pulse",
-    "Date": 1795866559
+    "Date": 1795880420
+  },
+  {
+    "id": "news_rolling_84c89d3844",
+    "Title": "⚡ Queen Latifah Performs ‘U.N.I.T.Y.’ at Thanksgiving Day Parade",
+    "Description": "Fresh off Rock Hall induction, rap legend delivers her 1993 single from the Peacock float at postponed parade",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2307251169.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795882821
+  },
+  {
+    "id": "news_billboard_53b58ea461",
+    "Title": "🏆 Tyla’s ‘Chanel’ & PARTYNEXTDOOR Win Fan-Voted Honors at 2026 Soul Train Awards",
+    "Description": "During its celebration of \"love, peace and soul,\" BET also revealed establishment of the Chaka Khan Humanitarian Award.",
+    "ImageURL": [
+      "https://www.billboard.com/wp-content/uploads/2026/05/2259300419-e1779388906380.jpg?w=237&#038;h=147&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Billboard",
+    "Date": 1795881684
+  },
+  {
+    "id": "news_rolling_ae5072bdcf",
+    "Title": "⚡ Raye Opens Macy’s Thanksgiving Day Parade With ‘Joy’",
+    "Description": "The South London singer was joined by her sisters Amma and Absolutely in a Central Park tunnel",
+    "ImageURL": [
+      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2302716875.jpg?w=1600&#038;h=900&#038;crop=1"
+    ],
+    "Important": false,
+    "Author": "Rolling Stone",
+    "Date": 1795876784
   },
   {
     "id": "news_nme_ef0ed41b03",
@@ -73,28 +106,6 @@
     "Date": 1795858200
   },
   {
-    "id": "news_billboard_e4a4caddfe",
-    "Title": "🏆 The Killers’ Dave Keuning Says He Survived a Major Stroke: ‘By Some Miracle I Am Fine’",
-    "Description": "The guitarist says doctors gave him a 40% chance of survival — and that the first thing he checked after surgery was whether he could still play.",
-    "ImageURL": [
-      "https://www.billboard.com/wp-content/uploads/2026/05/P102ZN6U-e1780074938228.jpg?w=1024"
-    ],
-    "Important": false,
-    "Author": "Billboard",
-    "Date": 1795847549
-  },
-  {
-    "id": "news_rolling_84650e124d",
-    "Title": "⚡ Watch Goo Goo Dolls’ Complete NFL Halftime Show",
-    "Description": "The band performed \"Iris,\" \"Broadway,\" and \"Slide\" during the Kansas City Chiefs vs. Buffalo Bills game as the broadcast was cut by NBC",
-    "ImageURL": [
-      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2307062312-1.jpg?w=1600&#038;h=900&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Rolling Stone",
-    "Date": 1795809516
-  },
-  {
     "id": "news_pitchfork_907236ea12",
     "Title": "🎼 Olivia Rodrigo Delivers Another Christmas Song",
     "Description": "Listen to “Miss This Christmas”",
@@ -104,17 +115,6 @@
     "Important": false,
     "Author": "Pitchfork",
     "Date": 1795798044
-  },
-  {
-    "id": "news_rolling_b8d8fb8f40",
-    "Title": "⚡ The Killers Dave Keuning Reveals He Suffered ‘Major Stroke’: ‘I Am Alive and Well’",
-    "Description": "\"The doctors said I had a 40% chance or survival and I would have disabilities after, but by some miracle I am fine\"",
-    "ImageURL": [
-      "https://www.rollingstone.com/wp-content/uploads/2026/11/GettyImages-2245887357-1.jpg?w=1600&#038;h=900&#038;crop=1"
-    ],
-    "Important": false,
-    "Author": "Rolling Stone",
-    "Date": 1795796382
   },
   {
     "id": "news_pitchfork_a797d096fb",
